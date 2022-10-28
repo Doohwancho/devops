@@ -1,0 +1,45 @@
+//case1) download image
+sudo docker search httpd 
+sudo docker pull httpd 
+sudo docker image ls 
+sudo docker inspect httpd 
+sudo docker rmi httpd //이미지 삭제
+
+
+//case2) image -> container
+sudo docker run -d --name web1 -p 8080:80 httpd
+	//--name web1 -> 'web1'이라는 이름으로 실행
+	//-d is daemon -> 백그라운드 실행
+	//-p 8080:80 8080는 내가 쓸 포트, 80은 컨테이너 포트. httpd의 이미지는 80포트를 사용하도록 정의되어있다.
+
+sudo docker ps -a //돌고있는 컨테이너 확인 
+sudo docker stop web1
+sudo docker start web1 
+sudo docker rm web1 //container 삭제
+
+
+//case3) get inside container -> conf
+sudo docker exec -it web1 bash
+	//-i -> iteractive
+	//-t -> ttyl, terminal in linux system
+ctrl + p + q //exit 누르면 나올 때 컨테이너가 죽음..
+
+
+
+//case4) container -> image
+sudo docker stop web1 
+sudo docker commit web1 httpd:psc //httpd라는 이미지를 'psc'라는 버전으로 커밋하겠다
+sudo docker image ls
+
+
+//case5) dockerhub에 image 올리기 
+sudo docker tag httpd:psc doohwancho/httpd:psc //이미지 id 먼저 수정한 후,
+sudo docker login
+sudo docker push doohwancho/httpd:psc
+sudo docker pull doohwancho/httpd:psc //dockerhub에 올린거 다운
+
+
+//case6) image -> 파일
+sudo docker save -o httpd.tar doohwancho/httpd:psc
+sudo docker load -i httpd.tar
+sudo docker image ls
