@@ -24,11 +24,12 @@ A. Linux\
 B. Software Architecture\
 C. AWS\
 D. Docker\
-E. CI/CD\
-F. Monitoring\
-G. gRPC\
-H. K8s\
-I. Terraform
+E. Web Server\
+x. CI/CD\
+x. Monitoring\
+x. gRPC\
+x. K8s\
+x. Terraform
 
 
 ---\

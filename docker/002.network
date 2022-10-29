@@ -1,0 +1,28 @@
+//case1) make bridge network
+sudo docker network create bri1 //"brid1" 이름의 bridge network 생성 
+sudo docker network ls // none, host, bridge, brid1 exist 
+sudo docker run -itd --name sv1 -net brid1 centos 
+sudo docker run -itd --name sv2 -net brid1 centos
+sudo docker run -itd --name sv3 -net brid1 centos
+
+
+//case2) network alias
+sudo docker create bri2
+sudo docker run -itd --name bri2_sv1 -net brid2 --net-alias psc_network centos //brid2를 psc_network라는 이름의 네트워크로 지정 후 연결
+sudo docker run -itd --name bri2_sv2 -net brid2 --net-alias psc_network centos
+sudo docker run -itd --name bri2_sv3 -net brid2 --net-alias psc_network centos
+
+test
+sudo docker exec brd2_sv4 sh -c "ping -c 1 psc_network" //여러번 하면, 저기 붙은 3개 서버가 나눠서 받는다. 
+
+//case3) 같은 bridge ip에 두개 컨테이너 붙이기 
+sudo docker run -itd --name sv1 centos 
+sudo docker run -itd --name sv2 -net container:sv1 centos //sv1 ip에 붙이기 
+
+주의!
+sudo docker stop sv1 //하면, sv2의 ip도 사라짐
+
+깨진 링크 되살리려면...
+sudo docker start sv1
+sudo docker restart sv2
+
