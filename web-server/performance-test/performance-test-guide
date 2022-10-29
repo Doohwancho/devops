@@ -1,0 +1,107 @@
+
+```commandline
+//step1) apache, nginx 설치
+on tmux1
+docker run -d --name httpd -p 8080:80 httpd
+docker ps 
+curl http://localhost:8080 
+
+on tmux2
+docker run -d --name nginx -p 8081:80 nginx
+docker ps 
+curl http://localhost:8081
+
+
+//step2) 동일 index.html 사용위해 mount하기
+vim index.html 
+AAAAAA
+BBBBBB
+CCCCCC
+DDDDDD
+EEEEEE
+
+docker exec -it httpd bash
+cd /
+find ./ -name index.html  // 값 복사 
+
+docker exect -it nginx bash 
+cd / 
+find ./ -name index.html // 값 복사
+
+
+docker stop httpd 
+docker rm httpd
+docker stop nginx 
+docker rm nginx 
+
+docker run -d -v ${PWD}:/usr/local/apache2/htdocs --name httpd -p 8080:80 httpd
+curl http://localhost:8080 
+
+docker run -d -v ${PWD}:/usr/share/nginx/html --name nginx -p 8081:80 nginx 
+curl http://localhost:8081
+
+
+ifconfig -> look for en0's ip address. instead of docker inspect httpd's ip address that starts with 172.x.x.x
+
+//step3) install k6 
+docker pull grafana/k6
+
+httpd.js
+import http from 'k6/http';
+import { sleep } from 'k6';
+
+export default function () {
+  http.get('http://192.168.219.101:8080');
+  sleep(1);
+}
+
+
+
+nginx.js
+import http from 'k6/http';
+import { sleep } from 'k6';
+
+export default function () {
+  http.get('http://192.168.219.101:8081');
+  sleep(1);
+}
+
+//step4) test
+
+//A. 10초동안 100명이 오면?
+docker run --rm -i grafana/k6 run --vus 100 --duration 10s - <httpd.js 
+
+docker run --rm -i grafana/k6 run --vus 100 --duration 10s - <nginx.js
+
+
+중요한 지표
+1. http_req_blocked
+2. http_req_duration = 실행 시간** 
+3. http_req_failed = 실패한 비율 
+
+
+10초동안 100명을 부하 테스트하면, nginx가 httpd보다 평균2ms 더 앞섬.
+
+//B. 10초동안 1000명이 오면?
+docker run --rm -i grafana/k6 run --vus 1000 --duration 10s - <httpd.js 
+
+docker run --rm -i grafana/k6 run --vus 1000 --duration 10s - <nginx.js
+
+
+10초동안 1000명 부하 테스트 하면, nginx가 httpd보다 평균 41ms 더 앞섬.
+
+
+//C. 10초동안 5000명이 오면?
+docker run --rm -i grafana/k6 run --vus 5000 --duration 10s - <httpd.js 
+
+docker run --rm -i grafana/k6 run --vus 5000 --duration 10s - <nginx.js
+
+
+10초동안 5000명 부하테스트 하면, nginx가 httpd보다 평균 4s나 더 빠른데, 단점은 아파치는 fail 비율 0%인데 반해 nginx는 0.16%가 연결 실패 뜸.
+
+apache는 느린데 메모리 초과해도 실패율이 더 적고, nginx는 더 빠른데 메모리 초과하면 fail비율이 더 높다고 한다.
+```
+
+
+
+
