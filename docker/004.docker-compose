@@ -1,0 +1,19 @@
+install https://docs.docker.com/desktop/install/mac-install/
+
+```docker-compose.yml
+SERVICE:
+	WEB:
+		IMAGE: httpd
+```
+
+```commandline
+//case1) 단일 컨테이너 off of docker-compose.yml
+sudo docker-compose up -d //docker-compose.yml 파일을 기반으로 컨테이너 띄움
+sudo docker ps
+
+
+//case2) 컨테이너 여러개 oof of docker-compose.yml
+sudo docker-compose scale web=10 //WEB이라고 적었으니까 
+sudo docker ps 
+sudo docker-compose scale web=3 //10개를 3개로 줄임  
+```
