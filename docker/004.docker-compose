@@ -1,3 +1,4 @@
+## D.1. 수동
 install https://docs.docker.com/desktop/install/mac-install/
 
 ```docker-compose.yml
@@ -17,3 +18,54 @@ sudo docker-compose scale web=10 //WEB이라고 적었으니까
 sudo docker ps 
 sudo docker-compose scale web=3 //10개를 3개로 줄임  
 ```
+
+## D.2. easier way 
+
+step1) 프로젝트 ./에 docker-compose.yml 생성 
+```docker-compose.yml
+version: '3.4'
+	services:
+		regiView:
+			image: parkseungchul/regiview:v1
+			networks:
+				- regi_net
+			links:
+				- regi:regi
+			environment:
+				- port=5000
+				- ip=regi
+			ports:
+				- "8080:8080"
+		regi:
+			image: registry
+			networks:
+				- regi_net
+			ports:
+				- "5000:5000"
+networks:
+	regi_net:
+```
+
+
+step2) 
+```docker
+git clone ${project}
+docker-compose up -d //docker-compose를 기반으로 컨테이너 만든 후 실행 
+
+docker-compose down
+```
+
+step3) 저 스프링 프로젝트 실행에 필요한 이미지 다운받아 local repository에 넣기 
+```commandline
+docker pull nginx
+docker pull httpd
+docker pull centos
+docker tag nginx localhost:5000/web:v1
+docker tag httpd localhost:5000/web:v2
+docker tag centos localhost:5000/centos
+docker push localhost:5000/web:v1
+docker push localhost:5000/web:v2
+docker push localhost:5000/centos
+```
+
+

@@ -1,0 +1,23 @@
+준비물: 2개의 vm 
+vm1 의 ip: 192.168.100.100/24
+vm2 의 ip: 192.168.100.101/24
+
+두 vm을 연결하는게 docker-swarm 
+Q. 도커 네트워크로 두 컨테이너 통신 가능한데 왜 docker-swarm 씀?
+A. 아마 docker network은 같은 vm, 다른 컨테이너를 이어주는 애라면, docker-swarm은 다른 vm의 다른 컨테이너를 이어주는애 같은데?
+
+```commandline
+//case1) vm1, vm2를 swarm으로 잇기 
+firewall-cmd --add-port=2377/tcp --permanent //두 네트워크 이어야 하니까 vm1의 방화벽 내리기
+
+sudo docker swarm init //on vm1. docker swarm join 커멘드 복사 후, vm2에 붙여넣기
+
+//case2) vm1 scale out 
+sudo docker service create -d --name web httpd
+sudo docker ps 
+sudo docker service scale web=5 //scale out to 5
+sudo docker ps //vm1에 2개 생성되고, 나머지 3개는 vm2에 생성됨 
+sudo docker stop ${container-id} //강제로 하나 내려도, 하나 새로 만들어서 5개 유지시켜줌. reboot하면 반대쪽에 5개 컨테이너 생성됨
+
+sudo docker swarm leave //vm2에 컨테이너 3개 유지하던거 다 내림. vm1에 5개로 유지됨.
+```

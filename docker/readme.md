@@ -13,7 +13,7 @@ a. docker basics :white_check_mark:\
 b. network :white_check_mark:\
 c. Dockerfile :white_check_mark:\
 d. docker compose :white_check_mark:\
-e. docker swarm\
+e. docker swarm :white_check_mark:\
 x. docker 초기 기본 세팅\
 x. springboot env setup using docker-compose\
 x. registery- security위한 망분리
@@ -30,4 +30,7 @@ b-2. [서로 다른 컨테이너 한 네트워크에 붙여서 통신 가능하�
 
 c-1. [D107. 내가 만든 어플리케이션 docker image 만들고 구동해 보기(new)](https://www.youtube.com/watch?v=zswvw6DpSCg&list=PLogzC_RPf25Fx3eNZzxLVw3dOL7r4XIUk&index=9&ab_channel=SeungchulPark)
 
-d-1. [D108-1 docker compose, swarm quick guide 1번째 시간(new)](https://www.youtube.com/watch?v=LgpqopdzyCA&list=PLogzC_RPf25Fx3eNZzxLVw3dOL7r4XIUk&index=8&ab_channel=SeungchulPark)
+d-1. [docker compose, hard way](https://www.youtube.com/watch?v=LgpqopdzyCA&list=PLogzC_RPf25Fx3eNZzxLVw3dOL7r4XIUk&index=8&ab_channel=SeungchulPark) \
+d-2. [docker compose, easy way](https://www.youtube.com/watch?v=UWX76VCl4Yc&list=PLogzC_RPf25Fx3eNZzxLVw3dOL7r4XIUk&index=11&ab_channel=SeungchulPark)
+
+e-1. [docker swarm quick guide](https://www.youtube.com/watch?v=LgpqopdzyCA&list=PLogzC_RPf25Fx3eNZzxLVw3dOL7r4XIUk&index=8&ab_channel=SeungchulPark)
