@@ -26,3 +26,15 @@ sudo docker stop sv1 //하면, sv2의 ip도 사라짐
 sudo docker start sv1
 sudo docker restart sv2
 
+//case4) 서로 다른 컨테이너 한 네트워크에 붙여서 통신 가능하게 하기
+sudo docker run -itd --name sv1 centos
+sudo docker run -itd --name sv2 centos
+sudo docker exec sv1 sh -c "ping sv2"//error! sudo docker exec sv2 sh -c "ping sv1"//error! 
+
+sudo docker network create test_network
+sudo docker network ls 
+sudo docker network connect test_network sv1
+sudo docker network connect test_network sv2
+
+sudo docker exec sv1 sh -c "ping sv2" //resolved!
+sudo docker exec sv2 sh -c "ping sv1" //resolved!
