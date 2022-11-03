@@ -14,7 +14,7 @@ b. network :white_check_mark:\
 c. Dockerfile :white_check_mark:\
 d. docker compose :white_check_mark:\
 e. docker swarm :white_check_mark:\
-f. springboot, react, mysql on docker :white_check_mark:\
+f. springboot || react || mysql on docker :white_check_mark:\
 x. docker 초기 기본 세팅\
 x. springboot env setup using docker-compose\
 x. registery- security위한 망분리
@@ -36,4 +36,5 @@ d-2. [docker compose, easy way](https://www.youtube.com/watch?v=UWX76VCl4Yc&list
 
 e-1. [docker swarm quick guide](https://www.youtube.com/watch?v=LgpqopdzyCA&list=PLogzC_RPf25Fx3eNZzxLVw3dOL7r4XIUk&index=8&ab_channel=SeungchulPark)
 
-f-1. [react+springboot+mysql on docker](https://github.com/codingspecialist/Springboot-React-MySQL-NginX-Docker)
+f-1. [nginx+react+springboot+mysql on docker](https://github.com/codingspecialist/Springboot-React-MySQL-NginX-Docker)\
+f-2. [nginx+springboot+mysql on docker](https://www.youtube.com/watch?v=cj061SpRTCE&t=2754s)
