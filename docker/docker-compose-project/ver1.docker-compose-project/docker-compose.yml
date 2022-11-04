@@ -1,0 +1,55 @@
+version: "3"
+
+services:
+
+  frontend:
+    restart: always
+    build: 
+      context: ./book-frontend/.
+      dockerfile: Dockerfile
+    ports:
+      - "80:80"
+    networks:
+      - bridge_network
+    depends_on: #backend가 먼저 떠야 frontend가 뜬다.
+      - backend
+
+  backend:
+    restart: always
+    build:
+      context: ./book-backend #빌드는 /book-backend에
+      dockerfile: Dockerfile #Dockerfile로 한다. 그리고 docker compose up --build -d로 한다. 빌드해야하니까.
+    ports:
+      - "8080:8080"
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:mysql://database:3306/book?autoReconnect=true&useSSL=false&serverTimezone=UTC&characterEncoding=UTF-8 #autoReconnect=true&useSSL=false 이거 안하면 백엔드랑 디비랑 연결 안되더라
+      #여기서 database는 위에 mysql을 정의한 서비스 명 "database". 이걸 application.yml에서도 그대로 가져다 쓴다.
+      SPRING_DATASOURCE_USERNAME: root
+      SPRING_DATASOURCE_PASSWORD: password
+    networks:
+      - bridge_network
+    depends_on: #db가 떠야 백엔드가 뜬다
+      - database
+
+  database: #서비스명
+    restart: always
+    image: mysql/mysql-server:8.0
+    command:
+      - --default-authentication-plugin=mysql_native_password #root의 default password는 "password"
+      - --character-set-server=utf8
+      - --collation-server=utf8_general_ci      
+    ports:
+      - "3306:3306"
+    environment:
+      MYSQL_DATABASE: book # create database book; && use database book;
+      MYSQL_ROOT_HOST: "%" #set localhost -> root@%
+      MYSQL_ROOT_PASSWORD: password #root's password is password
+    volumes:
+      - ../db:/var/lib/mysql #../db에 /var/lib/mysql를 마운트함
+    networks:
+      - bridge_network
+
+
+networks:
+  bridge_network: #얘로 frontend, backend, db 같은 네트워크로 묶는 것 
+    driver: bridge
