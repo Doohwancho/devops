@@ -1,24 +1,33 @@
 version: "3.7"
 
-services:
+networks:
+  frontend_network: #얘로 frontend, backend, db 같은 네트워크로 묶는 것 
+    driver: bridge
+  backend_network:
+    driver: bridge
 
+services:
   nginx:
     restart: always
     build:
       context: ./nginx
       dockerfile: Dockerfile
     ports:
-      - "80:80"
-    links:
-      - frontend-a:frontend-a
-      - frontend-b:frontend-b
-      - frontend-c:frontend-c
+      - "80:80" #http
+      # - "443:443" #https
+    # links: # links 말고 network 사용하자. 
+    #   - frontend-a:frontend-a
+    #   - frontend-b:frontend-b
+    #   - frontend-c:frontend-c
     networks:
-      - bridge_network
+      - frontend_network
+      - backend_network
+    environment:
+      - TZ=Asia/Seoul
     depends_on:
       - frontend-a
       - frontend-b
-      - frontend-c
+      # - frontend-c
 
   frontend-a:
     restart: always
@@ -28,10 +37,11 @@ services:
     volumes:
       - "./book-frontend/:/app"
       - "/app/node_modules"
-    ports:
-      - "3000:3000"
+    expose: #expose는 같은 네트워크에 속한 컨테이너 끼리에만 포트 염
+      - "3000"
     networks:
-      - bridge_network
+      - frontend_network
+      - backend_network
     depends_on: #backend가 먼저 떠야 frontend가 뜬다.
       - backend
 
@@ -43,10 +53,11 @@ services:
     volumes:
       - "./book-frontend/:/app"
       - "/app/node_modules"
-    ports:
-      - "3001:3000"
+    expose:
+      - "3001"
     networks:
-      - bridge_network
+      - frontend_network
+      - backend_network
     depends_on: #backend가 먼저 떠야 frontend가 뜬다.
       - backend
 
@@ -58,27 +69,70 @@ services:
     volumes:
       - "./book-frontend/:/app"
       - "/app/node_modules"
-    ports:
-      - "3002:3000"
+    # ports:
+    #   - "3002:3000"
+    expose:
+      - "3002"
     networks:
-      - bridge_network
+      - frontend_network
+      - backend_network
     depends_on: #backend가 먼저 떠야 frontend가 뜬다.
       - backend
 
-  backend:
+  backend-a:
     restart: always
     build:
       context: ./book-backend #빌드는 /book-backend에
       dockerfile: Dockerfile #Dockerfile로 한다. 그리고 docker compose up --build -d로 한다. 빌드해야하니까.
     ports:
-      - "8080:8080"
+      - "8080:8080" # Q. expose로 하면 안되는데 ports로 하면 됨. 왜지?
+    # expose:
+    #   - "8080"
     environment:
       SPRING_DATASOURCE_URL: jdbc:mysql://database:3306/book?autoReconnect=true&useSSL=false&serverTimezone=UTC&characterEncoding=UTF-8 #autoReconnect=true&useSSL=false 이거 안하면 백엔드랑 디비랑 연결 안되더라
       #여기서 database는 위에 mysql을 정의한 서비스 명 "database". 이걸 application.yml에서도 그대로 가져다 쓴다.
       SPRING_DATASOURCE_USERNAME: root
       SPRING_DATASOURCE_PASSWORD: password
     networks:
-      - bridge_network
+      - backend_network
+    depends_on: #db가 떠야 백엔드가 뜬다
+      - database
+
+  backend-b:
+    restart: always
+    build:
+      context: ./book-backend #빌드는 /book-backend에
+      dockerfile: Dockerfile #Dockerfile로 한다. 그리고 docker compose up --build -d로 한다. 빌드해야하니까.
+    ports:
+      - "8081:8080"
+    # expose:
+    #   - "8081"
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:mysql://database:3306/book?autoReconnect=true&useSSL=false&serverTimezone=UTC&characterEncoding=UTF-8 #autoReconnect=true&useSSL=false 이거 안하면 백엔드랑 디비랑 연결 안되더라
+      #여기서 database는 위에 mysql을 정의한 서비스 명 "database". 이걸 application.yml에서도 그대로 가져다 쓴다.
+      SPRING_DATASOURCE_USERNAME: root
+      SPRING_DATASOURCE_PASSWORD: password
+    networks:
+      - backend_network
+    depends_on: #db가 떠야 백엔드가 뜬다
+      - database
+
+  backend-c:
+    restart: always
+    build:
+      context: ./book-backend #빌드는 /book-backend에
+      dockerfile: Dockerfile #Dockerfile로 한다. 그리고 docker compose up --build -d로 한다. 빌드해야하니까.
+    ports:
+      - "8082:8080"
+    # expose:
+    #   - "8082"
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:mysql://database:3306/book?autoReconnect=true&useSSL=false&serverTimezone=UTC&characterEncoding=UTF-8 #autoReconnect=true&useSSL=false 이거 안하면 백엔드랑 디비랑 연결 안되더라
+      #여기서 database는 위에 mysql을 정의한 서비스 명 "database". 이걸 application.yml에서도 그대로 가져다 쓴다.
+      SPRING_DATASOURCE_USERNAME: root
+      SPRING_DATASOURCE_PASSWORD: password
+    networks:
+      - backend_network
     depends_on: #db가 떠야 백엔드가 뜬다
       - database
 
@@ -89,8 +143,8 @@ services:
       - --default-authentication-plugin=mysql_native_password #root의 default password는 "password"
       - --character-set-server=utf8
       - --collation-server=utf8_general_ci      
-    ports:
-      - "3306:3306"
+    expose:
+      - "3306"
     environment:
       MYSQL_DATABASE: book # create database book; && use database book;
       MYSQL_ROOT_HOST: "%" #set localhost -> root@%
@@ -98,9 +152,5 @@ services:
     volumes:
       - ../db:/var/lib/mysql #../db에 /var/lib/mysql를 마운트함
     networks:
-      - bridge_network
+      - backend_network
 
-
-networks:
-  bridge_network: #얘로 frontend, backend, db 같은 네트워크로 묶는 것 
-    driver: bridge

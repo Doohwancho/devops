@@ -5,6 +5,8 @@ WORKDIR /app
 
 ENV PATH /app/node_modules/.bin:$PATH
 COPY package.json package.json
-RUN npm install
+RUN npm install --silent
+RUN npm install react-scripts@3.0.1 -g --silent 
+#react-scripts 3.0.1버전은 https 요청없이 http 요청 만 할 때 사용
 COPY . .
 CMD ["npm", "run", "start"]

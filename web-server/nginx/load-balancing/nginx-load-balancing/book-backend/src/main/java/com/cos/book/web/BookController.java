@@ -4,20 +4,14 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import com.cos.book.domain.Book;
 import com.cos.book.service.BookService;
 
 import lombok.RequiredArgsConstructor;
 
+//@RequestMapping(value = "/api")
 @RequiredArgsConstructor
 @RestController
 public class BookController {
@@ -26,11 +20,11 @@ public class BookController {
 
 	private final BookService bookService;
 
-	@CrossOrigin
-	@GetMapping({ "", "/" })
-	public String hello() {
-		return "<h1>Hello</h1>";
-	}
+//	@CrossOrigin
+//	@GetMapping({ "", "/" })
+//	public String hello() {
+//		return "<h1>Hello</h1>";
+//	}
 
 	@CrossOrigin
 	@PostMapping("/book")
@@ -43,6 +37,8 @@ public class BookController {
 	@CrossOrigin
 	@GetMapping("/book")
 	public ResponseEntity<?> findAll() {
+//		return new ResponseEntity<>(null, HttpStatus.OK);
+		logger.info("findAll triggerd!!! %^&%^&%^&%^&%^&%^&%^&%^&%^&%^&%^&%^&");
 		return new ResponseEntity<>(bookService.모두가져오기(), HttpStatus.OK); // 200
 	}
 
