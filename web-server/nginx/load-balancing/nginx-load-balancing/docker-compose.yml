@@ -26,7 +26,7 @@ services:
       - TZ=Asia/Seoul
     depends_on:
       - frontend-a
-      - frontend-b
+      # - frontend-b
       # - frontend-c
 
   frontend-a:
@@ -45,39 +45,39 @@ services:
     depends_on: #backend가 먼저 떠야 frontend가 뜬다.
       - backend
 
-  frontend-b:
-    restart: always
-    build: 
-      context: ./book-frontend/.
-      dockerfile: Dockerfile
-    volumes:
-      - "./book-frontend/:/app"
-      - "/app/node_modules"
-    expose:
-      - "3001"
-    networks:
-      - frontend_network
-      - backend_network
-    depends_on: #backend가 먼저 떠야 frontend가 뜬다.
-      - backend
+  # frontend-b:
+  #   restart: always
+  #   build: 
+  #     context: ./book-frontend/.
+  #     dockerfile: Dockerfile
+  #   volumes:
+  #     - "./book-frontend/:/app"
+  #     - "/app/node_modules"
+  #   expose:
+  #     - "3001"
+  #   networks:
+  #     - frontend_network
+  #     - backend_network
+  #   depends_on: #backend가 먼저 떠야 frontend가 뜬다.
+  #     - backend
 
-  frontend-c:
-    restart: always
-    build: 
-      context: ./book-frontend/.
-      dockerfile: Dockerfile
-    volumes:
-      - "./book-frontend/:/app"
-      - "/app/node_modules"
-    # ports:
-    #   - "3002:3000"
-    expose:
-      - "3002"
-    networks:
-      - frontend_network
-      - backend_network
-    depends_on: #backend가 먼저 떠야 frontend가 뜬다.
-      - backend
+  # frontend-c:
+  #   restart: always
+  #   build: 
+  #     context: ./book-frontend/.
+  #     dockerfile: Dockerfile
+  #   volumes:
+  #     - "./book-frontend/:/app"
+  #     - "/app/node_modules"
+  #   # ports:
+  #   #   - "3002:3000"
+  #   expose:
+  #     - "3002"
+  #   networks:
+  #     - frontend_network
+  #     - backend_network
+  #   depends_on: #backend가 먼저 떠야 frontend가 뜬다.
+  #     - backend
 
   backend-a:
     restart: always
@@ -98,43 +98,43 @@ services:
     depends_on: #db가 떠야 백엔드가 뜬다
       - database
 
-  backend-b:
-    restart: always
-    build:
-      context: ./book-backend #빌드는 /book-backend에
-      dockerfile: Dockerfile #Dockerfile로 한다. 그리고 docker compose up --build -d로 한다. 빌드해야하니까.
-    ports:
-      - "8081:8080"
-    # expose:
-    #   - "8081"
-    environment:
-      SPRING_DATASOURCE_URL: jdbc:mysql://database:3306/book?autoReconnect=true&useSSL=false&serverTimezone=UTC&characterEncoding=UTF-8 #autoReconnect=true&useSSL=false 이거 안하면 백엔드랑 디비랑 연결 안되더라
-      #여기서 database는 위에 mysql을 정의한 서비스 명 "database". 이걸 application.yml에서도 그대로 가져다 쓴다.
-      SPRING_DATASOURCE_USERNAME: root
-      SPRING_DATASOURCE_PASSWORD: password
-    networks:
-      - backend_network
-    depends_on: #db가 떠야 백엔드가 뜬다
-      - database
+  # backend-b:
+  #   restart: always
+  #   build:
+  #     context: ./book-backend #빌드는 /book-backend에
+  #     dockerfile: Dockerfile #Dockerfile로 한다. 그리고 docker compose up --build -d로 한다. 빌드해야하니까.
+  #   ports:
+  #     - "8081:8080"
+  #   # expose:
+  #   #   - "8081"
+  #   environment:
+  #     SPRING_DATASOURCE_URL: jdbc:mysql://database:3306/book?autoReconnect=true&useSSL=false&serverTimezone=UTC&characterEncoding=UTF-8 #autoReconnect=true&useSSL=false 이거 안하면 백엔드랑 디비랑 연결 안되더라
+  #     #여기서 database는 위에 mysql을 정의한 서비스 명 "database". 이걸 application.yml에서도 그대로 가져다 쓴다.
+  #     SPRING_DATASOURCE_USERNAME: root
+  #     SPRING_DATASOURCE_PASSWORD: password
+  #   networks:
+  #     - backend_network
+  #   depends_on: #db가 떠야 백엔드가 뜬다
+  #     - database
 
-  backend-c:
-    restart: always
-    build:
-      context: ./book-backend #빌드는 /book-backend에
-      dockerfile: Dockerfile #Dockerfile로 한다. 그리고 docker compose up --build -d로 한다. 빌드해야하니까.
-    ports:
-      - "8082:8080"
-    # expose:
-    #   - "8082"
-    environment:
-      SPRING_DATASOURCE_URL: jdbc:mysql://database:3306/book?autoReconnect=true&useSSL=false&serverTimezone=UTC&characterEncoding=UTF-8 #autoReconnect=true&useSSL=false 이거 안하면 백엔드랑 디비랑 연결 안되더라
-      #여기서 database는 위에 mysql을 정의한 서비스 명 "database". 이걸 application.yml에서도 그대로 가져다 쓴다.
-      SPRING_DATASOURCE_USERNAME: root
-      SPRING_DATASOURCE_PASSWORD: password
-    networks:
-      - backend_network
-    depends_on: #db가 떠야 백엔드가 뜬다
-      - database
+  # backend-c:
+  #   restart: always
+  #   build:
+  #     context: ./book-backend #빌드는 /book-backend에
+  #     dockerfile: Dockerfile #Dockerfile로 한다. 그리고 docker compose up --build -d로 한다. 빌드해야하니까.
+  #   ports:
+  #     - "8082:8080"
+  #   # expose:
+  #   #   - "8082"
+  #   environment:
+  #     SPRING_DATASOURCE_URL: jdbc:mysql://database:3306/book?autoReconnect=true&useSSL=false&serverTimezone=UTC&characterEncoding=UTF-8 #autoReconnect=true&useSSL=false 이거 안하면 백엔드랑 디비랑 연결 안되더라
+  #     #여기서 database는 위에 mysql을 정의한 서비스 명 "database". 이걸 application.yml에서도 그대로 가져다 쓴다.
+  #     SPRING_DATASOURCE_USERNAME: root
+  #     SPRING_DATASOURCE_PASSWORD: password
+  #   networks:
+  #     - backend_network
+  #   depends_on: #db가 떠야 백엔드가 뜬다
+  #     - database
 
   database: #서비스명
     restart: always

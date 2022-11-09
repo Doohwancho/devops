@@ -12,7 +12,8 @@ const UpdateForm = (props) => {
   });
 
   useEffect(() => {
-    fetch('http://localhost:80/book/' + id)
+
+    fetch('http://localhost:80/api/book/' + id) //error
       .then((res) => res.json())
       .then((res) => {
         setBook(res);
@@ -29,7 +30,7 @@ const UpdateForm = (props) => {
   const submitBook = (e) => {
     e.preventDefault(); // submit이 action을 안타고 자기 할일을 그만함.
 
-    fetch('http://localhost:80/book/' + id, {
+    fetch('http://localhost:80/api/book/' + id, {
       method: 'PUT',
       headers: {
         'Content-Type': 'application/json; charset=utf-8',

@@ -3,7 +3,6 @@ import { useState } from 'react';
 import { Button } from 'react-bootstrap';
 
 const Detail = (props) => {
-  console.log('detail', props);
   const id = props.match.params.id;
 
   const [book, setBook] = useState({
@@ -13,7 +12,7 @@ const Detail = (props) => {
   });
 
   useEffect(() => {
-    fetch('http://localhost:80/book/' + id)
+    fetch('http://localhost:80/api/book/' + id)
       .then((res) => res.json())
       .then((res) => {
         setBook(res);
@@ -21,7 +20,7 @@ const Detail = (props) => {
   }, []);
 
   const deleteBook = () => {
-    fetch('http://localhost:80/book/' + id, {
+    fetch('http://localhost:80/api/book/' + id, {
       method: 'DELETE',
     })
       .then((res) => res.text())

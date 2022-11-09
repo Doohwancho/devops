@@ -36,5 +36,6 @@ x. Terraform
 Books
 
 A. 가상 면접 사례로 배우는 대규모 시스템 설계 기초\
-B. Effective DevOps with aws\
-C. DevOps Handbook
+B. 그림으로 공부하는 IT 인프라 구조\
+C. Effective DevOps with aws\
+D. DevOps Handbook

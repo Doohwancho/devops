@@ -6,10 +6,10 @@ const Home = () => {
 
   // 함수 실행시 최초 한번 실행되는 것 + 상태값이 변경될때마다 실행
   useEffect(() => {
-    fetch('http://localhost:80/book')
+
+    fetch('http://localhost:80/api/book')
       .then((res) => res.json())
       .then((res) => {
-        console.log(res);
         setBooks(res);
       }); // 비동기 함수
   }, []);
