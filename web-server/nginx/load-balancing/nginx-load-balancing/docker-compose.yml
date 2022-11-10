@@ -26,7 +26,7 @@ services:
       - TZ=Asia/Seoul
     depends_on:
       - frontend-a
-      # - frontend-b
+      - frontend-b
       # - frontend-c
 
   frontend-a:
@@ -45,21 +45,21 @@ services:
     depends_on: #backend가 먼저 떠야 frontend가 뜬다.
       - backend
 
-  # frontend-b:
-  #   restart: always
-  #   build: 
-  #     context: ./book-frontend/.
-  #     dockerfile: Dockerfile
-  #   volumes:
-  #     - "./book-frontend/:/app"
-  #     - "/app/node_modules"
-  #   expose:
-  #     - "3001"
-  #   networks:
-  #     - frontend_network
-  #     - backend_network
-  #   depends_on: #backend가 먼저 떠야 frontend가 뜬다.
-  #     - backend
+  frontend-b:
+    restart: always
+    build: 
+      context: ./book-frontend/.
+      dockerfile: Dockerfile
+    volumes:
+      - "./book-frontend/:/app"
+      - "/app/node_modules"
+    expose:
+      - "3001"
+    networks:
+      - frontend_network
+      - backend_network
+    depends_on: #backend가 먼저 떠야 frontend가 뜬다.
+      - backend
 
   # frontend-c:
   #   restart: always

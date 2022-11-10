@@ -13,6 +13,7 @@ a. apache-httpd\
 b. nginx-nginx :soon:\
 c. load-balancing :white_check_mark:\
 d. reverse proxy :white_check_mark:\
+e. ip_hash :white_check_mark:\
 x. http -> https redirect(ssl 인증서)\
 x. cache(static file)\
 x. web application firewall\
@@ -20,6 +21,9 @@ x. nginx 2중화\
 x. location /robots.txt 처리\
 x. keepAlive(프록시 이중화)\
 x. HAProxy
+
+
+
 
 ---\
 todos
@@ -31,7 +35,7 @@ c-2. least_conn instead of round-robin + backup :white_check_mark:\
 c-3. frontend & backend load balancing with backup server :white_check_mark:\
 c-?. docker-compose에서 backend container ports:는 되는데 expose:는 안됨
 
-d-1. rewrite로 /api/book 을 /book으로 redirect :white_check_mark:\ 
+d-1. rewrite로 /api/book 을 /book으로 redirect :white_check_mark:
 
 
 
