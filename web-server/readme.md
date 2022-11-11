@@ -33,7 +33,7 @@ b-1. nginx vs httpd performance test :white_check_mark:
 c-1. nginx로 load balancing 2 frontend server :white_check_mark:\
 c-2. least_conn instead of round-robin + backup :white_check_mark:\
 c-3. frontend & backend load balancing with backup server :white_check_mark:\
-c-?. docker-compose에서 backend container ports:는 되는데 expose:는 안됨
+c-4. docker-compose에서 backend container ports:는 되는데 expose:는 안된건 nginx에서 depends_on: backend 안해줘서 안붙었던 것 :white_check_mark:
 
 d-1. rewrite로 /api/book 을 /book으로 redirect :white_check_mark:
 

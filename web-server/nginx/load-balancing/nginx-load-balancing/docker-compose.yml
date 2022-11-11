@@ -26,8 +26,11 @@ services:
       - TZ=Asia/Seoul
     depends_on:
       - frontend-a
-      - frontend-b
+      # - frontend-b
       # - frontend-c
+      - backend-a
+      # - backend-b
+      # - backend-c
 
   frontend-a:
     restart: always
@@ -45,21 +48,21 @@ services:
     depends_on: #backend가 먼저 떠야 frontend가 뜬다.
       - backend
 
-  frontend-b:
-    restart: always
-    build: 
-      context: ./book-frontend/.
-      dockerfile: Dockerfile
-    volumes:
-      - "./book-frontend/:/app"
-      - "/app/node_modules"
-    expose:
-      - "3001"
-    networks:
-      - frontend_network
-      - backend_network
-    depends_on: #backend가 먼저 떠야 frontend가 뜬다.
-      - backend
+  # frontend-b:
+  #   restart: always
+  #   build: 
+  #     context: ./book-frontend/.
+  #     dockerfile: Dockerfile
+  #   volumes:
+  #     - "./book-frontend/:/app"
+  #     - "/app/node_modules"
+  #   expose:
+  #     - "3001"
+  #   networks:
+  #     - frontend_network
+  #     - backend_network
+  #   depends_on: #backend가 먼저 떠야 frontend가 뜬다.
+  #     - backend
 
   # frontend-c:
   #   restart: always
@@ -84,10 +87,10 @@ services:
     build:
       context: ./book-backend #빌드는 /book-backend에
       dockerfile: Dockerfile #Dockerfile로 한다. 그리고 docker compose up --build -d로 한다. 빌드해야하니까.
-    ports:
-      - "8080:8080" # Q. expose로 하면 안되는데 ports로 하면 됨. 왜지?
-    # expose:
-    #   - "8080"
+    # ports:
+    #   - "8080:8080" # ports는 docker container 외부로 포트 노출
+    expose:
+      - "8080" #expose는 도커 내부 네트워크에서 만든 backend_network 안에서만 8080 포트 노출. 도커 컨테이너 바깥에는 노출 안함
     environment:
       SPRING_DATASOURCE_URL: jdbc:mysql://database:3306/book?autoReconnect=true&useSSL=false&serverTimezone=UTC&characterEncoding=UTF-8 #autoReconnect=true&useSSL=false 이거 안하면 백엔드랑 디비랑 연결 안되더라
       #여기서 database는 위에 mysql을 정의한 서비스 명 "database". 이걸 application.yml에서도 그대로 가져다 쓴다.
@@ -103,8 +106,6 @@ services:
   #   build:
   #     context: ./book-backend #빌드는 /book-backend에
   #     dockerfile: Dockerfile #Dockerfile로 한다. 그리고 docker compose up --build -d로 한다. 빌드해야하니까.
-  #   ports:
-  #     - "8081:8080"
   #   # expose:
   #   #   - "8081"
   #   environment:
@@ -122,8 +123,6 @@ services:
   #   build:
   #     context: ./book-backend #빌드는 /book-backend에
   #     dockerfile: Dockerfile #Dockerfile로 한다. 그리고 docker compose up --build -d로 한다. 빌드해야하니까.
-  #   ports:
-  #     - "8082:8080"
   #   # expose:
   #   #   - "8082"
   #   environment:

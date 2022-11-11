@@ -14,7 +14,7 @@ b. network :white_check_mark:\
 c. Dockerfile :white_check_mark:\
 d. docker compose :white_check_mark:\
 e. docker swarm :white_check_mark:\
-f. docker-compose-project :white_check_mark:\ 
+f. docker-compose-project :white_check_mark:\
 x. docker 초기 기본 세팅\
 x. springboot env setup using docker-compose\
 x. registery- security위한 망분리
