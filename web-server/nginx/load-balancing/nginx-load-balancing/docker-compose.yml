@@ -84,7 +84,8 @@ services:
       - "8080" #expose는 도커 내부 네트워크에서 만든 backend_network 안에서만 8080 포트 노출. 도커 컨테이너 바깥에는 노출 안함
     environment:
       SPRING_DATASOURCE_URL: jdbc:mysql://database:3306/book?autoReconnect=true&useSSL=false&serverTimezone=UTC&characterEncoding=UTF-8 #autoReconnect=true&useSSL=false 이거 안하면 백엔드랑 디비랑 연결 안되더라
-      #여기서 database는 위에 mysql을 정의한 서비스 명 "database". 이걸 application.yml에서도 그대로 가져다 쓴다.
+      # 여기서 database는 위에 mysql을 정의한 서비스 명 "database". 
+      # 왜? docker에서는 컨테이너 ip가 랜덤하게 정해지기 때문에, 컨테이너 아이디로 ip를 대체한다
       SPRING_DATASOURCE_USERNAME: root
       SPRING_DATASOURCE_PASSWORD: password
     networks:
