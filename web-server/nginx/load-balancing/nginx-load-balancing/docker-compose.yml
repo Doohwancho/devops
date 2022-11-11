@@ -44,9 +44,6 @@ services:
       - "3000"
     networks:
       - frontend_network
-      - backend_network
-    depends_on: #backend가 먼저 떠야 frontend가 뜬다.
-      - backend
 
   # frontend-b:
   #   restart: always
@@ -60,9 +57,6 @@ services:
   #     - "3001"
   #   networks:
   #     - frontend_network
-  #     - backend_network
-  #   depends_on: #backend가 먼저 떠야 frontend가 뜬다.
-  #     - backend
 
   # frontend-c:
   #   restart: always
@@ -78,9 +72,6 @@ services:
   #     - "3002"
   #   networks:
   #     - frontend_network
-  #     - backend_network
-  #   depends_on: #backend가 먼저 떠야 frontend가 뜬다.
-  #     - backend
 
   backend-a:
     restart: always
