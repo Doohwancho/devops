@@ -24,8 +24,8 @@ B. Software Architecture\
 C. AWS\
 D. Docker\
 E. Web Server\
+F. Monitoring\
 x. CI/CD\
-x. Monitoring\
 x. gRPC\
 x. K8s\
 x. Terraform

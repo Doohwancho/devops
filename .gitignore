@@ -288,3 +288,9 @@ gradle-app.setting
 
 
 db/
+alertmanager/
+grafana/
+grafana_data/
+prometheus/
+prometheus_data/
+
