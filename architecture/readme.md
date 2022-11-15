@@ -1,32 +1,32 @@
 # 목차
 
 ## A. Macro
-a. [규모 확장 시스템 설계 기본](#a.-규모-확장-시스템-설계-기본) \
-b. [aws architecture by size](#a.-aws-architecture-by-size)
-1. [사용자가 본인 1명일 때](#1.-사용자가-본인-1명일-때)
-2. [사용자가 n명일 때](#2.-사용자가-n명일-때)
-3. [사용자가 100명 단위일 때](#3.-사용자가-100명-단위일-때)
-4. [사용자가 1000명 단위일 때](#4.-사용자가-1000명-단위일-때)
-5. [사용자가 10000명 단위일 때](#5.-사용자가-10000명-단위일-때)
-6. [사용자가 50만명 단위일 때](#6.-사용자가-50만명-단위일-때)
-7. [사용자가 100만명 단위일 때](#7.-사용자가-100만명-단위일-때)
-8. [사용자가 500만명 단위일 때](#8.-사용자가-500만명-단위일-때)
+a. [규모 확장 시스템 설계 기본](#a-규모-확장-시스템-설계-기본) \
+b. [aws architecture by size](#a-aws-architecture-by-size)
+1. [사용자가 본인 1명일 때](#1-사용자가-본인-1명일-때)
+2. [사용자가 n명일 때](#2-사용자가-n명일-때)
+3. [사용자가 100명 단위일 때](#3-사용자가-100명-단위일-때)
+4. [사용자가 1000명 단위일 때](#4-사용자가-1000명-단위일-때)
+5. [사용자가 10000명 단위일 때](#5-사용자가-10000명-단위일-때)
+6. [사용자가 50만명 단위일 때](#6-사용자가-50만명-단위일-때)
+7. [사용자가 100만명 단위일 때](#7-사용자가-100만명-단위일-때)
+8. [사용자가 500만명 단위일 때](#8-사용자가-500만명-단위일-때)
 
-c. [aws architecture for startup](#b.-aws-architecture-for-startup) \
-d. [3계층형 시스템](#c.-3계층형-시스템) \
-e. [web server](#d.-web-server) \
-f. [WAS](#e.-tomcat) \
-g. [Spring Security](#f.-spring-security) \
-h. [Spring Security JWT](#g.-spring-security-jwt) \
-i. [Spring MVC](#h.-spring-mvc) \
-j. [JDBC](#i.-jdbc) \
-k. [Database](#j.-database)
+c. [aws architecture for startup](#b-aws-architecture-for-startup) \
+d. [3계층형 시스템](#c-3계층형-시스템) \
+e. [web server](#d-web-server) \
+f. [WAS](#e-tomcat) \
+g. [Spring Security](#f-spring-security) \
+h. [Spring Security JWT](#g-spring-security-jwt) \
+i. [Spring MVC](#h-spring-mvc) \
+j. [JDBC](#i-jdbc) \
+k. [Database](#j-database)
 
 ## B. Micro
-a. [폰 노이만 구조](#a.-von-neumann-architecture) \
-b. [OSI on OS](#b.-osi-on-os) \
-c. [Compiler](#c.-compiler) \
-d. [JVM](#d.-jvm)
+a. [폰 노이만 구조](#a-von-neumann-architecture) \
+b. [OSI on OS](#b-osi-on-os) \
+c. [Compiler](#c-compiler) \
+d. [JVM](#d-jvm)
 
 
 
