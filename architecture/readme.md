@@ -24,9 +24,13 @@ k. [Database](#j-database)
 
 ## B. Micro
 a. [폰 노이만 구조](#a-von-neumann-architecture) \
-b. [OSI on OS](#b-osi-on-os) \
-c. [Compiler](#c-compiler) \
-d. [JVM](#d-jvm)
+b. [Operating System](#b-operating-system)
+1. [System Call](#1-system-call)
+2. [자원 관리](#2-자원-관리)
+
+c. [OSI on OS](#b-osi-on-os) \
+d. [Compiler](#c-compiler) \
+e. [JVM](#d-jvm)
 
 
 
@@ -198,7 +202,15 @@ c. Lambda
 ## a. Von Neumann Architecture
 ![Von Neumann Architecture](./images/von-neumann-architecture.gif)
 
-## b. OSI on OS
+## b. Operating System
+
+### 1. System Call
+![system call](./images/os-system-call.png)
+
+### 2. 자원 관리
+![컴퓨터 자원 관리](./images/자원-관리.png)
+
+## c. OSI on OS
 ![OSI on OS](./images/osi-os.png)
 
 ## c. Compiler
