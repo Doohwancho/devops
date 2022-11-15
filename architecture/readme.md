@@ -1,23 +1,32 @@
 # 목차
 
-A. Macro
+## A. Macro
 a. [규모 확장 시스템 설계 기본](#A.-규모-확장-시스템-설계-기본) \
-b. [aws architecture by size](##a.-AWS-architecture-by-size) \
+b. [aws architecture by size](##a.-aws-architecture-by-size)
+1. 사용자가 본인 1명일 때
+2. 사용자가 n명일 때
+3. 사용자가 100명 단위일 때
+4. 사용자가 1000명 단위일 때
+5. 사용자가 10000명 단위일 때
+6. 사용자가 50만명 단위일 때
+7. 사용자가 100만명 단위일 때
+8. 사용자가 500만명 단위일 때
+
 c. [aws architecture for startup](##b.-aws-architecture-for-startup) \
 d. [3계층형 시스템](##c.-3계층형-시스템) \
-e. [web server](##Web-Server) \
-f. [WAS](##Tomcat) \
-g. [Spring Security](##Spring-Security) \
-h. [Spring Security JWT](###Spring-Security-JWT) \
-i. [Spring MVC](##Spring-MVC) \
-j. [JDBC](##JDBC) \
-k. [Database](##Database)
+e. [web server](##web-server) \
+f. [WAS](##tomcat) \
+g. [Spring Security](##spring-security) \
+h. [Spring Security JWT](###spring-security-jwt) \
+i. [Spring MVC](##spring-mvc) \
+j. [JDBC](##jdbc) \
+k. [Database](##database)
 
-B. Micro
-a. [폰 노이만 구조](##Von-Neumann-Architecture) \
-b. [OSI on OS](##OSI-on-OS) \
-c. [Compiler](##Compiler) \
-d. [JVM](##JVM)
+## B. Micro
+a. [폰 노이만 구조](##von-neumann-architecture) \
+b. [OSI on OS](##osi-on-os) \
+c. [Compiler](##compiler) \
+d. [JVM](##jvm)
 
 
 
@@ -88,10 +97,11 @@ CloudWatch로 auto scaling(up+out)
 6. DB 캐싱과 읽기작업 부하 오프 로를 위한 읽기 전용 복제본 설정
 7. 오토 스케일하는 계층의 세션 상태 이전
 
-### 8. 상요자가 500만명 단위일 때
+### 8. 사용자가 500만명 단위일 때
 이정도 유저 사이즈면 아무리 경량화 해도 db write에 병목 발생함.
 
 1. Federation
+
 ![aws-500만명](./images/aws-5000000.png)
 
 데이터 베이스를 기능 및 목적에 따라 분리. 
@@ -99,11 +109,13 @@ db간 교차-함수 쿼리가 어려움
  
 
 2. Sharding
+
 db를 용도에 맞게 분리화 하더라도, db 테이블 자체가 너무 크거나,
 교차-함수 쿼리가 어려우면, 수평적 확장인 샤딩 고려.
 
 
 3. 특정 기능을 다른 종류의 DB로 변경
+
 NoSQL 도입 검토
 
 관리형 NoSQL 서비스인 DynamoDB 이용
