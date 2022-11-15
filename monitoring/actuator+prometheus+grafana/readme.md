@@ -34,7 +34,7 @@ docker-compose down
 
 
 
-#What is Spring Actuator?
+# What is Spring Actuator?
 
 스프링 모니터링할 때 필요한 서버 정보 보여줌.
 
