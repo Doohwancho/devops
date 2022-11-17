@@ -21,6 +21,9 @@ h. [Spring Security JWT](#g-spring-security-jwt) \
 i. [Spring MVC](#h-spring-mvc) \
 j. [JDBC](#i-jdbc) \
 k. [Database](#j-database)
+l. [Critical Rendering Path](#k-critical-rendering-path)
+1. [Critical Rendering Path 기본 구조](#1-critical-rendering-path-기본-구조)
+2. [Critical Rendering Path async 최적화](#2-critical-rendering-path-async-최적화)
 
 ## B. Micro
 a. [폰 노이만 구조](#a-von-neumann-architecture) \
@@ -199,6 +202,37 @@ c. Lambda
 
 ## j. Database
 ![Mysql](./images/mysql-architecture.png)
+
+## k. Critical Rendering Path
+
+### 1. Critical Rendering Path 기본 구조
+![crp1](./images/critical-rendering-path-1.png)
+![crp2](./images/critical-rendering-path-2.png)
+byte -> DOM Tree
+
+![crp3](./images/critical-rendering-path-3.png)
+DOM Tree + CSSOM Tree -> Render Tree
+
+![crp4](./images/critical-rendering-path-4.png)
+Layout
+
+![crp5](./images/critical-rendering-path-5.png)
+pixel
+
+![crp6](./images/critical-rendering-path-6.png)
+Paint (Render Tree in Layout with Pixel)
+
+
+### 2. Critical Rendering Path Async 최적화
+
+![crp7](./images/critical-rendering-path-7.png)
+![crp8](./images/critical-rendering-path-8.png)
+일반적 요청 순서
+
+![crp9](./images/critical-rendering-path-9.png)
+css, js를 async로 non-blocking로 요청
+
+
 
 # B. Low Level
 
