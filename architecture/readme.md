@@ -2,16 +2,15 @@
 
 ## A. Macro
 a. [규모 확장 시스템 설계 기본](#a-규모-확장-시스템-설계-기본) \
-b. [aws architecture by size](#b-aws-architecture-by-size)
-1. [사용자가 본인 1명일 때](#1-사용자가-본인-1명일-때)
-2. [사용자가 n명일 때](#2-사용자가-n명일-때)
-3. [사용자가 100명 단위일 때](#3-사용자가-100명-단위일-때)
-4. [사용자가 1000명 단위일 때](#4-사용자가-1000명-단위일-때)
-5. [사용자가 10000명 단위일 때](#5-사용자가-10000명-단위일-때)
-6. [사용자가 50만명 단위일 때](#6-사용자가-50만명-단위일-때)
-7. [사용자가 100만명 단위일 때](#7-사용자가-100만명-단위일-때)
-8. [사용자가 500만명 단위일 때](#8-사용자가-500만명-단위일-때)
-
+b. [aws architecture by size](#b-aws-architecture-by-size) \
+&nbsp;&nbsp;&nbsp;&nbsp;b-1. [사용자가 본인 1명일 때](#1-사용자가-본인-1명일-때) \
+&nbsp;&nbsp;&nbsp;&nbsp;b-2. [사용자가 n명일 때](#2-사용자가-n명일-때) \
+&nbsp;&nbsp;&nbsp;&nbsp;b-3. [사용자가 100명 단위일 때](#3-사용자가-100명-단위일-때) \
+&nbsp;&nbsp;&nbsp;&nbsp;b-4. [사용자가 1000명 단위일 때](#4-사용자가-1000명-단위일-때) \
+&nbsp;&nbsp;&nbsp;&nbsp;b-5. [사용자가 10000명 단위일 때](#5-사용자가-10000명-단위일-때) \
+&nbsp;&nbsp;&nbsp;&nbsp;b-6. [사용자가 50만명 단위일 때](#6-사용자가-50만명-단위일-때) \
+&nbsp;&nbsp;&nbsp;&nbsp;b-7. [사용자가 100만명 단위일 때](#7-사용자가-100만명-단위일-때) \
+&nbsp;&nbsp;&nbsp;&nbsp;b-8. [사용자가 500만명 단위일 때](#8-사용자가-500만명-단위일-때) \
 c. [aws architecture for startup](#c-aws-architecture-for-startup) \
 d. [3계층형 시스템](#d-3계층형-시스템) \
 e. [web server](#e-web-server) \
@@ -20,23 +19,20 @@ g. [Spring Security](#g-spring-security) \
 h. [Spring Security JWT](#h-spring-security-jwt) \
 i. [Spring MVC](#i-spring-mvc) \
 j. [JDBC](#j-jdbc) \
-k. [Database](#k-database)
-l. [Critical Rendering Path](#l-critical-rendering-path)
-1. [Critical Rendering Path 기본 구조](#1-critical-rendering-path-기본-구조)
-2. [Critical Rendering Path async 최적화](#2-critical-rendering-path-async-최적화)
-
+k. [Database](#k-database) \
+l. [Critical Rendering Path](#l-critical-rendering-path) \
+&nbsp;&nbsp;&nbsp;&nbsp;l-1. [Critical Rendering Path 기본 구조](#1-critical-rendering-path-기본-구조) \
+&nbsp;&nbsp;&nbsp;&nbsp;l-2. [Critical Rendering Path async 최적화](#2-critical-rendering-path-async-최적화) \
 m. [CI](#m-github-action-ci)
 
 ## B. Micro
 a. [폰 노이만 구조](#a-von-neumann-architecture) \
-b. [Operating System](#b-operating-system)
-1. [System Call](#1-system-call)
-2. [자원 관리](#2-자원-관리)
-
-c. [Network](#c-network)
-1. [Internet Protocol Flow](#1-internet-protocol-flow)
-2. [OSI on OS](#2-osi-on-os)
-
+b. [Operating System](#b-operating-system) \
+&nbsp;&nbsp;&nbsp;&nbsp;b-1. [System Call](#1-system-call) \
+&nbsp;&nbsp;&nbsp;&nbsp;b-2. [자원 관리](#2-자원-관리) \
+c. [Network](#c-network) \
+&nbsp;&nbsp;&nbsp;&nbsp;c-1. [Internet Protocol Flow](#1-internet-protocol-flow) \
+&nbsp;&nbsp;&nbsp;&nbsp;c-2. [OSI on OS](#2-osi-on-os) \
 d. [Compiler](#d-compiler) \
 e. [JVM](#e-jvm)
 
@@ -209,30 +205,30 @@ c. Lambda
 ## l. Critical Rendering Path
 
 ### 1. Critical Rendering Path 기본 구조
-![crp1](./images/critical-rendering-path-1.png)
-![crp2](./images/critical-rendering-path-2.png)
+![crp1](./images/critical-rendering-path-1.png) \
+![crp2](./images/critical-rendering-path-2.png) \
 byte -> DOM Tree
 
-![crp3](./images/critical-rendering-path-3.png)
+![crp3](./images/critical-rendering-path-3.png) \
 DOM Tree + CSSOM Tree -> Render Tree
 
-![crp4](./images/critical-rendering-path-4.png)
+![crp4](./images/critical-rendering-path-4.png) \
 Layout
 
-![crp5](./images/critical-rendering-path-5.png)
+![crp5](./images/critical-rendering-path-5.png) \
 pixel
 
-![crp6](./images/critical-rendering-path-6.png)
+![crp6](./images/critical-rendering-path-6.png) \
 Paint (Render Tree in Layout with Pixel)
 
 
 ### 2. Critical Rendering Path Async 최적화
 
-![crp7](./images/critical-rendering-path-7.png)
-![crp8](./images/critical-rendering-path-8.png)
+![crp7](./images/critical-rendering-path-7.png) \
+![crp8](./images/critical-rendering-path-8.png) \
 일반적 요청 순서
 
-![crp9](./images/critical-rendering-path-9.png)
+![crp9](./images/critical-rendering-path-9.png) \
 css, js를 async로 non-blocking로 요청
 
 
