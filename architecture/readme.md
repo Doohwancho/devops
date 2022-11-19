@@ -2,7 +2,7 @@
 
 ## A. Macro
 a. [규모 확장 시스템 설계 기본](#a-규모-확장-시스템-설계-기본) \
-b. [aws architecture by size](#a-aws-architecture-by-size)
+b. [aws architecture by size](#b-aws-architecture-by-size)
 1. [사용자가 본인 1명일 때](#1-사용자가-본인-1명일-때)
 2. [사용자가 n명일 때](#2-사용자가-n명일-때)
 3. [사용자가 100명 단위일 때](#3-사용자가-100명-단위일-때)
@@ -12,18 +12,20 @@ b. [aws architecture by size](#a-aws-architecture-by-size)
 7. [사용자가 100만명 단위일 때](#7-사용자가-100만명-단위일-때)
 8. [사용자가 500만명 단위일 때](#8-사용자가-500만명-단위일-때)
 
-c. [aws architecture for startup](#b-aws-architecture-for-startup) \
-d. [3계층형 시스템](#c-3계층형-시스템) \
-e. [web server](#d-web-server) \
-f. [WAS](#e-tomcat) \
-g. [Spring Security](#f-spring-security) \
-h. [Spring Security JWT](#g-spring-security-jwt) \
-i. [Spring MVC](#h-spring-mvc) \
-j. [JDBC](#i-jdbc) \
-k. [Database](#j-database)
-l. [Critical Rendering Path](#k-critical-rendering-path)
+c. [aws architecture for startup](#c-aws-architecture-for-startup) \
+d. [3계층형 시스템](#d-3계층형-시스템) \
+e. [web server](#e-web-server) \
+f. [WAS](#f-tomcat) \
+g. [Spring Security](#g-spring-security) \
+h. [Spring Security JWT](#h-spring-security-jwt) \
+i. [Spring MVC](#i-spring-mvc) \
+j. [JDBC](#j-jdbc) \
+k. [Database](#k-database)
+l. [Critical Rendering Path](#l-critical-rendering-path)
 1. [Critical Rendering Path 기본 구조](#1-critical-rendering-path-기본-구조)
 2. [Critical Rendering Path async 최적화](#2-critical-rendering-path-async-최적화)
+
+m. [CI](#m-github-action-ci)
 
 ## B. Micro
 a. [폰 노이만 구조](#a-von-neumann-architecture) \
@@ -39,11 +41,12 @@ d. [Compiler](#d-compiler) \
 e. [JVM](#e-jvm)
 
 
+# Macro
 
-# A. 규모 확장 시스템 설계 기본
+## a. 규모 확장 시스템 설계 기본
 ![규모확장 시스템설계 기본](./images/규모확장-시스템설계-기본.png)
 
-## a. AWS architecture by size
+## b. AWS architecture by size
 
 ### 1. 사용자가 본인 1명일 때
 ![aws-1](./images/aws-1.png)
@@ -142,7 +145,7 @@ ex)
 
 
 
-## b. aws architecture for startup
+## c. aws architecture for startup
 ![aws architecture for startup](./images/aws-architecture-for-startup.png)
 
 ### 1. 요약
@@ -179,31 +182,31 @@ c. Lambda
 
 
 
-## c. 3계층형 시스템
+## d. 3계층형 시스템
 ![3계층형 시스템](./images/3계층-시스템.png)
 
-## d. Web Server
+## e. Web Server
 ![nginx](./images/nginx-architecture.png)
 
-## e. Tomcat
+## f. Tomcat
 ![tomcat](./images/tomcat-architecture.png)
 
-## f. Spring Security
+## g. Spring Security
 ![spring security](./images/spring-security-architecture.jpg)
 
-### g. Spring Security JWT
+## h. Spring Security JWT
 ![spring security jwt](./images/spring-security-jwt-architecture.png)
 
-## h. Spring MVC
+## i. Spring MVC
 ![Spring-MVC](./images/spring-mvc.png)
 
-## i. JDBC
+## j. JDBC
 ![jdbc](./images/jdbc-architecture.jpg)
 
-## j. Database
+## k. Database
 ![Mysql](./images/mysql-architecture.png)
 
-## k. Critical Rendering Path
+## l. Critical Rendering Path
 
 ### 1. Critical Rendering Path 기본 구조
 ![crp1](./images/critical-rendering-path-1.png)
@@ -232,6 +235,10 @@ Paint (Render Tree in Layout with Pixel)
 ![crp9](./images/critical-rendering-path-9.png)
 css, js를 async로 non-blocking로 요청
 
+
+## m. Github-Action CI
+![github action](./images/github-action-ci.png)
+commit, push 하면 github에 별도 서버에서 build & test + alpha 해줌
 
 
 # B. Low Level
