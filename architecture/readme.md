@@ -24,9 +24,9 @@ l. [Critical Rendering Path](#l-critical-rendering-path) \
 &nbsp;&nbsp;&nbsp;&nbsp;l-1. [Critical Rendering Path 기본 구조](#1-critical-rendering-path-기본-구조) \
 &nbsp;&nbsp;&nbsp;&nbsp;l-2. [Critical Rendering Path async 최적화](#2-critical-rendering-path-async-최적화) \
 m. [Version Control](#m-version-control) \
-&nsbp;&nsbp;&nsbp;&nsbp;m-1. [Git Overall](#1-git-overall) \
-&nsbp;&nsbp;&nsbp;&nsbp;m-2. [Git Branch](#2-git-branch) \
-&nsbp;&nsbp;&nsbp;&nsbp;m-3. [Git Workflow](#3-git-workflow) \
+&nbsp;&nbsp;&nbsp;&nbsp;m-1. [Git Overall](#1-git-overall) \
+&nbsp;&nbsp;&nbsp;&nbsp;m-2. [Git Branch](#2-git-branch) \
+&nbsp;&nbsp;&nbsp;&nbsp;m-3. [Git Workflow](#3-git-workflow) \
 n. [CI](#n-github-action-ci)
 
 
