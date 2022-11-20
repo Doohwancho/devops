@@ -26,6 +26,7 @@ D. Docker\
 E. Web Server\
 F. Monitoring\
 x. CI/CD\
+x. Audit\
 x. gRPC\
 x. K8s\
 x. Terraform
