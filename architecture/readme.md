@@ -23,7 +23,12 @@ k. [Database](#k-database) \
 l. [Critical Rendering Path](#l-critical-rendering-path) \
 &nbsp;&nbsp;&nbsp;&nbsp;l-1. [Critical Rendering Path 기본 구조](#1-critical-rendering-path-기본-구조) \
 &nbsp;&nbsp;&nbsp;&nbsp;l-2. [Critical Rendering Path async 최적화](#2-critical-rendering-path-async-최적화) \
-m. [CI](#m-github-action-ci)
+m. [Version Control](#m-version-control) \
+&nsbp;&nsbp;&nsbp;&nsbp;m-1. [Git Overall](#1-git-overall) \
+&nsbp;&nsbp;&nsbp;&nsbp;m-2. [Git Branch](#2-git-branch) \
+&nsbp;&nsbp;&nsbp;&nsbp;m-3. [Git Workflow](#3-git-workflow) \
+n. [CI](#n-github-action-ci)
+
 
 ## B. Micro
 a. [폰 노이만 구조](#a-von-neumann-architecture) \
@@ -231,8 +236,22 @@ Paint (Render Tree in Layout with Pixel)
 ![crp9](./images/critical-rendering-path-9.png) \
 css, js를 async로 non-blocking로 요청
 
+## m. Version Control
 
-## m. Github-Action CI
+### 1. Git Overall
+
+![git overall](./images/git-1.png)
+
+
+### 2. Git Branch
+
+![git branch](./images/git-2.png)
+
+### 3. Git Workflow
+
+![git workflow](./images/git-3.png)
+
+## n. Github-Action CI
 ![github action](./images/github-action-ci.png)
 commit, push 하면 github에 별도 서버에서 build & test + alpha 해줌
 
