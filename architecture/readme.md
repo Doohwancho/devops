@@ -1,53 +1,82 @@
 # 목차
 
-## A. Macro
-a. [규모 확장 시스템 설계 기본](#a-규모-확장-시스템-설계-기본) \
-b. [aws architecture by size](#b-aws-architecture-by-size) \
-&nbsp;&nbsp;&nbsp;&nbsp;b-1. [사용자가 본인 1명일 때](#1-사용자가-본인-1명일-때) \
-&nbsp;&nbsp;&nbsp;&nbsp;b-2. [사용자가 n명일 때](#2-사용자가-n명일-때) \
-&nbsp;&nbsp;&nbsp;&nbsp;b-3. [사용자가 100명 단위일 때](#3-사용자가-100명-단위일-때) \
-&nbsp;&nbsp;&nbsp;&nbsp;b-4. [사용자가 1000명 단위일 때](#4-사용자가-1000명-단위일-때) \
-&nbsp;&nbsp;&nbsp;&nbsp;b-5. [사용자가 10000명 단위일 때](#5-사용자가-10000명-단위일-때) \
-&nbsp;&nbsp;&nbsp;&nbsp;b-6. [사용자가 50만명 단위일 때](#6-사용자가-50만명-단위일-때) \
-&nbsp;&nbsp;&nbsp;&nbsp;b-7. [사용자가 100만명 단위일 때](#7-사용자가-100만명-단위일-때) \
-&nbsp;&nbsp;&nbsp;&nbsp;b-8. [사용자가 500만명 단위일 때](#8-사용자가-500만명-단위일-때) \
-c. [aws architecture for startup](#c-aws-architecture-for-startup) \
-d. [3계층형 시스템](#d-3계층형-시스템) \
-e. [web server](#e-web-server) \
-f. [WAS](#f-tomcat) \
-g. [Spring Security](#g-spring-security) \
-h. [Spring Security JWT](#h-spring-security-jwt) \
-i. [Spring MVC](#i-spring-mvc) \
-j. [JDBC](#j-jdbc) \
-k. [Database](#k-database) \
-l. [Critical Rendering Path](#l-critical-rendering-path) \
+
+a. [폰 노이만 구조](#von-neumann-architecture) \
+b. [Operating System](#operating-system) \
+&nbsp;&nbsp;&nbsp;&nbsp;b-1. [System Call](#1-system-call) \
+&nbsp;&nbsp;&nbsp;&nbsp;b-2. [자원 관리](#2-자원-관리) \
+c. [Network](#network) \
+&nbsp;&nbsp;&nbsp;&nbsp;c-1. [Internet Protocol Flow](#1-internet-protocol-flow) \
+&nbsp;&nbsp;&nbsp;&nbsp;c-2. [OSI on OS](#2-osi-on-os) \
+d. [규모 확장 시스템 설계 기본](#규모-확장-시스템-설계-기본) \
+e. [aws architecture by size](#aws-architecture-by-size) \
+&nbsp;&nbsp;&nbsp;&nbsp;1. [사용자가 본인 1명일 때](#1-사용자가-본인-1명일-때) \
+&nbsp;&nbsp;&nbsp;&nbsp;2. [사용자가 n명일 때](#2-사용자가-n명일-때) \
+&nbsp;&nbsp;&nbsp;&nbsp;3. [사용자가 100명 단위일 때](#3-사용자가-100명-단위일-때) \
+&nbsp;&nbsp;&nbsp;&nbsp;4. [사용자가 1000명 단위일 때](#4-사용자가-1000명-단위일-때) \
+&nbsp;&nbsp;&nbsp;&nbsp;5. [사용자가 10000명 단위일 때](#5-사용자가-10000명-단위일-때) \
+&nbsp;&nbsp;&nbsp;&nbsp;6. [사용자가 50만명 단위일 때](#6-사용자가-50만명-단위일-때) \
+&nbsp;&nbsp;&nbsp;&nbsp;7. [사용자가 100만명 단위일 때](#7-사용자가-100만명-단위일-때) \
+&nbsp;&nbsp;&nbsp;&nbsp;8. [사용자가 500만명 단위일 때](#8-사용자가-500만명-단위일-때) \
+f. [aws architecture for startup](#aws-architecture-for-startup) \
+g. [3계층형 시스템](#3계층형-시스템) \
+h. [web server](#web-server) \
+i. [WAS](#tomcat) \
+j. [Spring Security](#spring-security) \
+&nbsp;&nbsp;&nbsp;&nbsp;1. [암호화](#암호화) \
+&nbsp;&nbsp;&nbsp;&nbsp;2. [대칭 키](#대칭-키) \
+&nbsp;&nbsp;&nbsp;&nbsp;3. [비대칭 키](#비대칭-키) \
+&nbsp;&nbsp;&nbsp;&nbsp;4. [대칭키 + 비대칭 키](#대칭-키-+-비대칭-키) \
+&nbsp;&nbsp;&nbsp;&nbsp;5. [session](#session) \
+&nbsp;&nbsp;&nbsp;&nbsp;6. [JWT](#jwt) \
+&nbsp;&nbsp;&nbsp;&nbsp;7. [Refresh token](#refresh-token) \
+&nbsp;&nbsp;&nbsp;&nbsp;8. [Spring Security basic architecture](#spring-security-basic) \
+&nbsp;&nbsp;&nbsp;&nbsp;9. [Spring Security JWT](#spring-security-jwt) \
+k. [Spring MVC](#spring-mvc) \
+l. [JVM](#jvm) \
+m. [JDBC](#jdbc) \
+n. [Database](#database) \
+o. [Critical Rendering Path](#critical-rendering-path) \
 &nbsp;&nbsp;&nbsp;&nbsp;l-1. [Critical Rendering Path 기본 구조](#1-critical-rendering-path-기본-구조) \
 &nbsp;&nbsp;&nbsp;&nbsp;l-2. [Critical Rendering Path async 최적화](#2-critical-rendering-path-async-최적화) \
-m. [Version Control](#m-version-control) \
+p. [Version Control](#version-control) \
 &nbsp;&nbsp;&nbsp;&nbsp;m-1. [Git Overall](#1-git-overall) \
 &nbsp;&nbsp;&nbsp;&nbsp;m-2. [Git Branch](#2-git-branch) \
 &nbsp;&nbsp;&nbsp;&nbsp;m-3. [Git Workflow](#3-git-workflow) \
-n. [CI](#n-github-action-ci)
+q. [Compiler](#compiler) \
+r. [CI](#github-action-ci)
 
 
-## B. Micro
-a. [폰 노이만 구조](#a-von-neumann-architecture) \
-b. [Operating System](#b-operating-system) \
-&nbsp;&nbsp;&nbsp;&nbsp;b-1. [System Call](#1-system-call) \
-&nbsp;&nbsp;&nbsp;&nbsp;b-2. [자원 관리](#2-자원-관리) \
-c. [Network](#c-network) \
-&nbsp;&nbsp;&nbsp;&nbsp;c-1. [Internet Protocol Flow](#1-internet-protocol-flow) \
-&nbsp;&nbsp;&nbsp;&nbsp;c-2. [OSI on OS](#2-osi-on-os) \
-d. [Compiler](#d-compiler) \
-e. [JVM](#e-jvm)
 
 
-# Macro
 
-## a. 규모 확장 시스템 설계 기본
+## Von Neumann Architecture
+![Von Neumann Architecture](./images/von-neumann-architecture.gif)
+
+## Operating System
+
+### 1. System Call
+![system call](./images/os-system-call.png)
+
+### 2. 자원 관리
+![컴퓨터 자원 관리](./images/자원-관리.png)
+
+## Network
+
+### 1. Internet Protocol Flow
+![Internet Protocol Flow](./images/internet-protocol-flow.png)
+
+### 2. OSI on OS
+![OSI on OS](./images/osi-os.png)
+
+
+
+
+
+## 규모 확장 시스템 설계 기본
 ![규모확장 시스템설계 기본](./images/규모확장-시스템설계-기본.png)
 
-## b. AWS architecture by size
+## AWS architecture by size
 
 ### 1. 사용자가 본인 1명일 때
 ![aws-1](./images/aws-1.png)
@@ -146,7 +175,7 @@ ex)
 
 
 
-## c. aws architecture for startup
+## aws architecture for startup
 ![aws architecture for startup](./images/aws-architecture-for-startup.png)
 
 ### 1. 요약
@@ -183,31 +212,106 @@ c. Lambda
 
 
 
-## d. 3계층형 시스템
+## 3계층형 시스템
 ![3계층형 시스템](./images/3계층-시스템.png)
 
-## e. Web Server
+## Web Server
 ![nginx](./images/nginx-architecture.png)
 
-## f. Tomcat
+## Tomcat
 ![tomcat](./images/tomcat-architecture.png)
 
-## g. Spring Security
+## Spring Security
+
+### 암호화
+![암호화](./images/security-encryption-algorithms.png)
+
+### 대칭 키
+![대칭 키](./images/security-대칭키.png)
+
+### 비대칭 키
+![비대칭 키](./images/security-비대칭키.png)
+
+공개키와 비밀키는 대칭이다.\
+공개키로 잠긴 문서는 비밀키로만 unlock 가능하다.
+
+### 대칭 키 + 비대칭 키
+비대칭키를 대칭키 교환용으로 사용.\
+왜? 비대칭키 느림, 대칭키 빠름.
+
+![비대칭 키](./images/security-대칭키+비대칭키.png)
+
+---
+step1) server.secretKey -> client
+
+(2)에서 서버의 공개키를 client에게 주면,\
+(3)에서 client가 서버의 공개키로 자신의 private key를 암호화 해서\
+(4,5)server.publicKey(client.secretKey)를 서버로 보냄\
+(6)에서 서버는 server.secretKey로 server.publicKey로 암호화 된 client.secretKey를 복호화함.\
+---
+step2) client.secretKey -> server
+
+(2~6)를 입장 바꿔서 반복
+
+---
+step3) handshake 이후 대칭키 통신
+
+(7,8)서버는 클라이언트에게 client.privateKey잘 받았다고 통보. client: 오키\
+(9)client-server는 이제부터 대칭 키 방식으로 동작함.
+
+### session
+![비대칭 키](./images/security-session.png)
+
+
+### jwt
+why?
+
+1. 유저 정보 서버에서 보관 -> 클라이언트에서 보관 (부하)
+2. no more slow db io for session-validation
+3. session is bad at scale-out
+
+![jwt1](./images/security-jwt-1.png)
+
+1. client->server 로그인 성공
+2. (header + payload + 서버의 secret key)로 암호화 한 jwt을 client에게 줌
+3. client는 이제부터 항상 http header에 jwt token을 첨부해서 보냄
+4. 서버는 jwt토큰을 서버의 secret key로 복호화 해서 유저가 보낸게 맞다는걸 인증(authenticate)함.
+
+
+![jwt2](./images/security-jwt-2.png)
+
+1. header -> who is issuer is + expiration date
+2. payload -> additional infos
+3. signiture -> encrypt(header, payload, server.secretKey)
+
+
+
+### refresh token
+why?
+1. jwt token 유효기한 1년인데 탈취 당하면 1년동안 자유이용권 
+2. 유효기간 짧게, refresh token으로 재갱신하게 하면, jwt token 털려도 잠깐동안만 이용 가능
+
+![비대칭 키](./images/security-refresh-token.png)
+
+### Spring Security Basic
 ![spring security](./images/spring-security-architecture.jpg)
 
-## h. Spring Security JWT
+### Spring Security JWT
 ![spring security jwt](./images/spring-security-jwt-architecture.png)
 
-## i. Spring MVC
+## Spring MVC
 ![Spring-MVC](./images/spring-mvc.png)
 
-## j. JDBC
+## JVM
+![JVM](./images/jvm-architecture.png)
+
+## JDBC
 ![jdbc](./images/jdbc-architecture.jpg)
 
-## k. Database
+## Database
 ![Mysql](./images/mysql-architecture.png)
 
-## l. Critical Rendering Path
+## Critical Rendering Path
 
 ### 1. Critical Rendering Path 기본 구조
 ![crp1](./images/critical-rendering-path-1.png) \
@@ -236,7 +340,7 @@ Paint (Render Tree in Layout with Pixel)
 ![crp9](./images/critical-rendering-path-9.png) \
 css, js를 async로 non-blocking로 요청
 
-## m. Version Control
+## Version Control
 
 ### 1. Git Overall
 
@@ -251,35 +355,13 @@ css, js를 async로 non-blocking로 요청
 
 ![git workflow](./images/git-3.png)
 
-## n. Github-Action CI
+
+## Compiler
+![compiler](./images/compiler.png)
+
+## Github-Action CI
 ![github action](./images/github-action-ci.png)
 commit, push 하면 github에 별도 서버에서 build & test + alpha 해줌
 
 
-# B. Low Level
-
-## a. Von Neumann Architecture
-![Von Neumann Architecture](./images/von-neumann-architecture.gif)
-
-## b. Operating System
-
-### 1. System Call
-![system call](./images/os-system-call.png)
-
-### 2. 자원 관리
-![컴퓨터 자원 관리](./images/자원-관리.png)
-
-## c. Network
-
-### 1. Internet Protocol Flow
-![Internet Protocol Flow](./images/internet-protocol-flow.png)
-
-### 2. OSI on OS
-![OSI on OS](./images/osi-os.png)
-
-## d. Compiler
-![compiler](./images/compiler.png)
-
-## e. JVM
-![JVM](./images/jvm-architecture.png)
 
