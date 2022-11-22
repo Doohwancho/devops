@@ -3,11 +3,25 @@
 
 a. [폰 노이만 구조](#von-neumann-architecture) \
 b. [Operating System](#operating-system) \
-&nbsp;&nbsp;&nbsp;&nbsp;b-1. [System Call](#1-system-call) \
-&nbsp;&nbsp;&nbsp;&nbsp;b-2. [자원 관리](#2-자원-관리) \
+&nbsp;&nbsp;&nbsp;&nbsp;1. [System Call](#1-system-call) \
+&nbsp;&nbsp;&nbsp;&nbsp;2. [자원 관리](#2-자원-관리) \
 c. [Network](#network) \
-&nbsp;&nbsp;&nbsp;&nbsp;c-1. [Internet Protocol Flow](#1-internet-protocol-flow) \
-&nbsp;&nbsp;&nbsp;&nbsp;c-2. [OSI on OS](#2-osi-on-os) \
+&nbsp;&nbsp;&nbsp;&nbsp;1. [브라우저에 google.com 치면 일어나는 일](#브라우저에-google.com-치면-일어나는-일) \
+&nbsp;&nbsp;&nbsp;&nbsp;2. [Http](#http) \
+&nbsp;&nbsp;&nbsp;&nbsp;3. [Url](#url) \
+&nbsp;&nbsp;&nbsp;&nbsp;4. [DNS](#dns) \
+&nbsp;&nbsp;&nbsp;&nbsp;5. [Packet](#packet) \
+&nbsp;&nbsp;&nbsp;&nbsp;6. [OSI Layers on Operating System](#osi-layers-on-os) \
+&nbsp;&nbsp;&nbsp;&nbsp;7. [1. Physical Layer](#1-physical-layer) \
+&nbsp;&nbsp;&nbsp;&nbsp;8. [2. Datalink Layer](#2-datalink-layer-on-l2-switch(frame)) \
+&nbsp;&nbsp;&nbsp;&nbsp;9. [ARP Protocol](#arp-protocol) \
+&nbsp;&nbsp;&nbsp;&nbsp;10. [NAT](#nat) \
+&nbsp;&nbsp;&nbsp;&nbsp;11. [DMZ](#dmz) \
+&nbsp;&nbsp;&nbsp;&nbsp;12. [Firewall](#firewall) \
+&nbsp;&nbsp;&nbsp;&nbsp;13. [3. Network Layer](#network-layer-on-l3-switch(packet)) \
+&nbsp;&nbsp;&nbsp;&nbsp;14. [3 Way Handshake](#3-way-handshake) \
+&nbsp;&nbsp;&nbsp;&nbsp;15. [SSL](#ssl) \
+&nbsp;&nbsp;&nbsp;&nbsp;16. [4 Way Handshake](#4-way-handshake) \
 d. [규모 확장 시스템 설계 기본](#규모-확장-시스템-설계-기본) \
 e. [aws architecture by size](#aws-architecture-by-size) \
 &nbsp;&nbsp;&nbsp;&nbsp;1. [사용자가 본인 1명일 때](#1-사용자가-본인-1명일-때) \
@@ -37,12 +51,12 @@ l. [JVM](#jvm) \
 m. [JDBC](#jdbc) \
 n. [Database](#database) \
 o. [Critical Rendering Path](#critical-rendering-path) \
-&nbsp;&nbsp;&nbsp;&nbsp;l-1. [Critical Rendering Path 기본 구조](#1-critical-rendering-path-기본-구조) \
-&nbsp;&nbsp;&nbsp;&nbsp;l-2. [Critical Rendering Path async 최적화](#2-critical-rendering-path-async-최적화) \
+&nbsp;&nbsp;&nbsp;&nbsp;1. [Critical Rendering Path 기본 구조](#1-critical-rendering-path-기본-구조) \
+&nbsp;&nbsp;&nbsp;&nbsp;2. [Critical Rendering Path async 최적화](#2-critical-rendering-path-async-최적화) \
 p. [Version Control](#version-control) \
-&nbsp;&nbsp;&nbsp;&nbsp;m-1. [Git Overall](#1-git-overall) \
-&nbsp;&nbsp;&nbsp;&nbsp;m-2. [Git Branch](#2-git-branch) \
-&nbsp;&nbsp;&nbsp;&nbsp;m-3. [Git Workflow](#3-git-workflow) \
+&nbsp;&nbsp;&nbsp;&nbsp;1. [Git Overall](#1-git-overall) \
+&nbsp;&nbsp;&nbsp;&nbsp;2. [Git Branch](#2-git-branch) \
+&nbsp;&nbsp;&nbsp;&nbsp;3. [Git Workflow](#3-git-workflow) \
 q. [Compiler](#compiler) \
 r. [CI](#github-action-ci)
 
@@ -50,10 +64,12 @@ r. [CI](#github-action-ci)
 
 
 
-## Von Neumann Architecture
+# Von Neumann Architecture
 ![Von Neumann Architecture](./images/von-neumann-architecture.gif)
 
-## Operating System
+# Operating System
+![OSI on OS2](./images/network-osi-os2.png)
+
 
 ### 1. System Call
 ![system call](./images/os-system-call.png)
@@ -61,22 +77,222 @@ r. [CI](#github-action-ci)
 ### 2. 자원 관리
 ![컴퓨터 자원 관리](./images/자원-관리.png)
 
-## Network
+# Network
 
-### 1. Internet Protocol Flow
-![Internet Protocol Flow](./images/internet-protocol-flow.png)
+### 브라우저에 google.com 치면 일어나는 일
 
-### 2. OSI on OS
-![OSI on OS](./images/osi-os.png)
+![google.com](./images/network-웹사이트에-url.png)
+
+### http
+
+http request
+
+ex.
+http://www.google.com/advisor/selectBeerTaste.do
+![http request](./images/network-http-request.png)
+
+http response
+![http response](./images/network-http-response.png)
+
+
+### url
+![url](./images/network-url.png)
+
+### DNS
+
+DNS 얻는 과정
+
+1. 자기 PC 메모리 뒤져서 DNS cache 메모리에 google.com에 매핑되는 공인 IP address를 찾음
+2. 없으면, 자기 PC에 host 파일 뒤짐.
+3. 그래도 없으면, DNS server한테 물어봄.
+    1. 대부분 공유기 쓰는데, 공유기는 DNS forwarding 기능 제공함. 그래서 공유기가 응답 해줌
+4. 그래도 없으면, ISP(kt,lg,sk)의 root DNS server한테 물음. 응답 오면 DNS cache에 저장해둠. 나중에 또 안물으려고.
+5. 그래도 없으면 ICANN에게 물어보고 응답오면 DNS cache에 저장해 둠.
+
+![DNS 1](./images/network-dns-1.png)
+![DNS 2](./images/network-dns-2.png)
+
+
+### Packet
+
+최대 사이즈 1500byte(1.5kb)
+
+![packet](./images/network-packet.png)
+
+Q. 만약 1.5MB 사이즈의 파일을 보낸다면?
+1. HDD, SSD에서 1.5MB중 64kb 단위로 쪼개서 읽음
+2. RAM buffer에 저 쪼갠 64kb 조각들 중 몇개를 올림
+3. Application Layer에서 http protocol에 따라 http request 작성
+4. Process가 File이든 Socket이든(본질적으로 동일) 입출력 시도하면,
+5. RAM buffer에 저장된 64kb 사이즈의 stream형식의 길다란 데이터를 TCP 버퍼에 옮겨 담은 후,
+6. Transport Layer에서 encapsulation으로 일정 단위(1460byte)로 끊어서 Segment화 한 후에 번호 붙임(비동기로 쏠건데, 그래야 나중에 서순 재정렬 할 수 있으니까)
+7. Network Layer에서 Encapsulation 해서 packet으로 만든다. (1460byte payload data + tcp header 20byte + ip header 20byte == 1500byte)
+8. 이걸 또 Datalink Layer에서 encapsulate해서 frame으로 만든다.
+9. frame은 DataLink Layer에 LAN card(NIC)을 거쳐서 Router을 거쳐서 인터넷으로 나간다.
+
+![packet](./images/network-packet-3.png)
+
+data를 보낼 땐,\
+7th. Application Layer\
+4th. Transport Layer\
+3th. Network Layer\
+2nd. Datalink Layer\
+단계별로 payload + 헤더로 감싸서 보냄.
+
+![packet](./images/network-packet-4.png)
+
+packet을 받을 땐, 반대로
+2nd. Datalink Layer\
+3th. Network Layer\
+4th. Transport Layer\
+7th. Application Layer
+
+헤더 까면서 위층으로 payload보내며 올라감.\
+File이건 Socket이건 Stream에 비동기로 오는애들 순서 상관없이 쌓아놓고,
+맨 마지막에 한번에 순서 정렬함. 
+
+
+### OSI Layers on OS
+
+![OSI on OS](./images/network-osi-os.png)
+
+Application Layer에서 app Process가 File이건 Socket이건 소켓을 열어서\
+Transport Layer인 TCP에서 Segment를 만들고\
+Network Layer인 IP에서 Packet을 만들고\
+Datalink Layer인 Device Driver에서 Frame을 만들어서\
+Physical Layer인 NIC를 통해 전송
+
+![OSI on OS2](./images/network-osi-os2.png)
+
+
+### 1. Physical Layer
+
+![physical-1](./images/network-osi-physical-1.png)
+voltage가 위로 튀면1, 아래로 튀면 0
+
+
+어디가 처음인지 어떻게 앎? (ethernet protocol 기준)
+![physical-2](./images/network-osi-physical-2.png)
+1. 맨 처음 0 voltage
+2. 처음 데이터 보내기전 56bit의 distinctive pattern의 'preamble'보냄. 101010101010...
+
+![physical-3](./images/network-osi-physical-3.png)
+3. 11이 갑툭튀함 -> 데이터 보내기 시작한다는 신호
 
 
 
+물리층에서 가장 많이 고민하는 사항
+1. bandwidth(대역폭) : 몇차선 도로?
+2. latency : n차선 도로에서 차가 막히는 정도라고 보면 됨.
 
 
-## 규모 확장 시스템 설계 기본
+### 2. Datalink Layer on L2 Switch(Frame)
+![ethernet protocol](./images/network-osi-datalink-2.png)
+1. preamble: physical layer에서 56개의 10101010...
+2. B는 destination의 mac 주소. 이 경우, router의 mac 주소.
+3. A는 보내는 기기의 mac 주소.
+
+![datalink on router](./images/network-osi-datalink-1.png)
+
+L2 switch\
+pass mac address through (hub || bridge || 공유기)\
+종류1. hub = 들어온 input 무지성으로 연결된 놈들에게 다 쏨\
+종류2. bridge = 들어온 input 무지성으로 다 쏘는게 아니라 Frame(Ethernet protocol) 까봐서 도착지 정해서 보냄.\
+종류3. 공유기 = bridge + NAT
+
+
+
+### ARP Protocol
+
+LAN안에 내 pc가, 공유기의 MAC Address 몰라서, ARP 날림.
+
+ARP protocol: IP address로 mac address찾는 방법\
+라우터의 mac address 찾기
+
+![ARP](./images/network-arp-1.png)
+
+![ARP](./images/network-arp-2.png)
+
+목적지 맥주소 몰라서 FF FF FF FF FF FF로 작성함\
+1로 꽉 채운 것. 그럼 LAN안 모두한테 보냄.
+
+![ARP](./images/network-arp-3.png)
+
+중간에 00 00 00 00 00 00이 맥주소 비워둔 것. 도착지 MAC주소 모르니까.\
+c0 a8 00 1e도 도착지 ip(라우터 공인ip)를 16진수화 한 것\
+ip주소가 안맞으면 요청 무시, 맞으면 본인의 MAC주소 적어 답장
+
+![ARP](./images/network-arp-4.png)
+
+ARP table
+![ARP](./images/network-arp-5.png)
+
+
+
+### NAT
+
+![NAT](./images/network-NAT.png)
+
+1. ip 주소 절약
+2. 내부 주소 숨김
+
+### DMZ
+![DMZ](./images/network-dmz.png)
+
+내부 네트워크에 존재하지만, 외부에서 접근할 수 있는 특수한 네트워크 영역\
+내부 네트워크에 바로 접속 못하게 보안목적
+
+### Firewall
+
+![firewall](./images/network-firewall.png)
+
+1. 패킷 필터형
+   1. 통과하는 패킷을 포트 번호나 IP 주소를 바탕으로 필터링한다.
+2. 애플리케이션 게이트웨이형
+   1. 일종의 프록시 서버
+   2. 세션에 포함된 정보 검사하기 위해 기존 세션 종료하고 새로운 세션 만듬
+   3. 패킷 필터형에 비해 속도는 느리지만 더 많은 검사 수행 가능 (spoofing 같은..)
+
+### Network Layer on L3 Switch(Packet)
+
+![Router](./images/network-osi-ip-router.png)
+L3 switch
+1. router는 한 층에 여러 L2 switch의 요청을 NAT안에서 관리
+2. pass IP address
+
+Internet Protocol(IP) Flow
+![Internet Protocol Flow](./images/network-internet-protocol-flow.png)
+![network layer(IP)](./images/network-osi-ip.png)
+
+
+### 3 Way Handshake
+![3 Way Handshake](./images/network-3wayhandshake.png)
+
+정확한 전송 보장 위해 상대방 컴퓨터와 사전에 세션 수립
+
+
+### SSL
+http's' is on ssl
+
+ssl 인증 발급
+![ssl 발급과정](./images/security-대칭키+비대칭키.png)
+비대칭키로 대칭키 옮긴 후, 대칭키로 암호화, 복호화
+
+tls handshake
+
+![tls handshakes](./images/network-tls-handshake.svg)
+
+
+### 4 Way Handshake
+
+![4 Way Handshake](./images/network-4wayhandshake.png)
+
+TCP 연결했던 세션 종료
+
+# 규모 확장 시스템 설계 기본
 ![규모확장 시스템설계 기본](./images/규모확장-시스템설계-기본.png)
 
-## AWS architecture by size
+# AWS architecture by size
 
 ### 1. 사용자가 본인 1명일 때
 ![aws-1](./images/aws-1.png)
@@ -175,7 +391,7 @@ ex)
 
 
 
-## aws architecture for startup
+# aws architecture for startup
 ![aws architecture for startup](./images/aws-architecture-for-startup.png)
 
 ### 1. 요약
@@ -212,16 +428,16 @@ c. Lambda
 
 
 
-## 3계층형 시스템
+# 3계층형 시스템
 ![3계층형 시스템](./images/3계층-시스템.png)
 
-## Web Server
+# Web Server
 ![nginx](./images/nginx-architecture.png)
 
-## Tomcat
+# Tomcat
 ![tomcat](./images/tomcat-architecture.png)
 
-## Spring Security
+# Spring Security
 
 ### 암호화
 ![암호화](./images/security-encryption-algorithms.png)
@@ -247,7 +463,8 @@ step1) server.secretKey -> client
 (2)에서 서버의 공개키를 client에게 주면,\
 (3)에서 client가 서버의 공개키로 자신의 private key를 암호화 해서\
 (4,5)server.publicKey(client.secretKey)를 서버로 보냄\
-(6)에서 서버는 server.secretKey로 server.publicKey로 암호화 된 client.secretKey를 복호화함.\
+(6)에서 서버는 server.secretKey로 server.publicKey로 암호화 된 client.secretKey를 복호화함.
+
 ---
 step2) client.secretKey -> server
 
@@ -299,19 +516,20 @@ why?
 ### Spring Security JWT
 ![spring security jwt](./images/spring-security-jwt-architecture.png)
 
-## Spring MVC
+
+# Spring MVC
 ![Spring-MVC](./images/spring-mvc.png)
 
-## JVM
+# JVM
 ![JVM](./images/jvm-architecture.png)
 
-## JDBC
+# JDBC
 ![jdbc](./images/jdbc-architecture.jpg)
 
-## Database
+# Database
 ![Mysql](./images/mysql-architecture.png)
 
-## Critical Rendering Path
+# Critical Rendering Path
 
 ### 1. Critical Rendering Path 기본 구조
 ![crp1](./images/critical-rendering-path-1.png) \
@@ -340,7 +558,7 @@ Paint (Render Tree in Layout with Pixel)
 ![crp9](./images/critical-rendering-path-9.png) \
 css, js를 async로 non-blocking로 요청
 
-## Version Control
+# Version Control
 
 ### 1. Git Overall
 
@@ -356,10 +574,10 @@ css, js를 async로 non-blocking로 요청
 ![git workflow](./images/git-3.png)
 
 
-## Compiler
+# Compiler
 ![compiler](./images/compiler.png)
 
-## Github-Action CI
+# Github-Action CI
 ![github action](./images/github-action-ci.png)
 commit, push 하면 github에 별도 서버에서 build & test + alpha 해줌
 
