@@ -1,10 +1,18 @@
 # 목차
 
 
-a. [폰 노이만 구조](#von-neumann-architecture) \
+a. [Computer Architecture](#computer-architecture)\
+&nbsp;&nbsp;&nbsp;&nbsp;1. [컴퓨터 구조](#computer-architecture-all) \
+&nbsp;&nbsp;&nbsp;&nbsp;2. [폰 노이만 구조](#von-neumann-architecture) \
+&nbsp;&nbsp;&nbsp;&nbsp;3. [CPU](#cpu) \
+&nbsp;&nbsp;&nbsp;&nbsp;4. [Cache](#cache) \
+&nbsp;&nbsp;&nbsp;&nbsp;5. [Bus](#bus) \
+&nbsp;&nbsp;&nbsp;&nbsp;6. [IO](#io) \
 b. [Operating System](#operating-system) \
-&nbsp;&nbsp;&nbsp;&nbsp;1. [System Call](#1-system-call) \
-&nbsp;&nbsp;&nbsp;&nbsp;2. [자원 관리](#2-자원-관리) \
+&nbsp;&nbsp;&nbsp;&nbsp;1. [System Call](#kernel\)-1-system-call) \
+&nbsp;&nbsp;&nbsp;&nbsp;2. [Process 관리](#kernel\)-2-process-관리) \
+&nbsp;&nbsp;&nbsp;&nbsp;3. [메모리 관리](#kernel\)-3-메모리-관리) \
+&nbsp;&nbsp;&nbsp;&nbsp;4. [가상화](#가상화) \
 c. [Network](#network) \
 &nbsp;&nbsp;&nbsp;&nbsp;1. [브라우저에 google.com 치면 일어나는 일](#브라우저에-google.com-치면-일어나는-일) \
 &nbsp;&nbsp;&nbsp;&nbsp;2. [Http](#http) \
@@ -50,6 +58,8 @@ k. [Spring MVC](#spring-mvc) \
 l. [JVM](#jvm) \
 m. [JDBC](#jdbc) \
 n. [Database](#database) \
+&nbsp;&nbsp;&nbsp;&nbsp;1. [Mysql Architecture](#1-mysql-architecture) \
+&nbsp;&nbsp;&nbsp;&nbsp;2. [B Tree](#2-b-tree) \
 o. [Critical Rendering Path](#critical-rendering-path) \
 &nbsp;&nbsp;&nbsp;&nbsp;1. [Critical Rendering Path 기본 구조](#1-critical-rendering-path-기본-구조) \
 &nbsp;&nbsp;&nbsp;&nbsp;2. [Critical Rendering Path async 최적화](#2-critical-rendering-path-async-최적화) \
@@ -59,23 +69,136 @@ p. [Version Control](#version-control) \
 &nbsp;&nbsp;&nbsp;&nbsp;3. [Git Workflow](#3-git-workflow) \
 q. [Compiler](#compiler) \
 r. [CI](#github-action-ci)
+end. [reference](#reference)
+
+# Computer Architecture
+
+### Computer Architecture All
+![Computer Architecture](./images/architecture-all.png)
 
 
-
-
-
-# Von Neumann Architecture
+### Von Neumann Architecture
 ![Von Neumann Architecture](./images/von-neumann-architecture.gif)
+
+### CPU
+![CPU](./images/architecture-cpu.png)
+
+a. CPU
+
+연산은 1초에 1억회 이상 실시 (core)
+
+### CACHE
+
+![CACHE](./images/architecture-cache-1.png)
+
+
+응답속도 보고 에러난 컴포넌트 예측하기
+![CACHE](./images/architecture-debugging-1.png)
+![CACHE](./images/architecture-debugging-2.png)
+
+백엔드는 하드웨어 에런지 클라우드 에런지, 디비 에런지 모르잖아?\
+큰 범위부터 좁혀가야 하는데, 방법 중 하나가 ms\
+
+ex)\
+Q. 만약 사용중인 static 페이지가 400ms 속도로 느리게 로딩한다면?\
+A. 이미지, js파일 같은 정적 파일이 캐시가 아닌 디스크에서 온다는걸로 판단 가능.
+
+### BUS
+![BUS](./images/architecture-bus-3.png)
+![BUS](./images/architecture-bus-2.png)
+
+CPU, 메모리, 그외 IO장치들의 데이터 옮겨줌.
+1. address bus
+2. data bus
+3. control bus
+
+OS의 Interrupt에 의해중간 침범 당할 떄도 있음.
+
+![BUS](./images/architecture-bus-1.png)
+
+PCI (Peripheral Component Interconnect Bus)
+
+모든 종류의 버스가 이어지는 대로
+
+PCI 3.0 은 1회선당 2GB/s의 전송이 가능\
+x8은 8선(8배), x16은 16선(16배)을 의미
+
+---
+CPU에 가까울 수록 버스 대역이 큼.
+1. 메모리
+   1. HDD는 4Gb/s, 8GB/s
+   2. DDR3 RAM은 10.6GB/s
+2. FILE
+   1. USB는 12MB/s으로 받고 60MB/s으로 보냄
+   2. CD/DVD는 120MB/s으로 받고 150MB/s으로 보냄 
+   3. Flash card는 10~40MB으로 받고 60MB/s으로 보냄
+3. SOCKET 
+   1. NIC는 128MB/s으로 받는데 1GB/s로 보냄
+
+CPU랑 IO controller랑 동신 속도는 12.8GB/s. 더 빠름.
+
+
+
+
+### IO
+![IO](./images/architecture-io.png)
+
+NIC랑 연결되는 IO랑\
+USB 포트랑 연결되는 IO랑\
+HDD or RAM에 연결되는 IO가 다 다르고,\
+버스가 CPU로 실어나르고,\
+CPU와 직접 데이터 교환하는게 아니라 캐시를 통해 교환함.
+
 
 # Operating System
 ![OSI on OS2](./images/network-osi-os2.png)
+![kernel](./images/os-kernel.png)
 
 
-### 1. System Call
+### 1. kernel 1) System Call
 ![system call](./images/os-system-call.png)
 
-### 2. 자원 관리
+
+### 2. kernel 2) Process 관리
+
+
+
+### 3. kernel 3) 메모리 관리
+
 ![컴퓨터 자원 관리](./images/자원-관리.png)
+
+---
+가상 메모리
+
+![physical memory](./images/architecture-memory-physical.png)
+![virtual memory](./images/architecture-memory-virtual.png)
+
+---
+저장방법: 고정길이 vs 가변길이
+![고정길이 가변길이](./images/architecture-memory-고정가변.png)
+
+고정길이는 크기, 위치가 정해져 있어 쉽게 access 가능 -> 빠른 read(성능 good)\
+대신 안쓰는 공간 생김(공간 bad).
+
+가변길이는 공간 유용하게 쓸 수 있지만,(공간 good)\
+칸막이 위치가 안정해져있어서 원하는 책 찾으려면 고정 길이에 비해 시간걸림.(성능 bad)
+
+### 4. 가상화
+한개에 물리 서버 안에 여러 논리서버 만들어 scale out 가능.
+
+![가상화](./images/os-가상화1.png)
+
+1. 안정성 - 물리서버 이중화 해서 한쪽 망가지더라도 구동 가능.
+2. scale out 용이
+
+---
+Hypervisor -> Container
+![hypervisor->container](./images/os-container.png)
+
+docker-compose 짱짱맨
+1. 이제 os 까는데 몇시간 쓰고
+2. os별로 환경세팅하는데 시간 엄청 안써도 됨
+
 
 # Network
 
@@ -274,8 +397,10 @@ Internet Protocol(IP) Flow
 ### SSL
 http's' is on ssl
 
-ssl 인증 발급
-![ssl 발급과정](./images/security-대칭키+비대칭키.png)
+![ssl 발급과정](./images/network-ssl.png)
+
+서버랑 client만 똑 띄어서 보면,
+![ssl 발](./images/security-대칭키+비대칭키.png)
 비대칭키로 대칭키 옮긴 후, 대칭키로 암호화, 복호화
 
 tls handshake
@@ -431,6 +556,9 @@ c. Lambda
 # 3계층형 시스템
 ![3계층형 시스템](./images/3계층-시스템.png)
 
+MVC
+
+
 # Web Server
 ![nginx](./images/nginx-architecture.png)
 
@@ -527,7 +655,14 @@ why?
 ![jdbc](./images/jdbc-architecture.jpg)
 
 # Database
+
+### 1. Mysql architecture
 ![Mysql](./images/mysql-architecture.png)
+
+### 2. B-Tree
+![B-Tree](./images/database-btree-1.png)
+b-tree에서 인덱스를 찾아가는 과정
+
 
 # Critical Rendering Path
 
@@ -582,4 +717,11 @@ css, js를 async로 non-blocking로 요청
 commit, push 하면 github에 별도 서버에서 build & test + alpha 해줌
 
 
+# Reference
+
+1. book: 그림으로 공부하는 IT 인프라 구조
+2. book: 컴파일러 만들기 - 컴퓨터 프로그램의 구조와 원리
+3. [Computation Structures](https://computationstructures.org/index.html)
+4. [규모 확장 시스템 설계 기본](https://jyami.tistory.com/148)
+5. [네트워크 관련 - 널널한 개발자](https://www.youtube.com/channel/UCdGTtaI-ERLjzZNLuBj3X6A)
 
