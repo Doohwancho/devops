@@ -42,9 +42,13 @@ e. [aws architecture by size](#aws-architecture-by-size) \
 &nbsp;&nbsp;&nbsp;&nbsp;8. [사용자가 500만명 단위일 때](#8-사용자가-500만명-단위일-때) \
 f. [aws architecture for startup](#aws-architecture-for-startup) \
 g. [3계층형 시스템](#3계층형-시스템) \
-h. [web server](#web-server) \
-i. [WAS](#tomcat) \
-j. [Spring Security](#spring-security) \
+h. [Web Server](#web-server) \
+i. [CGI](#cgi) \
+j. [Web Application Server](#web-application-server) \
+k. [Servlet](#servlet) \
+l. [JVM](#jvm) \
+m. [Garbage Collector](#garbage-collector) \
+n. [Spring Security](#spring-security) \
 &nbsp;&nbsp;&nbsp;&nbsp;1. [암호화](#암호화) \
 &nbsp;&nbsp;&nbsp;&nbsp;2. [대칭 키](#대칭-키) \
 &nbsp;&nbsp;&nbsp;&nbsp;3. [비대칭 키](#비대칭-키) \
@@ -52,24 +56,29 @@ j. [Spring Security](#spring-security) \
 &nbsp;&nbsp;&nbsp;&nbsp;5. [session](#session) \
 &nbsp;&nbsp;&nbsp;&nbsp;6. [JWT](#jwt) \
 &nbsp;&nbsp;&nbsp;&nbsp;7. [Refresh token](#refresh-token) \
-&nbsp;&nbsp;&nbsp;&nbsp;8. [Spring Security basic architecture](#spring-security-basic) \
-&nbsp;&nbsp;&nbsp;&nbsp;9. [Spring Security JWT](#spring-security-jwt) \
-k. [Spring MVC](#spring-mvc) \
-l. [JVM](#jvm) \
-m. [JDBC](#jdbc) \
-n. [Database](#database) \
+&nbsp;&nbsp;&nbsp;&nbsp;8. [Web Context](#web-context) \
+&nbsp;&nbsp;&nbsp;&nbsp;9. [Spring Security basic architecture](#spring-security-basic) \
+&nbsp;&nbsp;&nbsp;&nbsp;10. [Spring Security JWT](#spring-security-jwt) \
+o. [AOP](#aop) \
+p. [Spring MVC](#spring-mvc) \
+q. [JDBC](#jdbc) \
+r. [Database](#database) \
 &nbsp;&nbsp;&nbsp;&nbsp;1. [Mysql Architecture](#1-mysql-architecture) \
 &nbsp;&nbsp;&nbsp;&nbsp;2. [B Tree](#2-b-tree) \
-o. [Critical Rendering Path](#critical-rendering-path) \
+s. [Critical Rendering Path](#critical-rendering-path) \
 &nbsp;&nbsp;&nbsp;&nbsp;1. [Critical Rendering Path 기본 구조](#1-critical-rendering-path-기본-구조) \
 &nbsp;&nbsp;&nbsp;&nbsp;2. [Critical Rendering Path async 최적화](#2-critical-rendering-path-async-최적화) \
-p. [Version Control](#version-control) \
+t. [Version Control](#version-control) \
 &nbsp;&nbsp;&nbsp;&nbsp;1. [Git Overall](#1-git-overall) \
 &nbsp;&nbsp;&nbsp;&nbsp;2. [Git Branch](#2-git-branch) \
 &nbsp;&nbsp;&nbsp;&nbsp;3. [Git Workflow](#3-git-workflow) \
-q. [Compiler](#compiler) \
-r. [CI](#github-action-ci)
+u. [Build](#build) \
+v. [Compiler](#compiler) \
+w. [CI](#github-action-ci) \
 end. [reference](#reference)
+---
+more
+database: transaction, lock, isolation level, index, JPA N+1
 
 # Computer Architecture
 
@@ -97,7 +106,7 @@ a. CPU
 ![CACHE](./images/architecture-debugging-2.png)
 
 백엔드는 하드웨어 에런지 클라우드 에런지, 디비 에런지 모르잖아?\
-큰 범위부터 좁혀가야 하는데, 방법 중 하나가 ms\
+큰 범위부터 좁혀가야 하는데, 방법 중 하나가 ms
 
 ex)\
 Q. 만약 사용중인 static 페이지가 400ms 속도로 느리게 로딩한다면?\
@@ -562,8 +571,211 @@ MVC
 # Web Server
 ![nginx](./images/nginx-architecture.png)
 
-# Tomcat
+# CGI
+![cgi](./images/cgi.png)
+CGI
+1. 정적 데이터만 처리할 땐, client -> web server만 있었는데,
+2. database로 동적 데이터 처리해야 하니까,
+   1. client -> web server -> Application -> database
+   2. web server: httpd, nginx
+   3. Application: php, java, python, etc
+3. 이 때, 웹 서버(apache, nginx, etc)의 http protocol랑 AP server(php, java, python)의 언어 사이 통신규약이 필요해서 나온게 Common Gateway Interface(CGI)
+
+---
+A. 인터프리터 방식
+
+![interpretor](./images/cgi-2.png)
+
+1. 스크립트 엔진이
+2. 스크립트(.php, .pl, .asp, .py) 실행 
+3. 파싱 
+4. 결과를 web server에 던져줌
+
+
+---
+B. 자바는? .class는 어떻게 실행? 자바는 인터프리터 언어가 아닌데?
+
+![interpretor](./images/cgi-3.png)
+
+1. jvm이 .class 파일 실행하지?
+2. jvm 돌게 하기 위해 자바 프로그램 관리 서버가 필요. 
+3. 자바 프로그램 관리 서버는 CGI 프로그램
+
+![servlet](./images/servlet-1.png)
+
+자바 프로그램 관리 서버인데 CGI 규칙을 따르는 프로그램 = Servlet Container
+Servlet Container는 Web Application Server라고 표현하며,
+종류로는 Tomcat, Jetty 등등 이 있음.
+
+![servlet](./images/servlet-3.png)
+
+서브릿 컨테이너가 servlet객체의 life cycle 관리하면서
+서블릿 컨테이너가 자바 프로그램을 Servlet이라는 인터페이스로 호출
+
+.class 실행은 JVM이 함
+
+
+
+
+# Web Application Server
+Servlet Container
+
+Servlet Lifecycle 관리 + Thread pool 관리
+
+ex. Tomcat
 ![tomcat](./images/tomcat-architecture.png)
+Servlet을 관리하는 엔진: Catalina
+
+
+---
+Thread Pool
+1. 실행중인 프로그램을 프로세스라 부르고, 그 프로세스의 실행단위가 스레드이다.
+2. 컴퓨터 CPU core는 Thread 단위로 작업을 처리한다. (1 core = 1 thread)
+3. core에서 작업하던 thread의 stack정보를 로드함 -> context switching cost -> CPU overhead
+4. if 요청수에 비해 너무 많게 설정 -> 놀고 있는 스레드가 많아져 메모리,cpu 자원 비효율 증대
+5. if 너무 적게 설정 -> 동시 처리 요청수가 줄어든다. 평균응답시간, TPS 감소
+6. thread 생성시 비용이 많이 들기에, thread pool안에 미리 생성해 놓고 사용.
+   1. tomcat9.0 기준, min(idle) 25개, max 200개 로 default가 되어있더라.
+   2. Q. 근데 쓰레드 갯수 200개면 넘 많은거 아님? 1core = 1thread 하래매?
+      1. Tomcat 8.5부터는 NIO라고 non-blocking io 씀.
+   3. Q. 근데 쓰레드 100개가 컨트롤러 하나에 요청하면 감당 가능함?
+      1. db에서 write해서 멀티 쓰레드 환경에서 동기화 처리 필요하지 controller는 상태보관 안하고 일종의 read만 하니까 괜찮.
+      2. 결론: @Bean 붙은 객체들은 멀티 쓰레드 환경에서 상태보관(write)하게 시키지 말자. 앵간하면. 
+
+```yml
+# application.yml (적어놓은 값은 default)
+server:
+  tomcat:
+    threads:
+      max: 200 # 생성할 수 있는 thread의 총 개수
+      min-spare: 10 # 항상 활성화 되어있는(idle) thread의 개수
+    max-connections: 8192 # 수립가능한 connection의 총 개수. http request가 byte[]로 오면, Socket Connection으로 받아 HttpServletRequest로 파싱 후 Stream으로 전달하는데, 이 때, 받는 Connection의 최대 갯수.
+    accept-count: 100 # 작업큐의 사이즈. 스프링 부트에선 아무 옵션을 안주면 Integer.MAX, 즉 21억 블라블라를 줬습니다. 이는 무한 대기열 전략 으로, 아무리 요청이 많이 들어와도 core size를 늘리지 않는다는 정책입니다. 무한 대기열 전략에선 작업큐가 꽉 찰 일이 없으므로, 스레드풀의 max사이즈가 의미가 없습니다.
+    connection-timeout: 20000 # timeout 판단 기준 시간, 20초
+  port: 8080 # 서버를 띄울 포트번호
+```
+
+![tomcat](./images/tomcat-threadpool.png)
+
+Thread Pool 동작과정
+1. 첫 작업이 들어오면, CPU Core 갯수만큼 스레드를 생성합니다.
+2. 유저 요청(Connection, Server socket에서 accept한 소캣 객체)이 들어올 때마다 작업 큐(queue)에 담아둡니다.
+3. core size의 스레드 중, 유휴상태(idle)인 스레드가 있다면 작업 큐에서 작업을 꺼내 스레드에 작업을 할당하여 작업을 처리합니다.
+   1. 만약 유휴상태인 스레드가 없다면, 작업은 작업 큐에서 대기합니다.
+   2. 그 상태가 지속되어 작업 큐가 꽉 찬다면, 스레드를 새로 생성합니다.
+   3. 3번과정을 반복하다 스레드 최대 사이즈 에 도달하고 작업큐도 꽉 차게 되면, 추가 요청에 대해선 connection-refused 오류를 반환합니다.
+4. 태스크가 완료되면 스레드는 다시 유휴상태로 돌아갑니다.
+   1. 작업큐가 비어있고 core size이상의 스레드가 생성되어있다면 스레드를 destory합니다.
+
+# Servlet
+
+![servlet](./images/servlet.png)
+Servlet Container(Tomcat)에서 Lifecycle로 관리되는 Servlet 인터페이스 객체
+
+Servlet 인터페이스 객체는 Singleton이라 static variable, member variable은 쓰레드 들이 공유하고, Local Variable은 쓰레드마다 독립적으로 생성
+
+![servlet](./images/servlet-4.png)
+url마다 서브릿이 생기고, 요청을 각 서브릿에 매핑시켜줌.\
+1 http request -> 1 thread -> 1 servlet -> 1 connection\
+이 요청 어디로 감?
+
+![Spring-MVC](./images/spring-mvc.png)
+Spring MVC파트 때, Dispatcher 'Servlet'으로 보내짐.\
+그래서 legacy spring에서 web.xml에 모든 요청에 대해('/') DispatcherServlet으로 보내라고 등록해야 했던 것.
+
+![servlet](./images/servlet-5.png)
+Dispatcher Servlet이 생긴 후, Servlet을 url마다 따로 만들지 않고, DispatcherServlet이 1개로 모두 처리.\
+원래 Servlet이 따로놀 땐, Servlet에서 Controller + View역할 까지 했었는데, 
+FrontControllerl인 DispatcherServlet가 도입되면서 Front Controller + Controller + View로 나눠짐.\
+Model1 -> Model2 -> MVC 탄생
+
+# JVM
+
+![JVM](./images/jvm-architecture-1.png)
+
+1. javac로 소스파일을 Class파일로 컴파일
+2. Class Loader가 .class 파일(byte code)를 Runtime Data Area로 올림(런타임 때 수행)
+3. Execution Engine이 메모리에 적재된 byte code를 기계어로 변경 후 명령어 단위로 실행. either 인터프리터 방식 or JIT(just in time) 컴파일러 이용하는 방식
+4. Garbage Collector는 Heap Memory에 생성된 객체 중, 참조되지 않은 객체를 탐색 후 제거
+
+![JVM](./images/jvm-architecture.png)
+![JVM](./images/jvm-2.png)
+
+---
+- 모든 쓰레드가 공유
+1. Method area (메소드 영역)
+   1. 클래스 정보
+      1. Type정보(Interface인지 class인지)
+      2. 클래스 멤버 변수의 이름
+      3. 필드 정보(데이터 타입, 접근 제어자)
+      4. final class 변수
+   2. 메소드 정보
+      1. 메소드의 이름
+      2. 리턴 타입
+      3. 파라미터
+      4. 접근 제어자
+   3. Constant Pool
+      1. (상수 풀 : 문자 상수, 타입, 필드, 객체 참조가 저장됨)
+   4. static 변수
+2. Heap area (힙 영역)
+   1. new 키워드로 생성된 객체와 배열이 생성되는 영역
+   2. 메소드 영역에 로드된 클래스만 생성이 가능
+   3. Garbage Collector가 참조되지 않는 메모리를 확인하고 제거하는 영역
+
+Q. Spring에서 @Controller 생성하면, 어디 저장되고 쓰레드가 어떻게 참조함?\
+A. 객체니까 Heap에 생성되는데, 클레스 정보는 메서드 영억에 저장됨.\
+그리고 이 두 영역은 모든 쓰레드가 공유하기 때문에, multi thread 환경에서 여러 쓰레드가 메서드 영역에 @Controller를 참조하는 것.\
+컨트롤러가 상태관리는 안하니까, write없음 -> read만 해서 괜찮.
+
+
+---
+- 각각 쓰레드마다 생성 & 공유하지 않음
+3. Stack area (스택 영역)
+   1. 지역 변수, 파라미터, 리턴 값, 연산에 사용되는 임시 값등이 생성되는 영역
+4. PC Register
+   1. Thread(쓰레드)가 생성될 때마다 생성되는 영역
+   2. Program Counter
+      1. 현재 쓰레드가 실행되는 부분의 주소와 명령을 저장하고 있는 영역. (*CPU의 레지스터와 다름)
+   3. 이것을 이용해서 여러 쓰레드를이 돌아가면서 수행
+5. Native method stack
+   1. 자바 외 언어로 작성된 네이티브 코드를 위한 메모리 영역
+   2. 보통 C/C++등의 코드를 수행하기 위한 스택이다. (JNI)
+
+# Garbage Collector
+![JVM](./images/jvm-2.png)
+
+1. eden
+2. survivor1
+3. survivor2
+4. old
+5. permanent
+
+---
+Minor GC
+
+1. 최초에 객체가 생성되면 Eden영역에 생성된다.
+2. Eden영역에 객체가 가득차게 되면 첫 번째 CG가 일어난다.
+3. survivor1 영역에 Eden영역의 메모리를 그대로 복사된다. 그리고 survivor1 영역을 제외한 다른 영역의 객체를 제거한다.
+4. Eden영역도 가득차고 survivor1영역도 가득차게된다면, Eden영역에 생성된 객체와 survivor1영역에 생성된 객체 중에 참조되고 있는 객체가 있는지 검사한다.
+5. 참조 되고있지 않은 객체는 내버려두고 참조되고 있는 객체만 survivor2영역에 복사한다.
+6. survivor2영역을 제외한 다른 영역의 객체들을 제거한다.
+7. 위의 과정중에 일정 횟수이상 참조되고 있는 객체들을 survivor2에서 Old영역으로 이동시킨다.
+- 위 과정을 계속 반복, survivor2 영역까지 꽉차기 전에 계속해서 Old로 비움
+
+
+---
+Major GC (Full GC)
+
+1. Old 영역에 있는 모든 객체들을 검사하며 참조되고 있는지 확인한다.
+2. 참조되지 않은 객체들을 모아 한 번에 제거한다.
+   1. 이 때 모든 쓰레드 일시 정지 -> 성능저하
+   2. 왜? 제거한 후 heap 재정렬 해야하는데, 옮기는 도 중 빈 공간 참조하면 null -> run time error 이기 때문.
+3. 제거한 후 Heap Memory에 빈 공간을 디지털 조각모음마냥 재정렬함
+- Minor GC보다 시간이 훨씬 많이 걸리고 실행중에 GC를 제외한 모든 쓰레드가 중지한다.
+
+
+
+
 
 # Spring Security
 
@@ -638,21 +850,60 @@ why?
 
 ![비대칭 키](./images/security-refresh-token.png)
 
+### Web Context
+![servlet](./images/servlet-2.png)
+web context
+
+필터가 있는 곳.
+Spring Container에서 보관하는 @Bean 정보 필요 없는 처리 할 때 쓰임.
+1. XSS 공격 판별
+2. CORS정책 잘 따르는지 확인
+3. utf-8 필터
+4. Spring Security Filter(DelegationProxyFilter로 Spring Container에서 꺼내 쓰기 가능)
+
+
 ### Spring Security Basic
 ![spring security](./images/spring-security-architecture.jpg)
 
 ### Spring Security JWT
 ![spring security jwt](./images/spring-security-jwt-architecture.png)
 
+# AOP
+![AOP](./images/aop.png)
 
 # Spring MVC
 ![Spring-MVC](./images/spring-mvc.png)
 
-# JVM
-![JVM](./images/jvm-architecture.png)
-
 # JDBC
 ![jdbc](./images/jdbc-architecture.jpg)
+
+각 DataSource마다, Connection Pool안에 Connection을 미리 initialized 해놓고 관리
+![jdbc](./images/jdbc-1.png)
+
+Q1. optimal # of Connection?\
+A1. 쓰레드 갯수
+
+왜? 
+
+1 요청(쓰레드) 당 1 Connection 씀. 그 이상 Connection 만드는건 메모리 낭비.
+
+![jdbc](./images/jdbc-2.png)
+![jdbc](./images/jdbc-3.png)
+
+쓰레드 요청시 Connection Pool에 남은 Connection 없으면 HandOffQUEUE에 가서 순서 기다려야 함.
+
+Q2. 그럼 tomcat thread pool에서 thread 갯수 최대로 땡기고 Connection Pool Size도 최대로 땡기면 되겠네?
+
+A2. ㄴㄴ\
+CPU CORE 가 빨라서 여러 쓰레드 동시에 처리하는 것 처럼 보이지만\
+1 core는 1 thread만 한 순간에 처리 가능하기 때문에,\
+다른 쓰레드로 바꿀 때 thread의 stack 영역 로드하는 등, 오버헤드 발생\
+이게 컨텍스트 스위칭.
+
+그래서 커넥션 갯수는 쓰레드 갯수로 맞추고, 쓰레드 갯수는 코어 갯수로 맞추는게 좋음.(컨텍스트 스위칭 비용 최소화)
+
+근데 AP server를 최적화 해도, database server에 IO blocking, 병목 발생 가능하기 때문에, 이쪽도 신경 써야 함.
+
 
 # Database
 
@@ -661,6 +912,7 @@ why?
 
 ### 2. B-Tree
 ![B-Tree](./images/database-btree-1.png)
+
 b-tree에서 인덱스를 찾아가는 과정
 
 
@@ -708,6 +960,16 @@ css, js를 async로 non-blocking로 요청
 
 ![git workflow](./images/git-3.png)
 
+# Build
+Maven
+![build](./images/build.png)
+
+1. mvn compile : compiler:compile의 실행으로 src/java 밑의 모든 자바 소스를 컴파일해서 target/classes로 복사
+2. mvn test : surefire:test의 실행으로 target/test-classes에 있는 테스트케이스의 단위테스트를 진행한다. 결과를 target/surefire-reports에 생성한다.
+3. mvn package : target디렉토리 하위에 jar, war, ear등 패키지파일을 생성하고 이름은 <build>의 <finalName>의 값을 사용한다 지정되지 않았을 때는 아까 설명한 "artifactId-version.extention" 이름으로 생성
+4. mvn clean : 빌드 과정에서 생긴 target 디렉토리 내용 삭제
+5. mvn site : target/site에 문서 사이트 생성
+6. mvn site-deploy : 문서 사이트를 서버로 배포
 
 # Compiler
 ![compiler](./images/compiler.png)
@@ -724,4 +986,5 @@ commit, push 하면 github에 별도 서버에서 build & test + alpha 해줌
 3. [Computation Structures](https://computationstructures.org/index.html)
 4. [규모 확장 시스템 설계 기본](https://jyami.tistory.com/148)
 5. [네트워크 관련 - 널널한 개발자](https://www.youtube.com/channel/UCdGTtaI-ERLjzZNLuBj3X6A)
+6. [Maven build](https://jeong-pro.tistory.com/168)
 
