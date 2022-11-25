@@ -8,6 +8,7 @@ a. [Computer Architecture](#computer-architecture)\
 &nbsp;&nbsp;&nbsp;&nbsp;4. [Cache](#cache) \
 &nbsp;&nbsp;&nbsp;&nbsp;5. [Bus](#bus) \
 &nbsp;&nbsp;&nbsp;&nbsp;6. [IO](#io) \
+&nbsp;&nbsp;&nbsp;&nbsp;x. [Application](#application) \
 b. [Operating System](#operating-system) \
 &nbsp;&nbsp;&nbsp;&nbsp;1. [System Call](#kernel\)-1-system-call) \
 &nbsp;&nbsp;&nbsp;&nbsp;2. [Process 관리](#kernel\)-2-process-관리) \
@@ -158,6 +159,48 @@ HDD or RAM에 연결되는 IO가 다 다르고,\
 버스가 CPU로 실어나르고,\
 CPU와 직접 데이터 교환하는게 아니라 캐시를 통해 교환함.
 
+
+### Application
+
+Program = Input -> Computation -> Output
+
+![Application](./images/application.png)
+
+A. Input
+
+contents
+
+B. Computation
+
+1. store
+   1. time - memory
+      1. 현재 정보 -> 미래로 전달(ex. memo, library, wiki)
+   2. space - cloud
+      1. 정보를 다른 곳에서 쓸 수 있게 처리(ex. cloud, vcs)
+      2. compression
+2. create
+   1. automation (RPA -> AI)
+      1. calc
+         1. statistics
+         2. 3d, image program(photoshop -> stable diffusion)
+      2. relate
+         1. facebook
+         2. mindmap
+      3. sort & search & visualize
+         1. google
+         2. docs
+         3. management
+3. transfer
+   1. 1 to 1
+      1. messenger
+   2. N to N
+      1. community(cafe, sns, blog, youtube)
+
+C. Output
+
+1. string
+2. image
+3. video
 
 # Operating System
 ![OSI on OS2](./images/network-osi-os2.png)
@@ -603,9 +646,8 @@ B. 자바는? .class는 어떻게 실행? 자바는 인터프리터 언어가 �
 
 ![servlet](./images/servlet-1.png)
 
-자바 프로그램 관리 서버인데 CGI 규칙을 따르는 프로그램 = Servlet Container
-Servlet Container는 Web Application Server라고 표현하며,
-종류로는 Tomcat, Jetty 등등 이 있음.
+자바 프로그램 관리 서버인데 CGI 규칙을 따르는 프로그램 = Servlet Container\
+Servlet Container는 Web Application Server라고 표현하며, 종류로는 Tomcat, Jetty 등등 이 있음.
 
 ![servlet](./images/servlet-3.png)
 
@@ -623,7 +665,9 @@ Servlet Container
 Servlet Lifecycle 관리 + Thread pool 관리
 
 ex. Tomcat
+
 ![tomcat](./images/tomcat-architecture.png)
+
 Servlet을 관리하는 엔진: Catalina
 
 
@@ -686,7 +730,7 @@ Spring MVC파트 때, Dispatcher 'Servlet'으로 보내짐.\
 ![servlet](./images/servlet-5.png)
 Dispatcher Servlet이 생긴 후, Servlet을 url마다 따로 만들지 않고, DispatcherServlet이 1개로 모두 처리.\
 원래 Servlet이 따로놀 땐, Servlet에서 Controller + View역할 까지 했었는데, 
-FrontControllerl인 DispatcherServlet가 도입되면서 Front Controller + Controller + View로 나눠짐.\
+Front Controller인 DispatcherServlet가 도입되면서 Front Controller + Controller + View로 나눠짐.\
 Model1 -> Model2 -> MVC 탄생
 
 # JVM
@@ -704,26 +748,16 @@ Model1 -> Model2 -> MVC 탄생
 ---
 - 모든 쓰레드가 공유
 1. Method area (메소드 영역)
-   1. 클래스 정보
-      1. Type정보(Interface인지 class인지)
-      2. 클래스 멤버 변수의 이름
-      3. 필드 정보(데이터 타입, 접근 제어자)
-      4. final class 변수
-   2. 메소드 정보
-      1. 메소드의 이름
-      2. 리턴 타입
-      3. 파라미터
-      4. 접근 제어자
-   3. Constant Pool
-      1. (상수 풀 : 문자 상수, 타입, 필드, 객체 참조가 저장됨)
-   4. static 변수
+   1. meta space (interface, static, class, constant pool, etc)
+   2. 예전 JVM버전엔 Permanent Generation(PermGen) Space 이었고 GC관리 영역이었음.
+   3. memory limit이 있고, 너무 커지면 여기서 RAM에 virtual memory로 옮기기 때문에 앱이 느려짐.
 2. Heap area (힙 영역)
    1. new 키워드로 생성된 객체와 배열이 생성되는 영역
    2. 메소드 영역에 로드된 클래스만 생성이 가능
    3. Garbage Collector가 참조되지 않는 메모리를 확인하고 제거하는 영역
 
 Q. Spring에서 @Controller 생성하면, 어디 저장되고 쓰레드가 어떻게 참조함?\
-A. 객체니까 Heap에 생성되는데, 클레스 정보는 메서드 영억에 저장됨.\
+A. 객체니까 Heap에 생성되는데, 클래스 정보는 메서드 영역에 저장됨.\
 그리고 이 두 영역은 모든 쓰레드가 공유하기 때문에, multi thread 환경에서 여러 쓰레드가 메서드 영역에 @Controller를 참조하는 것.\
 컨트롤러가 상태관리는 안하니까, write없음 -> read만 해서 괜찮.
 
@@ -733,10 +767,12 @@ A. 객체니까 Heap에 생성되는데, 클레스 정보는 메서드 영억에
 3. Stack area (스택 영역)
    1. 지역 변수, 파라미터, 리턴 값, 연산에 사용되는 임시 값등이 생성되는 영역
 4. PC Register
-   1. Thread(쓰레드)가 생성될 때마다 생성되는 영역
-   2. Program Counter
+   1. 캐시 영역이라 보면 됨. Just In Time Compiler가 자주 access하는 compiled code넣는 곳.
+   2. Thread(쓰레드)가 생성될 때마다 생성되는 영역
+   3. Program Counter
       1. 현재 쓰레드가 실행되는 부분의 주소와 명령을 저장하고 있는 영역. (*CPU의 레지스터와 다름)
-   3. 이것을 이용해서 여러 쓰레드를이 돌아가면서 수행
+      2. 다음번에 실행되어야 할 명령어가 있는 메모리 주소를 가르킴
+   4. 이것을 이용해서 여러 쓰레드를이 돌아가면서 수행
 5. Native method stack
    1. 자바 외 언어로 작성된 네이티브 코드를 위한 메모리 영역
    2. 보통 C/C++등의 코드를 수행하기 위한 스택이다. (JNI)
@@ -744,14 +780,48 @@ A. 객체니까 Heap에 생성되는데, 클레스 정보는 메서드 영억에
 # Garbage Collector
 ![JVM](./images/jvm-2.png)
 
-1. eden
-2. survivor1
-3. survivor2
-4. old
-5. permanent
+1. young generation
+   1. eden
+      1. 신생아 객체
+   2. survivor1
+      1. 첫 생존자
+   3. survivor2
+      1. 두번째 생존자
+2. old generation
+   1. tenured
+      1. 고인물
+3. permanent
+   1. Method Aread의 메타 데이터가 기록된 곳
+
 
 ---
-Minor GC
+reference counting
+![reference counting](./images/gc-2.png)
+
+객체 노드가 누굴 참조하는지 다 세는 방법.
+
+단점
+1. **순환 참조** 알아낼 수 없음
+   1. a->b, b->a 참조하면, a,b는 영원히 free() 못함 
+2. reference 증감 카운트 해야해서 객체, 변수 등록할 때마다 갱신 필요
+
+---
+mark and sweep
+
+![mark and sweep](./images/gc-1.gif)
+
+1. Marking
+   1. heap에서 쓰는 객체 노드 표시
+2. Sweeping
+   1. heap에서 마크 안된 노드(안쓰는 노드) free()
+3. Compacting
+   1. survival node를 다른 장소로 옮김(ex. eden->survivor1 이든, survivor1 -> 2든..) 
+4. Stop The World
+   1. 모든 쓰레드 정지
+   2. free() 후 메모리에 정리안된 객체들 재정리 해줘야 하는 도중 참조당하면 안되니까. 
+
+---
+Minor GC (young gen killer)
 
 1. 최초에 객체가 생성되면 Eden영역에 생성된다.
 2. Eden영역에 객체가 가득차게 되면 첫 번째 CG가 일어난다.
@@ -763,14 +833,21 @@ Minor GC
 - 위 과정을 계속 반복, survivor2 영역까지 꽉차기 전에 계속해서 Old로 비움
 
 
+
 ---
-Major GC (Full GC)
+Major GC (young + old killer)
 
 1. Old 영역에 있는 모든 객체들을 검사하며 참조되고 있는지 확인한다.
 2. 참조되지 않은 객체들을 모아 한 번에 제거한다.
    1. 이 때 모든 쓰레드 일시 정지 -> 성능저하
    2. 왜? 제거한 후 heap 재정렬 해야하는데, 옮기는 도 중 빈 공간 참조하면 null -> run time error 이기 때문.
-3. 제거한 후 Heap Memory에 빈 공간을 디지털 조각모음마냥 재정렬함
+
+---
+Full GC (young + old + permanent killer)
+
+1. mark and sweep all heap
+2. STOP THE WORLD!
+   1. 제거한 후 Heap Memory에 빈 공간을 디지털 조각모음마냥 재정렬함
 - Minor GC보다 시간이 훨씬 많이 걸리고 실행중에 GC를 제외한 모든 쓰레드가 중지한다.
 
 
@@ -987,4 +1064,5 @@ commit, push 하면 github에 별도 서버에서 build & test + alpha 해줌
 4. [규모 확장 시스템 설계 기본](https://jyami.tistory.com/148)
 5. [네트워크 관련 - 널널한 개발자](https://www.youtube.com/channel/UCdGTtaI-ERLjzZNLuBj3X6A)
 6. [Maven build](https://jeong-pro.tistory.com/168)
+7. [Application 구조](https://black7375.tistory.com/35)
 
