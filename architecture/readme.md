@@ -8,7 +8,12 @@ a. [Computer Architecture](#computer-architecture)\
 &nbsp;&nbsp;&nbsp;&nbsp;4. [Cache](#cache) \
 &nbsp;&nbsp;&nbsp;&nbsp;5. [Bus](#bus) \
 &nbsp;&nbsp;&nbsp;&nbsp;6. [IO](#io) \
-&nbsp;&nbsp;&nbsp;&nbsp;x. [Application](#application) \
+&nbsp;&nbsp;&nbsp;&nbsp;x. [Char](#application) \
+&nbsp;&nbsp;&nbsp;&nbsp;x. [Charsets and Encodings](#charsets-and-encodings) \
+&nbsp;&nbsp;&nbsp;&nbsp;x. [Color and Image](#color-and-image) \
+&nbsp;&nbsp;&nbsp;&nbsp;x. [File Format](#file-format) \
+&nbsp;&nbsp;&nbsp;&nbsp;x. [Archive](#archive) \
+&nbsp;&nbsp;&nbsp;&nbsp;x. [Audio](#audio) \
 b. [Operating System](#operating-system) \
 &nbsp;&nbsp;&nbsp;&nbsp;1. [System Call](#kernel\)-1-system-call) \
 &nbsp;&nbsp;&nbsp;&nbsp;2. [Process 관리](#kernel\)-2-process-관리) \
@@ -66,16 +71,17 @@ q. [JDBC](#jdbc) \
 r. [Database](#database) \
 &nbsp;&nbsp;&nbsp;&nbsp;1. [Mysql Architecture](#1-mysql-architecture) \
 &nbsp;&nbsp;&nbsp;&nbsp;2. [B Tree](#2-b-tree) \
-s. [Critical Rendering Path](#critical-rendering-path) \
+s. [UIUX](#uiux) \
+t. [Critical Rendering Path](#critical-rendering-path) \
 &nbsp;&nbsp;&nbsp;&nbsp;1. [Critical Rendering Path 기본 구조](#1-critical-rendering-path-기본-구조) \
 &nbsp;&nbsp;&nbsp;&nbsp;2. [Critical Rendering Path async 최적화](#2-critical-rendering-path-async-최적화) \
-t. [Version Control](#version-control) \
+u. [Version Control](#version-control) \
 &nbsp;&nbsp;&nbsp;&nbsp;1. [Git Overall](#1-git-overall) \
 &nbsp;&nbsp;&nbsp;&nbsp;2. [Git Branch](#2-git-branch) \
 &nbsp;&nbsp;&nbsp;&nbsp;3. [Git Workflow](#3-git-workflow) \
-u. [Build](#build) \
-v. [Compiler](#compiler) \
-w. [CI](#github-action-ci) \
+v. [Build](#build) \
+w. [Compiler](#compiler) \
+x. [CI](#github-action-ci) \
 end. [reference](#reference)
 ---
 more
@@ -101,8 +107,31 @@ a. CPU
 
 ![CACHE](./images/architecture-cache-1.png)
 
+![CACHE](./images/architecture-memory-cache.jpg)
 
+1. L1 Cache: 프로세서와 가장 가까운 캐시. 속도를 위해 I$와 D$로 나뉜다.
+   1. Instruction Cache (I$): 메모리의 TEXT 영역 데이터를 다루는 캐시.
+   2. Data Cache (D$): TEXT 영역을 제외한 모든 데이터를 다루는 캐시.
+2. L2 Cache: 용량이 큰 캐시. 크기를 위해 L1 캐시처럼 나누지 않는다.
+3. L3 Cache: 멀티 코어 시스템에서 여러 코어가 공유하는 캐시.
+
+
+---
+공간지역성, 시간 지역성
+
+![공간 지역성, 시간 지역성](./images/architecture-memory-시공간지역성.webp)
+
+운영체제는 프로세스를 페이지(Page)라는 단위로 나눠 관리하며, 위 그림은 페이지를 참조한 기록.\
+arr[]는 공간지역성이 높고,\
+지속적으로 같은 객체 참조하는건 시간지역성이 높음.
+
+이걸 바탕으로 다음 필요한 데이터를 예측해서 가져오는데,
+예측이 맞으면 cache hit, 틀리면 cache miss -> 그 다음 메모리에서 가져옴
+
+
+---
 응답속도 보고 에러난 컴포넌트 예측하기
+
 ![CACHE](./images/architecture-debugging-1.png)
 ![CACHE](./images/architecture-debugging-2.png)
 
@@ -168,6 +197,7 @@ Program = Input -> Computation -> Output
 
 A. Input
 1. contents
+   1. gamification
 2. user info
 
 
@@ -219,7 +249,7 @@ B. Computation
 
 C. Output
 
-1. format
+1. format (UIUX)
    1. string
    2. image
    3. video
@@ -233,7 +263,36 @@ Q
    1. how to loss-less compression?
 3. most effective way to visualize to max UX?
 4. how to make system sustainable?
-   1. change methods other than fee, subscription, ads?
+   1. change methods other than fee, subscription, ads, patronize?
+
+### Charsets and Encodings
+
+![ascii](./images/ascii.png)
+
+
+### Color and Image
+
+![color](./images/color.png)
+![image](./images/color-image.png)
+![jpeg](./images/jpg.png)
+![jpeg](./images/gif.png)
+
+
+### File Format
+
+![macos](./images/file.png)
+![macos](./images/macho101-1.png)
+![pdf](./images/pdf.png)
+![exe](./images/exe.svg)
+
+### Archive
+
+![zip](./images/zip.png)
+![tar](./images/tar.png)
+
+### Audio
+
+![wav](./images/audio.png)
 
 
 # Operating System
@@ -250,6 +309,7 @@ Q
 
 
 ### 3. kernel 3) 메모리 관리
+
 
 ![컴퓨터 자원 관리](./images/자원-관리.png)
 
@@ -769,6 +829,9 @@ Model1 -> Model2 -> MVC 탄생
 
 # JVM
 
+![.class](./images/java-class.png)
+![class](./images/class101-1.png)
+
 ![JVM](./images/jvm-architecture-1.png)
 
 1. javac로 소스파일을 Class파일로 컴파일
@@ -1027,6 +1090,15 @@ CPU CORE 가 빨라서 여러 쓰레드 동시에 처리하는 것 처럼 보이
 b-tree에서 인덱스를 찾아가는 과정
 
 
+# UIUX
+
+![ux](./images/ux.webp)
+
+UI디자인은 사용자와 제품이 접하는 지점, 말그대로 인터페이스를 디자인함으로써 사용성을 높이는 영역이고,\
+UX디자인은 사용자가 제품을 접하기 전부터 접한 이후까지의 총체적인 부분을 디자인함으로써 사용성을 높이는 영역이다.
+
+
+
 # Critical Rendering Path
 
 ### 1. Critical Rendering Path 기본 구조
@@ -1099,4 +1171,5 @@ commit, push 하면 github에 별도 서버에서 build & test + alpha 해줌
 5. [네트워크 관련 - 널널한 개발자](https://www.youtube.com/channel/UCdGTtaI-ERLjzZNLuBj3X6A)
 6. [Maven build](https://jeong-pro.tistory.com/168)
 7. [Application 구조](https://black7375.tistory.com/35)
+8. [pics](https://github.com/corkami/pics)
 
