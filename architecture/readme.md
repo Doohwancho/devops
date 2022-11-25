@@ -167,40 +167,74 @@ Program = Input -> Computation -> Output
 ![Application](./images/application.png)
 
 A. Input
+1. contents
+2. user info
 
-contents
 
 B. Computation
 
-1. store
-   1. time - memory
-      1. 현재 정보 -> 미래로 전달(ex. memo, library, wiki)
-   2. space - cloud
-      1. 정보를 다른 곳에서 쓸 수 있게 처리(ex. cloud, vcs)
-      2. compression
-2. create
+1. create
    1. automation (RPA -> AI)
-      1. calc
-         1. statistics
-         2. 3d, image program(photoshop -> stable diffusion)
-      2. relate
-         1. facebook
-         2. mindmap
-      3. sort & search & visualize
-         1. google
-         2. docs
-         3. management
+      1. calc == new Node()
+         1. prediction
+            1. statistics -> Big Data + ML
+         2. image
+            1. photoshop -> video editing -> stable diffusion
+      2. relate (recommendation) == link(Node1, Node2)
+         1. human: facebook, linkedin
+         2. stuff: e-commerce
+         3. idea: mindmap, articles
+      3. organize(sort & search & visualize) == sort(Nodes)
+         1. linear
+            1. docs
+            2. management
+         2. non-linear
+            1. google
+            2. hitomi (post-modernistic)
+
+2. store
+   1. time - memory
+      1. 현재 정보 -> 미래로 전달(ex. memo, library, wiki, vcs)
+   2. space - cloud
+      1. 정보를 다른 곳에서 쓸 수 있게 처리(ex. cloud, backup)
+      
 3. transfer
-   1. 1 to 1
-      1. messenger
-   2. N to N
-      1. community(cafe, sns, blog, youtube)
+   1. human to human (whom to trust? authority issue)
+      1. 1 to 1
+         1. messenger
+      2. 1 to N
+         1. subscription model
+      3. N to N
+         1. community(cafe, sns, blog, youtube)
+   2. dimention
+      1. 1d(text)
+      2. 2d(image)
+      3. 3d(video)
+      4. 3.5d(AR)
+      5. 4d(game, VR)
+
+4. destroy
+   1. compression
+
 
 C. Output
 
-1. string
-2. image
-3. video
+1. format
+   1. string
+   2. image
+   3. video
+   4. AR
+   5. game -> VR
+
+---
+Q
+1. new way of input?
+2. how to compress information?
+   1. how to loss-less compression?
+3. most effective way to visualize to max UX?
+4. how to make system sustainable?
+   1. change methods other than fee, subscription, ads?
+
 
 # Operating System
 ![OSI on OS2](./images/network-osi-os2.png)
