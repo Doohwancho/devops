@@ -8,7 +8,7 @@ a. [Computer Architecture](#computer-architecture)\
 &nbsp;&nbsp;&nbsp;&nbsp;4. [Cache](#cache) \
 &nbsp;&nbsp;&nbsp;&nbsp;5. [Bus](#bus) \
 &nbsp;&nbsp;&nbsp;&nbsp;6. [IO](#io) \
-&nbsp;&nbsp;&nbsp;&nbsp;x. [Char](#application) \
+&nbsp;&nbsp;&nbsp;&nbsp;x. [Application](#application) \
 &nbsp;&nbsp;&nbsp;&nbsp;x. [Charsets and Encodings](#charsets-and-encodings) \
 &nbsp;&nbsp;&nbsp;&nbsp;x. [Color and Image](#color-and-image) \
 &nbsp;&nbsp;&nbsp;&nbsp;x. [File Format](#file-format) \
@@ -1144,6 +1144,57 @@ css, js를 async로 non-blocking로 요청
 ![git workflow](./images/git-3.png)
 
 # Build
+
+build 단계(cpp)
+
+![img.png](images/foo-bar-5.png)
+1. 전처리 단계
+   1. 먼저 #include 와 #define 와 같은 전처리기 매크로들을 처리
+   2. '#include < iostream >' 전처리하면 iostream에 있던애들 다 땡겨오기 때문에 2만 7천줄됨   
+2. 컴파일 단계
+   1. 그 뒤에 각각의 소스 파일들을 어셈블리 명령어로 변환
+3. 어셈블 단계
+   1. 그 후에 어셈블리 코드들을 실제 기계어로 이루어진 목적 코드(Object file)로 변환
+4. 링킹 단계
+   1. 마지막으로 각각의 목적 코드들을 한데 모아서 하나의 실행 파일로 만들어주는 링킹 (Linking) 단계로 나누어볼 수 있습니다.
+
+
+---
+example) foo bar
+
+![foo-bar](./images/foo-bar.png)
+
+foo.c랑 bar.c를 import받아 실행하는 main.c를 컴파일 하고싶으면?
+
+g++ -c main.c 하면, main.o (목적 파일이 생김)
+
+objdump -S main.o
+
+![foo-bar](./images/foo-bar-2.png)
+
+근데 알아서 foo.c, bar.c를 묶어서 main.o로 컴파일 해주는게 아니라,
+callq를 보면 foo랑 bar을 call하라고만 나오지, 세부사항은 안적혀 있음.
+
+![img.png](images/foo-bar-3.png)
+
+1. 그래서 foo.c, bar.c, main.c을 각각 컴파일 후, 
+2. foo.o, bar.o, main.o 라는 목적 파일 생성 후,
+3. 목적파일들을 'linking'해줌 
+4. main이라는 binary 파일 생성
+
+
+
+![img.png](images/foo-bar-4.png)
+
+`clang++ *.cpp -std=c++17 -o main`
+
+근데 셸 스크립트로 컴파일+링킹하면, 파일 하나만 바꿔도 전부 다시해야하니까 오래걸림 -> cmake같은 빌드 툴 쓰면, 수정된 부분만 부분 컴파일+링킹해줘서 빠름.
+
+
+
+
+
+---
 Maven
 ![build](./images/build.png)
 
