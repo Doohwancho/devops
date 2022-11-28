@@ -295,3 +295,4 @@ grafana/
 grafana_data/
 prometheus/
 prometheus_data/
+pgdata/

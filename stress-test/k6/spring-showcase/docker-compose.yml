@@ -1,0 +1,30 @@
+version: "3"
+
+#networks:
+#  backend_network:
+#    driver: bridge
+
+services:
+  app:
+    build:
+      context: ./
+      dockerfile: Dockerfile
+    restart: always
+#    volumes:
+#      - /var/run/docker.sock:/var/run/docker.sock
+    ports:
+      - "8080:8080"
+#    networks:
+#      - backend_network
+#  monitoring:
+#    container_name: uptime-kuma
+#    image: louislam/uptime-kuma:latest
+#    restart: always
+#    volumes:
+#      - ./monitoring/uptime-kuma/data:/app/data
+#    ports:
+#      - "3001:3001"
+#    security_opt:
+#      - no-new-privileges:true
+#    networks:
+#      - backend_network

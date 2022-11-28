@@ -1,0 +1,138 @@
+
+---
+How to run?
+
+1. docker build -t spring-showcase .
+2. docker run -d -p 8080:8080 spring-showcase
+3. http://localhost:8080/applications  -> 대시보드 -> 인스턴스 클릭 
+    spring boot admin이라고 spring 자체 monitoring service
+4. LAN에 내 ip 확인. ifconfig -> en0의 ipv4 확인
+5. write script.js -> ip 주소를 en0의 아이피로 바꿈
+6. docker run --rm -i grafana/k6 run --vus 10000 --duration 10s - <basic.js
+
+
+---
+스트레스 테스트 결과
+
+GET http://localhost:8080/api/greet/whynot 
+...으로 10000 개의 리퀘스트 보냄.
+
+
+     data_received..................: 1.8 MB 155 kB/s
+     data_sent......................: 1.2 MB 101 kB/s
+     http_req_blocked...............: avg=649.74ms min=5.95µs  med=716.86ms max=3.49s p(90)=1.4s     p(95)=1.49s
+     http_req_connecting............: avg=634.23ms min=0s      med=711.27ms max=3.24s p(90)=1.38s    p(95)=1.46s
+     http_req_duration..............: avg=1.52s    min=71.65ms med=1.41s    max=5.17s p(90)=2.52s    p(95)=3.01s
+       { expected_response:true }...: avg=1.52s    min=71.65ms med=1.41s    max=5.17s p(90)=2.52s    p(95)=3.01s
+     http_req_failed................: 0.00%  ✓ 0          ✗ 11854
+     http_req_receiving.............: avg=5.44ms   min=47.16µs med=100.58µs max=2.71s p(90)=942.37µs p(95)=14.81ms
+     http_req_sending...............: avg=98.75ms  min=24.12µs med=30.25ms  max=2.12s p(90)=128.95ms p(95)=531.99ms
+     http_req_tls_handshaking.......: avg=0s       min=0s      med=0s       max=0s    p(90)=0s       p(95)=0s
+     http_req_waiting...............: avg=1.42s    min=70.7ms  med=1.36s    max=5.16s p(90)=2.25s    p(95)=2.76s
+     http_reqs......................: 11854  1012.16649/s
+     iteration_duration.............: avg=4.36s    min=1.71s   med=4.36s    max=9.3s  p(90)=5.95s    p(95)=6.67s
+     iterations.....................: 11854  1012.16649/s
+     vus............................: 3831   min=0        max=8117
+     vus_max........................: 10000  min=1146     max=10000
+
+
+data_received = 총 받은 데이터의 사이즈
+data_sent = 총 보낸 데이터의 사이즈
+http_req_connecting = tcp connection을 server와 established 할 때 까지 걸린 시간 (은근 오래걸리네?)
+*http_req_duration = avg 1.52s 1개당 총 시간. server 찍고 client까지 돌아올 떄 까지.
+
+http_req_failed = 10000개 보낸 것 중에서 몇개 실패했는지
+http_req_receiving = server->client로 도달할 떄 까지 걸린 시간 
+http_req_sending = client->server로 도달할 때 까지 걸린 시간(connection established 때문에 오래 걸린다고 나와있는 듯)
+http_req_wating = 
+http_reqs = 총 몇개의 http request를 만들었나
+
+iteration_duration = 10000개 리퀘스트 보내고 응답 받을 때 까지 걸린 총 시간
+vus = virtual user. 최대 10000만명
+
+
+
+
+---
+1. Stress Test
+
+Goal:
+1. know limit of this system.how far can we push it?
+2. determine maximum capacity of your system under extreme situation.  findout where the break point is
+3. determine if your system will recover without manually intervention after the stress test is over
+
+
+
+How:
+특정 시나리오 만듬. 몇분까지 몇명의 유저가 접속, 
+버티면 몇분까지 더 많은 유저가 접속. 
+그것도 버티면 더 많은 유저 부음.
+
+
+Code:
+docker run --rm -i grafana/k6 run --vus 10000 --duration 10s - <./k6/stress.js
+
+
+
+---
+2. Spike Test
+
+Goal:
+1. 서버가 갑자기 유저 접속자 수가 spike up 하면 어떻게 반응하는지 테스트하는 것.
+2. will system recover itself from sudden spike?
+
+
+How:
+100명에서 갑자기 1400명으로 올렸다가, 
+3분동안 견디게 하고,
+다시 ramp down stage 거침.
+
+
+Metric:
+1. Excellent: performace is still during spike. no error nor shutdown.
+2. Good: response time is slower, but the system does not produce any errors
+3. Poor: system produces errors during spike, but recovers to normal state
+4. Bad: system crashs && does not recover
+
+
+Code:
+docker run --rm -i grafana/k6 run --vus 10000 --duration 10s - <./k6/spike.js
+
+
+---
+3. Load Test
+
+가장 무난하게 처음 돌리는 부하 테스팅.
+서버가 일반적인 상황에서 어떻게 반응하는지 체크하는 테스팅.
+
+threshold를 정해서, 99%의 request가 150ms 안에 성공하는지 체크
+
+
+Code:
+docker run --rm -i grafana/k6 run --vus 10000 --duration 10s - <./k6/load.js
+
+
+---
+4. Soak Test
+
+
+Goal: validate reliability of the system over a long time
+
+find
+1. bugs regarding race-condition that appear sporadically
+2. memory leaks
+3. make sure db doesnt exhaust
+4. verify expected application restarts don't lose request
+5. make sure your logs don't exhaust the allotted disk storage
+6. make sure the external services you depend on don't stop working after certain amount of http request
+
+
+How:
+1. stress test로 최대 핸들 가능한 유저의 수를 구함
+2. 80% 정도의 유저수로 테스트 진행
+3. 3 stage로 진행
+
+
+Code:
+docker run --rm -i grafana/k6 run --vus 10000 --duration 10s - <./k6/soak.js
+

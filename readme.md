@@ -25,6 +25,7 @@ C. AWS\
 D. Docker\
 E. Web Server\
 F. Monitoring\
+G. Stress Test\
 x. CI/CD\
 x. Audit\
 x. gRPC\
