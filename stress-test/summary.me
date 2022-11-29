@@ -1,0 +1,85 @@
+
+---
+Goal
+
+가장 실전환경과 가깝게 구성후,
+
+1. throughput(시간당 처리량):. data_sent, data_received, http_req(1초에 4.3개의 request를 처리하더라), checks(총 http requests 중 몇%가 fail 났는지)
+2. response time(latency): client에서 http request 쏘고 server에서 response 받을 때 까지 총 걸린 시간. http_req_duration
+3. 병목구간 확인
+4. concurrency(동시 접속자 수 핸들링): auto-scaling, vus, iteration
+5. resiliency(how system recovers from crashes & downtime)
+
+
+
+상황마다 성능지표 다 다르니, 성능 측정할 때에는, "몇명의 사용자가 어느정도의 밀도로 API 요청시, 서버의 응답속도 분포는~ " 의 형태가 현실적이다. 
+
+
+---
+K6 Output
+
+1명의 유저가 총 180번의 http request를 보냈을 때의 결과값
+latency: 144.56ms (http_req_duration)
+throughput: 4.3 http_request/s (http_reqs)
+
+
+
+
+checks.........................: 50.00% ✓ 45       ✗ 45  
+data_received..................: 1.3 MB 31 kB/s
+data_sent......................: 81 kB  2.0 kB/s
+group_duration.................: avg=6.45s    min=4.01s    med=6.78s    max=10.15s   p(90)=9.29s    p(95)=9.32s   
+http_req_blocked...............: avg=57.62ms  min=7µs      med=12.25µs  max=1.35s    p(90)=209.41ms p(95)=763.61ms
+http_req_connecting............: avg=20.51ms  min=0s       med=0s       max=1.1s     p(90)=100.76ms p(95)=173.41ms
+http_req_duration..............: avg=144.56ms min=104.11ms med=110.47ms max=1.14s    p(90)=203.54ms p(95)=215.95ms
+  { expected_response:true }...: avg=144.56ms min=104.11ms med=110.47ms max=1.14s    p(90)=203.54ms p(95)=215.95ms
+http_req_failed................: 0.00%  ✓ 0        ✗ 180 
+http_req_receiving.............: avg=663.96µs min=128.46µs med=759.82µs max=1.66ms   p(90)=1.3ms    p(95)=1.46ms  
+http_req_sending...............: avg=88.01µs  min=43.07µs  med=78.03µs  max=318.81µs p(90)=133.15µs p(95)=158.3µs 
+http_req_tls_handshaking.......: avg=29.25ms  min=0s       med=0s       max=458.71ms p(90)=108.31ms p(95)=222.46ms
+http_req_waiting...............: avg=143.8ms  min=103.5ms  med=109.5ms  max=1.14s    p(90)=203.19ms p(95)=215.56ms
+http_reqs......................: 180    4.36938/s
+iteration_duration.............: avg=12.91s   min=12.53s   med=12.77s   max=14.35s   p(90)=13.36s   p(95)=13.37s  
+iterations.....................: 45     1.092345/s
+vus............................: 1      min=1      max=19
+vus_max........................: 20     min=20     max=20
+
+
+---
+Metrics
+
+metric	                    type	    description
+vus	Gauge	                Current     number of active virtual users
+vus_max	                    Gauge	    Max possible number of virtual users (VU resources are preallocated to ensure performance will not be affected when scaling up the load level)
+iterations	                Counter	    The aggregate number of times the VUs in the test have executed the JS script (the default function). Or in case the test is not using a JS script but accessing a single URL the number of times the VUs have requested that URL
+data_received	            Counter	    The amount of received data
+data_sent	                Counter	    The amount of data sent
+checks	                    Rate	    Number of failed checks.
+http_reqs	                Counter	    How many HTTP requests has k6 generated in total	integer
+http_req_blocked	        Trend	    Time spent blocked (waiting for a free TCP connection slot) before initiating request	float
+http_req_looking_up	        Trend	    Time spent looking up remote host name in DNS	float
+http_req_connecting	        Trend	    Time spent establishing TCP connection to remote host	float
+http_req_tls_handshaking	Trend	    Time spent handshaking TLS session with remote host	float
+http_req_sending	        Trend	    Time spent sending data to remote host	float
+http_req_waiting	        Trend	    Time spent waiting for response from remote host (a.k.a. time to first byte or TTFB)	float
+http_req_receiving	        Trend	    Time spent receiving response data from remote host	float
+http_req_duration	        Trend	    Total time for the request. It's equal to http_req_sending + http_req_waiting + http_req_receiving (i.e. how long did the remote server take to process the request and respond (without the initial DNS lookup/connection times)	float
+
+
+
+---
+병목 구간 파악
+
+
+nginx - springboot - mysql
+
+
+이 세 구간에서 병목구간 어떻게 파악?
+보통 nginx, mysql은 최적화 되있기 때문에, spring server를 scale-out 해본다.
+
+이후, 이 세 부분중 어느 부분이 병목지점인가를 벤치마킹 툴 + 코드분석으로 파악해서 scale out + optimize 해준다.
+
+
+단, 서버 수평으로 늘리는건 돈주고 사야하니까, 코드를 optimize하거나,
+gRPC를 이용해본다거나, 서버에 비지니스 쪽 알고리즘을 더 효율 높은걸로 바꿔본다거나 해본다.
+디비 최적화는 보통 index추가 하거나 de-normalization 한다.
