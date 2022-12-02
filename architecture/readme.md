@@ -79,11 +79,11 @@ u. [Version Control](#version-control) \
 &nbsp;&nbsp;&nbsp;&nbsp;1. [Git Overall](#git-overall) \
 &nbsp;&nbsp;&nbsp;&nbsp;2. [Git Branch](#git-branch) \
 &nbsp;&nbsp;&nbsp;&nbsp;3. [Git Workflow](#git-workflow) \
-v. [Build](#build) \
-w. [Compiler](#compiler) \
+v. [Compiler](#compiler) \
 &nbsp;&nbsp;&nbsp;&nbsp;1. [Compiler](#근본-compiler) \
 &nbsp;&nbsp;&nbsp;&nbsp;2. [JIT Compiler](#jit-compiler) \
 &nbsp;&nbsp;&nbsp;&nbsp;3. [Interpreter](#interpreter) \
+w. [Build](#build) \
 x. [CI](#github-action-ci) \
 end. [reference](#reference)
 ---
@@ -1146,9 +1146,9 @@ css, js를 async로 non-blocking로 요청
 
 ![git workflow](./images/git-3.png)
 
-# Build
+# Compiler
 
-build 단계(cpp)
+compile 단계 in c++
 
 ![img.png](images/foo-bar-5.png)
 1. 전처리 단계
@@ -1197,26 +1197,16 @@ callq를 보면 foo랑 bar을 call하라고만 나오지, 세부사항은 안적
 
 
 
----
-Maven
-![build](./images/build.png)
-
-1. mvn compile : compiler:compile의 실행으로 src/java 밑의 모든 자바 소스를 컴파일해서 target/classes로 복사
-2. mvn test : surefire:test의 실행으로 target/test-classes에 있는 테스트케이스의 단위테스트를 진행한다. 결과를 target/surefire-reports에 생성한다.
-3. mvn package : target디렉토리 하위에 jar, war, ear등 패키지파일을 생성하고 이름은 <build>의 <finalName>의 값을 사용한다 지정되지 않았을 때는 아까 설명한 "artifactId-version.extention" 이름으로 생성
-4. mvn clean : 빌드 과정에서 생긴 target 디렉토리 내용 삭제
-5. mvn site : target/site에 문서 사이트 생성
-6. mvn site-deploy : 문서 사이트를 서버로 배포
-
-# Compiler
-근본 컴파일러 vs JIT+interpreter
-
-![compiler vs jit](./images/compiler-1.png)
-
 ### 근본 Compiler
 완제품(기계어)\
 기계어 바로 실행하면 됨\
 빠르나, 하드웨어(+하드웨어 전용 어셈블리어) 종속적
+
+근본 컴파일러 vs JIT+interpreter
+
+![compiler vs jit](./images/compiler-1.png)
+
+
 ![compiler](./images/compiler.png)
 
 ### JIT Compiler
@@ -1236,6 +1226,21 @@ ex. java, .net, nodejs(v8)
 한줄씩 번역->바로 실행\
 제일 느림\
 ex. js, python, ruby, sql, ...
+
+
+# Build
+
+Maven
+
+![build](./images/build.png)
+
+1. mvn compile : compiler:compile의 실행으로 src/java 밑의 모든 자바 소스를 컴파일해서 target/classes로 복사
+2. mvn test : surefire:test의 실행으로 target/test-classes에 있는 테스트케이스의 단위테스트를 진행한다. 결과를 target/surefire-reports에 생성한다.
+3. mvn package : target디렉토리 하위에 jar, war, ear등 패키지파일을 생성하고 이름은 <build>의 <finalName>의 값을 사용한다 지정되지 않았을 때는 아까 설명한 "artifactId-version.extention" 이름으로 생성
+4. mvn clean : 빌드 과정에서 생긴 target 디렉토리 내용 삭제
+5. mvn site : target/site에 문서 사이트 생성
+6. mvn site-deploy : 문서 사이트를 서버로 배포
+
 
 
 # Github-Action CI
