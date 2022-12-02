@@ -65,6 +65,9 @@ n. [Spring Security](#spring-security) \
 &nbsp;&nbsp;&nbsp;&nbsp;8. [Web Context](#web-context) \
 &nbsp;&nbsp;&nbsp;&nbsp;9. [Spring Security basic architecture](#spring-security-basic) \
 &nbsp;&nbsp;&nbsp;&nbsp;10. [Spring Security JWT](#spring-security-jwt) \
+&nbsp;&nbsp;&nbsp;&nbsp;11. [CORS](#cors) \
+&nbsp;&nbsp;&nbsp;&nbsp;12. [XSS](#xss) \
+&nbsp;&nbsp;&nbsp;&nbsp;13. [XSRF](#xsrf) \
 o. [AOP](#aop) \
 p. [Spring MVC](#spring-mvc) \
 q. [JDBC](#jdbc) \
@@ -1044,6 +1047,24 @@ Spring Container에서 보관하는 @Bean 정보 필요 없는 처리 할 때 �
 
 ### Spring Security JWT
 ![spring security jwt](./images/spring-security-jwt-architecture.png)
+
+### CORS
+cross origin resources sharing
+
+XSS, XSRF 공격 받으니까, 보내던 곳 말고 다른 origin(protocol+host+port)이면 컷.\
+개발시 postman으로 api테스트할 때, CORS 걸려서 Access-Control-Allow-Origin = * 해주는데,\
+실제 서비스시 preflight request나 credentialed request 방법을 적용해줘야 한다.
+
+
+### XSS
+![xss](./images/xss.png)
+
+js script insertion
+
+### XSRF
+![xsrf](./images/xsrf.png)
+
+낚시사이트에서 쿠키+세션이나 토큰 훔쳐 보내는 것
 
 # AOP
 ![AOP](./images/aop.png)
