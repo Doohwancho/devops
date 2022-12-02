@@ -88,6 +88,9 @@ v. [Compiler](#compiler) \
 &nbsp;&nbsp;&nbsp;&nbsp;3. [Interpreter](#interpreter) \
 w. [Build](#build) \
 x. [CI](#github-action-ci) \
+y. [Performance Tuning](#performance-tuning) \
+&nbsp;&nbsp;&nbsp;&nbsp;1. [Latency](#latency) \
+&nbsp;&nbsp;&nbsp;&nbsp;2. [Throughput](#throughput) \
 end. [reference](#reference)
 ---
 more
@@ -134,19 +137,6 @@ arr[]는 공간지역성이 높고,\
 이걸 바탕으로 다음 필요한 데이터를 예측해서 가져오는데,
 예측이 맞으면 cache hit, 틀리면 cache miss -> 그 다음 메모리에서 가져옴
 
-
----
-응답속도 보고 에러난 컴포넌트 예측하기
-
-![CACHE](./images/architecture-debugging-1.png)
-![CACHE](./images/architecture-debugging-2.png)
-
-백엔드는 하드웨어 에런지 클라우드 에런지, 디비 에런지 모르잖아?\
-큰 범위부터 좁혀가야 하는데, 방법 중 하나가 ms
-
-ex)\
-Q. 만약 사용중인 static 페이지가 400ms 속도로 느리게 로딩한다면?\
-A. 이미지, js파일 같은 정적 파일이 캐시가 아닌 디스크에서 온다는걸로 판단 가능.
 
 ### BUS
 ![BUS](./images/architecture-bus-3.png)
@@ -408,9 +398,12 @@ evolution of HTTP
 4. Http 3.0
 
 ![http](./images/http-3.png)
+![http](./images/http-3-quic.png)
+![http](./images/http-3-quic-2.png)
 
-1. TCP -> UDP 전환\
-2. 대신 보안으로 TLS 필수
+1. TCP -> UDP 전환
+2. tcp handshakes -> quic handshakes
+3. TLS connection 맺었으면 quic handshakes 건너뛰고 바로 통신. 대신 보안으로 TLS 필수
 
 
 
@@ -1311,6 +1304,51 @@ Maven
 # Github-Action CI
 ![github action](./images/github-action-ci.png)
 commit, push 하면 github에 별도 서버에서 build & test + alpha 해줌
+
+# Performance Tuning
+
+### Latency
+
+Latency(response time, 응답속도) 보고 에러난 컴포넌트 예측하기
+
+백엔드는 병목구간이 하드웨어 에서 걸렸는지, 클라우드에서 걸렸는지, , 디비에서 걸렸는지 모르잖아?\
+Latency보고 힌트를 얻어 큰 범위부터 좁혀가야 함.
+
+![CACHE](./images/architecture-debugging-1.png)
+![CACHE](./images/architecture-debugging-2.png)
+
+ex)\
+Q. 만약 사용중인 static 페이지가 400ms 속도로 느리게 로딩한다면?\
+A. 이미지, js파일 같은 정적 파일이 캐시가 아닌 디스크에서 온다는걸로 판단 가능.
+
+
+![CACHE](./images/latency-1.png)
+![CACHE](./images/latency-2.png)
+![CACHE](./images/latency-3.png)
+![CACHE](./images/latency-4.png)
+![CACHE](./images/latency-5.png)
+![CACHE](./images/latency-6.png)
+![CACHE](./images/latency-7.png)
+![CACHE](./images/latency-8.png)
+![CACHE](./images/latency-9.png)
+1. reading 1GB of RAM sequentially
+2. bcrypt a password takes 300ms
+3. TLS handshake takes 250ms to 500ms
+
+![CACHE](./images/latency-10.png)
+1. reading 1GB from SSD에서 sequentially
+
+![CACHE](./images/latency-11.png)
+
+### Throughput
+
+처리량 Mb/s
+
+처리량 늘리겠다고 멀티쓰레드 도입은 오해\
+1core = 1thread\
+단일 쓰레드 처리가 오래 걸리는거에 멀티쓰레드 해봤자 무의미.
+
+
 
 
 # Reference
