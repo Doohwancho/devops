@@ -69,18 +69,21 @@ o. [AOP](#aop) \
 p. [Spring MVC](#spring-mvc) \
 q. [JDBC](#jdbc) \
 r. [Database](#database) \
-&nbsp;&nbsp;&nbsp;&nbsp;1. [Mysql Architecture](#1-mysql-architecture) \
-&nbsp;&nbsp;&nbsp;&nbsp;2. [B Tree](#2-b-tree) \
+&nbsp;&nbsp;&nbsp;&nbsp;1. [Mysql Architecture](#mysql-architecture) \
+&nbsp;&nbsp;&nbsp;&nbsp;2. [B Tree](#b-tree) \
 s. [UIUX](#uiux) \
 t. [Critical Rendering Path](#critical-rendering-path) \
-&nbsp;&nbsp;&nbsp;&nbsp;1. [Critical Rendering Path 기본 구조](#1-critical-rendering-path-기본-구조) \
-&nbsp;&nbsp;&nbsp;&nbsp;2. [Critical Rendering Path async 최적화](#2-critical-rendering-path-async-최적화) \
+&nbsp;&nbsp;&nbsp;&nbsp;1. [Critical Rendering Path 기본 구조](#critical-rendering-path-기본-구조) \
+&nbsp;&nbsp;&nbsp;&nbsp;2. [Critical Rendering Path async 최적화](#critical-rendering-path-async-최적화) \
 u. [Version Control](#version-control) \
-&nbsp;&nbsp;&nbsp;&nbsp;1. [Git Overall](#1-git-overall) \
-&nbsp;&nbsp;&nbsp;&nbsp;2. [Git Branch](#2-git-branch) \
-&nbsp;&nbsp;&nbsp;&nbsp;3. [Git Workflow](#3-git-workflow) \
+&nbsp;&nbsp;&nbsp;&nbsp;1. [Git Overall](#git-overall) \
+&nbsp;&nbsp;&nbsp;&nbsp;2. [Git Branch](#git-branch) \
+&nbsp;&nbsp;&nbsp;&nbsp;3. [Git Workflow](#git-workflow) \
 v. [Build](#build) \
 w. [Compiler](#compiler) \
+&nbsp;&nbsp;&nbsp;&nbsp;1. [Compiler](#근본-compiler) \
+&nbsp;&nbsp;&nbsp;&nbsp;2. [JIT Compiler](#jit-compiler) \
+&nbsp;&nbsp;&nbsp;&nbsp;3. [Interpreter](#interpreter) \
 x. [CI](#github-action-ci) \
 end. [reference](#reference)
 ---
@@ -169,9 +172,9 @@ CPU에 가까울 수록 버스 대역이 큼.
    2. DDR3 RAM은 10.6GB/s
 2. FILE
    1. USB는 12MB/s으로 받고 60MB/s으로 보냄
-   2. CD/DVD는 120MB/s으로 받고 150MB/s으로 보냄 
+   2. CD/DVD는 120MB/s으로 받고 150MB/s으로 보냄
    3. Flash card는 10~40MB으로 받고 60MB/s으로 보냄
-3. SOCKET 
+3. SOCKET
    1. NIC는 128MB/s으로 받는데 1GB/s로 보냄
 
 CPU랑 IO controller랑 동신 속도는 12.8GB/s. 더 빠름.
@@ -227,7 +230,7 @@ B. Computation
       1. 현재 정보 -> 미래로 전달(ex. memo, library, wiki, vcs)
    2. space - cloud
       1. 정보를 다른 곳에서 쓸 수 있게 처리(ex. cloud, backup)
-      
+
 3. transfer
    1. human to human (whom to trust? authority issue)
       1. 1 to 1
@@ -418,7 +421,7 @@ packet을 받을 땐, 반대로
 
 헤더 까면서 위층으로 payload보내며 올라감.\
 File이건 Socket이건 Stream에 비동기로 오는애들 순서 상관없이 쌓아놓고,
-맨 마지막에 한번에 순서 정렬함. 
+맨 마지막에 한번에 순서 정렬함.
 
 
 ### OSI Layers on OS
@@ -574,7 +577,7 @@ route53을 통해 해당 IP를 DNS 등록.
 ### 2. 사용자가 n명일 때
 ![aws-n](./images/aws-n.png)
 
-db 인스턴스 분리 on ec2 
+db 인스턴스 분리 on ec2
 
 ### 3. 사용자가 100명 단위일 때
 ![aws-100](./images/aws-100.png)
@@ -587,7 +590,7 @@ db on ec2에 백업과 같은 작업, 업데이 부담 덜기 위해 RDS 사용.
 
 이중화 함
 앞에 load balancer 붙여줌
-RDB의 Multi-AZ옵션 사용해서 Master-Standby db로 나눠 backup 관리 
+RDB의 Multi-AZ옵션 사용해서 Master-Standby db로 나눠 backup 관리
 
 ### 5. 사용자가 10000명 단위일 때
 ![aws-10000-a](./images/aws-10000-a.png)
@@ -606,7 +609,7 @@ Elastic cache의 Redis나 DynamoDB로 관리
 
 ![aws-10000-d](./images/aws-10000-d.png)
 
-동적 컨텐츠도 CloudFront이용해서 CDN으로 처리해서 ec2 WAS 부하 분산 
+동적 컨텐츠도 CloudFront이용해서 CDN으로 처리해서 ec2 WAS 부하 분산
 
 
 ### 6. 사용자가 50만명 단위일 때
@@ -634,9 +637,9 @@ CloudWatch로 auto scaling(up+out)
 
 ![aws-500만명](./images/aws-5000000.png)
 
-데이터 베이스를 기능 및 목적에 따라 분리. 
+데이터 베이스를 기능 및 목적에 따라 분리.
 db간 교차-함수 쿼리가 어려움
- 
+
 
 2. Sharding
 
@@ -676,7 +679,7 @@ ex)
 
 ### 2. 데이터 흐름
 a. User
-1. CloudFront를 통해 S3에서 호스팅 되는 React App 접속 
+1. CloudFront를 통해 S3에서 호스팅 되는 React App 접속
 2. Route53을 통해 Internet Gateway로 이동
 3. ALB를 통해 Public Subnet 라우팅 테이블로 이동
 4. 라우팅 테이블에서 ALB 를 통해 접근한 트래픽은 어플리케이션으로 트래픽을 보냄
@@ -693,7 +696,7 @@ b. DevOps
 
 
 c. Lambda
-1. Lambda가 Private Subnet 에서 생성됨 
+1. Lambda가 Private Subnet 에서 생성됨
 2. 인터넷을 사용해야 할 경우 Public Subnet 에 있는 NAT Gateway를 통해 인터넷에 접근함
 3. 데이터베이스 사용시 내부IP를 이용하여 데이터베이스에 접근
 
@@ -724,8 +727,8 @@ A. 인터프리터 방식
 ![interpretor](./images/cgi-2.png)
 
 1. 스크립트 엔진이
-2. 스크립트(.php, .pl, .asp, .py) 실행 
-3. 파싱 
+2. 스크립트(.php, .pl, .asp, .py) 실행
+3. 파싱
 4. 결과를 web server에 던져줌
 
 
@@ -735,7 +738,7 @@ B. 자바는? .class는 어떻게 실행? 자바는 인터프리터 언어가 �
 ![interpretor](./images/cgi-3.png)
 
 1. jvm이 .class 파일 실행하지?
-2. jvm 돌게 하기 위해 자바 프로그램 관리 서버가 필요. 
+2. jvm 돌게 하기 위해 자바 프로그램 관리 서버가 필요.
 3. 자바 프로그램 관리 서버는 CGI 프로그램
 
 ![servlet](./images/servlet-1.png)
@@ -778,7 +781,7 @@ Thread Pool
       1. Tomcat 8.5부터는 NIO라고 non-blocking io 씀.
    3. Q. 근데 쓰레드 100개가 컨트롤러 하나에 요청하면 감당 가능함?
       1. db에서 write해서 멀티 쓰레드 환경에서 동기화 처리 필요하지 controller는 상태보관 안하고 일종의 read만 하니까 괜찮.
-      2. 결론: @Bean 붙은 객체들은 멀티 쓰레드 환경에서 상태보관(write)하게 시키지 말자. 앵간하면. 
+      2. 결론: @Bean 붙은 객체들은 멀티 쓰레드 환경에서 상태보관(write)하게 시키지 말자. 앵간하면.
 
 ```yml
 # application.yml (적어놓은 값은 default)
@@ -823,7 +826,7 @@ Spring MVC파트 때, Dispatcher 'Servlet'으로 보내짐.\
 
 ![servlet](./images/servlet-5.png)
 Dispatcher Servlet이 생긴 후, Servlet을 url마다 따로 만들지 않고, DispatcherServlet이 1개로 모두 처리.\
-원래 Servlet이 따로놀 땐, Servlet에서 Controller + View역할 까지 했었는데, 
+원래 Servlet이 따로놀 땐, Servlet에서 Controller + View역할 까지 했었는데,
 Front Controller인 DispatcherServlet가 도입되면서 Front Controller + Controller + View로 나눠짐.\
 Model1 -> Model2 -> MVC 탄생
 
@@ -899,7 +902,7 @@ reference counting
 
 단점
 1. **순환 참조** 알아낼 수 없음
-   1. a->b, b->a 참조하면, a,b는 영원히 free() 못함 
+   1. a->b, b->a 참조하면, a,b는 영원히 free() 못함
 2. reference 증감 카운트 해야해서 객체, 변수 등록할 때마다 갱신 필요
 
 ---
@@ -912,10 +915,10 @@ mark and sweep
 2. Sweeping
    1. heap에서 마크 안된 노드(안쓰는 노드) free()
 3. Compacting
-   1. survival node를 다른 장소로 옮김(ex. eden->survivor1 이든, survivor1 -> 2든..) 
+   1. survival node를 다른 장소로 옮김(ex. eden->survivor1 이든, survivor1 -> 2든..)
 4. Stop The World
    1. 모든 쓰레드 정지
-   2. free() 후 메모리에 정리안된 객체들 재정리 해줘야 하는 도중 참조당하면 안되니까. 
+   2. free() 후 메모리에 정리안된 객체들 재정리 해줘야 하는 도중 참조당하면 안되니까.
 
 ---
 Minor GC (young gen killer)
@@ -1019,7 +1022,7 @@ why?
 
 ### refresh token
 why?
-1. jwt token 유효기한 1년인데 탈취 당하면 1년동안 자유이용권 
+1. jwt token 유효기한 1년인데 탈취 당하면 1년동안 자유이용권
 2. 유효기간 짧게, refresh token으로 재갱신하게 하면, jwt token 털려도 잠깐동안만 이용 가능
 
 ![비대칭 키](./images/security-refresh-token.png)
@@ -1057,7 +1060,7 @@ Spring Container에서 보관하는 @Bean 정보 필요 없는 처리 할 때 �
 Q1. optimal # of Connection?\
 A1. 쓰레드 갯수
 
-왜? 
+왜?
 
 1 요청(쓰레드) 당 1 Connection 씀. 그 이상 Connection 만드는건 메모리 낭비.
 
@@ -1081,10 +1084,10 @@ CPU CORE 가 빨라서 여러 쓰레드 동시에 처리하는 것 처럼 보이
 
 # Database
 
-### 1. Mysql architecture
+### Mysql architecture
 ![Mysql](./images/mysql-architecture.png)
 
-### 2. B-Tree
+### B-Tree
 ![B-Tree](./images/database-btree-1.png)
 
 b-tree에서 인덱스를 찾아가는 과정
@@ -1101,7 +1104,7 @@ UX디자인은 사용자가 제품을 접하기 전부터 접한 이후까지의
 
 # Critical Rendering Path
 
-### 1. Critical Rendering Path 기본 구조
+### Critical Rendering Path 기본 구조
 ![crp1](./images/critical-rendering-path-1.png) \
 ![crp2](./images/critical-rendering-path-2.png) \
 byte -> DOM Tree
@@ -1119,7 +1122,7 @@ pixel
 Paint (Render Tree in Layout with Pixel)
 
 
-### 2. Critical Rendering Path Async 최적화
+### Critical Rendering Path Async 최적화
 
 ![crp7](./images/critical-rendering-path-7.png) \
 ![crp8](./images/critical-rendering-path-8.png) \
@@ -1130,16 +1133,16 @@ css, js를 async로 non-blocking로 요청
 
 # Version Control
 
-### 1. Git Overall
+### Git Overall
 
 ![git overall](./images/git-1.png)
 
 
-### 2. Git Branch
+### Git Branch
 
 ![git branch](./images/git-2.png)
 
-### 3. Git Workflow
+### Git Workflow
 
 ![git workflow](./images/git-3.png)
 
@@ -1150,7 +1153,7 @@ build 단계(cpp)
 ![img.png](images/foo-bar-5.png)
 1. 전처리 단계
    1. 먼저 #include 와 #define 와 같은 전처리기 매크로들을 처리
-   2. '#include < iostream >' 전처리하면 iostream에 있던애들 다 땡겨오기 때문에 2만 7천줄됨   
+   2. '#include < iostream >' 전처리하면 iostream에 있던애들 다 땡겨오기 때문에 2만 7천줄됨
 2. 컴파일 단계
    1. 그 뒤에 각각의 소스 파일들을 어셈블리 명령어로 변환
 3. 어셈블 단계
@@ -1177,9 +1180,9 @@ callq를 보면 foo랑 bar을 call하라고만 나오지, 세부사항은 안적
 
 ![img.png](images/foo-bar-3.png)
 
-1. 그래서 foo.c, bar.c, main.c을 각각 컴파일 후, 
+1. 그래서 foo.c, bar.c, main.c을 각각 컴파일 후,
 2. foo.o, bar.o, main.o 라는 목적 파일 생성 후,
-3. 목적파일들을 'linking'해줌 
+3. 목적파일들을 'linking'해줌
 4. main이라는 binary 파일 생성
 
 
@@ -1206,7 +1209,34 @@ Maven
 6. mvn site-deploy : 문서 사이트를 서버로 배포
 
 # Compiler
+근본 컴파일러 vs JIT+interpreter
+
+![compiler vs jit](./images/compiler-1.png)
+
+### 근본 Compiler
+완제품(기계어)\
+기계어 바로 실행하면 됨\
+빠르나, 하드웨어(+하드웨어 전용 어셈블리어) 종속적
 ![compiler](./images/compiler.png)
+
+### JIT Compiler
+just-in-time\
+반제품(byte code for jvm)\
+jvm이 byte code를 기계어로 한번 더 번역해줘야 함\
+compiler보다 느리나 하드웨어 종속적이지 않음\
+ex. java, .net, nodejs(v8)
+
+![jit](./images/jit-compiler.png)
+![JVM](./images/jvm-architecture.png)
+
+
+
+### Interpreter
+쌩재료\
+한줄씩 번역->바로 실행\
+제일 느림\
+ex. js, python, ruby, sql, ...
+
 
 # Github-Action CI
 ![github action](./images/github-action-ci.png)
