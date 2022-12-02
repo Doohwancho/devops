@@ -369,6 +369,50 @@ http://www.google.com/advisor/selectBeerTaste.do
 http response
 ![http response](./images/network-http-response.png)
 
+---
+evolution of HTTP
+
+![http](./images/http-overall.png)
+
+
+---
+1. Http 1.0
+
+![http](./images/http-1.png)
+
+1. 매번 tcp 3 way handshakes -> 네트워크 부하
+2. 이를 해결하려고 cookie & session과 tcp connection 재활용하는 http 1.1 나옴.
+
+
+---
+2. Http 1.1
+
+![http](./images/http-1.1.png)
+
+1. 3 way handshake 이후 TCP connection 재사용
+2. pipelining이라고 multiple request 비동기로 보내고, 순서대로 받으면 인정해주는 시스템 시도했으나 실패
+3. line blocking이라고 pipelining시 첫째 안오면 기다리게 했는데, packet loss하면 하염없이 기다림 -> 성능하락
+
+---
+3. Http 2.0
+
+![http](./images/http-2.png)
+
+1. IO multiplexing: 비동기로 여러개 보내고 서순 고려 안하고 받아 마지막에 재조립
+2. 얘도 line blocking issue 존재
+3. server push -> client poll 기능
+4. http request header 을 Huffman Coding 방식으로 압축함. 두번째 request부터는 diff 한 부분만 보냄.
+
+
+---
+4. Http 3.0
+
+![http](./images/http-3.png)
+
+1. TCP -> UDP 전환\
+2. 대신 보안으로 TLS 필수
+
+
 
 ### url
 ![url](./images/network-url.png)
@@ -1279,4 +1323,4 @@ commit, push 하면 github에 별도 서버에서 build & test + alpha 해줌
 6. [Maven build](https://jeong-pro.tistory.com/168)
 7. [Application 구조](https://black7375.tistory.com/35)
 8. [pics](https://github.com/corkami/pics)
-
+9. [ByteByteGo](https://www.youtube.com/@ByteByteGo)
