@@ -466,6 +466,7 @@ File이건 Socket이건 Stream에 비동기로 오는애들 순서 상관없이 
 
 ### OSI Layers on OS
 
+![OSI on OS](./images/osi-all.png)
 ![OSI on OS](./images/network-osi-os.png)
 
 Application Layer에서 app Process가 File이건 Socket이건 소켓을 열어서\
@@ -1322,6 +1323,7 @@ Q. 만약 사용중인 static 페이지가 400ms 속도로 느리게 로딩한�
 A. 이미지, js파일 같은 정적 파일이 캐시가 아닌 디스크에서 온다는걸로 판단 가능.
 
 
+![CACHE](./images/latency-11.png)
 ![CACHE](./images/latency-1.png)
 ![CACHE](./images/latency-2.png)
 ![CACHE](./images/latency-3.png)
