@@ -1,0 +1,126 @@
+
+---
+How to run?
+
+1. run springboot app
+2. postman post로 http://localhost:8080/product 에 아래의 json을 보냄
+{
+	"productId":1,
+	"name": "test",
+	"price": 1000
+}
+3. run uptime-kuma by 'docker compose up -d'
+4. ifconfig -> find 'en0's
+5. http:localhost:3001 로 uptime kuma 접속
+6. register en0's ipv4:8080/actuator/health
+
+
+
+
+
+---
+생각
+
+
+일단 기본적으로,
+업타임 쿠마는 그냥 localhost:8080 만 붙여놓으면, 서버 ping했을 때 latency, 업타임 몇%인지 보여줌.
+서버 다운되면 telegram으로 알람 보내게 할 수도 있고,
+모니터링 기록 저장할 수도 있고,
+
+
+
+
+근데 이게 MSA면 서비스마다 url이 달라서, 다르게 붙이면 되는데,
+monolith면, 기능별로 모니터링하기 애매함.
+그래서 spring actuator붙이고
+healthcheck package에 HealthcareManager에 서비스들 붙여놓고
+curl -X GET "http://localhost:8080/actuator/health"  날려보면, 붙여놓은 서비스 대로 결과가 뜸.
+
+아 아니구나
+
+@Component('HealthcareManager') 해놓으니까,
+http://192.168.45.10:8080/actuator/health/HealthcareManager
+하면 component들이 많네.
+
+
+http://192.168.45.10:8080/actuator/health/HealthcareManager/데이터베이스
+http://192.168.45.10:8080/actuator/health/HealthcareManager/임의의서비스
+
+
+이거 개별로 uptime kuma에서 핑찍으면 monolith여도 기능별로 서비스가 도는지 확인 가능하겠네.
+그리고 이건 기능별로 latency + uptime도 확인 가능하겠네.
+
+개꿀?
+
+
+
+
+---
+HealthCheck Status Details1. ping server
+
+
+springboot setting in application.properties
+
+# Show details of health endpoint
+management.endpoint.health.show-details=always
+
+
+
+curl http://localhost:8080/actuator/health
+
+
+case1) simple
+{"status":"UP"}
+
+
+case2) details
+{
+   "status": "UP",
+   "components": {
+    "diskSpace": {
+     "status": "UP",
+     "details": {
+      "total": 250685575168,
+      "free": 12073996288,
+      "threshold": 10485760,
+      "exists": true
+     }
+    },
+    "ping": {
+     "status": "UP"
+    }
+   }
+}
+
+
+
+shows total, free, and threshold space.
+
+
+
+---
+HealthCheck Status Details2. database health check
+
+{
+   "status": "UP",
+   "components": {
+    "db": {
+     "status": "UP",
+     "details": {
+      "database": "H2",
+      "validationQuery": "isValid()"
+     }
+    },
+    "diskSpace": {
+     ...
+     }
+    },
+    "ping": {
+     "status": "UP"
+    }
+   }
+}
+
+
+
+
