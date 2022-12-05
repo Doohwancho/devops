@@ -1,100 +1,102 @@
 # 목차
 
+1. [Computer Architecture](#computer-architecture)
+	1. [컴퓨터 구조](#computer-architecture-all)
+	2. [폰 노이만 구조](#von-neumann-architecture)
+	3. [CPU](#cpu)
+	4. [Cache](#cache)
+	5. [Bus](#bus)
+	6. [IO](#io)
+	7. [Application](#application)
+	8. [Charsets and Encodings](#charsets-and-encodings)
+	9. [Color and Image](#color-and-image)
+	10. [File Format](#file-format)
+	11. [Archive](#archive)
+	12. [Audio](#audio)
+2. [Operating System](#operating-system)
+	1. [System Call](#kernel-1-system-call)
+	2. [Process 관리](#kernel-2-process-관리)
+	3. [메모리 관리](#kernel-3-메모리-관리)
+	4. [가상화](#가상화)
+3. [Network](#network)
+	1. [브라우저에 google.com 치면 일어나는 일](#브라우저에-google.com-치면-일어나는-일)
+	2. [Http](#http)
+	3. [Url](#url)
+	4. [DNS](#dns)
+	5. [Packet](#packet)
+	6. [OSI Layers on Operating System](#osi-layers-on-os)
+	7. [1. Physical Layer](#1-physical-layer)
+	8. [2. Datalink Layer](#2-datalink-layer-on-l2-switch(frame))
+	9. [ARP Protocol](#arp-protocol)
+	10. [NAT](#nat)
+	11. [DMZ](#dmz)
+	12. [Firewall](#firewall)
+	13. [3. Network Layer](#network-layer-on-l3-switch(packet))
+	14. [3 Way Handshake](#3-way-handshake)
+	15. [SSL](#ssl)
+	16. [4 Way Handshake](#4-way-handshake)
+4. [System Design](#system-design)
+	1. [Basic Production App Architecture](#basic-production-app-architecture)
+	2. [규모 확장 시스템 설계 기본](#규모-확장-시스템-설계-기본)
+	3. [design twitter](#design-twitter)
+	4. [3계층형 시스템](#3계층형-시스템)
+	5. [aws architecture for startup](#aws-architecture-for-startup)
+5. [aws architecture by size](#aws-architecture-by-size)
+	1. [사용자가 본인 1명일 때](#1-사용자가-본인-1명일-때)
+	2. [사용자가 n명일 때](#2-사용자가-n명일-때)
+	3. [사용자가 100명 단위일 때](#3-사용자가-100명-단위일-때)
+	4. [사용자가 1000명 단위일 때](#4-사용자가-1000명-단위일-때)
+	5. [사용자가 10000명 단위일 때](#5-사용자가-10000명-단위일-때)
+	6. [사용자가 50만명 단위일 때](#6-사용자가-50만명-단위일-때)
+	7. [사용자가 100만명 단위일 때](#7-사용자가-100만명-단위일-때)
+	8. [사용자가 500만명 단위일 때](#8-사용자가-500만명-단위일-때)
+6. [Web Server](#web-server)
+7. [CGI](#cgi)
+8. [Web Application Server](#web-application-server)
+9. [Servlet](#servlet)
+10. [JVM](#jvm)
+11. [Garbage Collector](#garbage-collector)
+12. [Spring Security](#spring-security)
+	1. [암호화](#암호화)
+	2. [대칭 키](#대칭-키)
+	3. [비대칭 키](#비대칭-키)
+	4. [대칭키 + 비대칭 키](#대칭-키-+-비대칭-키)
+	5. [session](#session)
+	6. [JWT](#jwt)
+	7. [Refresh token](#refresh-token)
+	8. [Web Context](#web-context)
+	9. [Spring Security basic architecture](#spring-security-basic)
+	10. [Spring Security JWT](#spring-security-jwt)
+	11. [CORS](#cors)
+	12. [XSS](#xss)
+	13. [XSRF](#xsrf)
+13. [AOP](#aop)
+14. [Spring MVC](#spring-mvc)
+14. [JDBC](#jdbc)
+15. [Database](#database)
+	1. [Mysql Architecture](#mysql-architecture)
+	2. [B Tree](#b-tree)
+16. [UIUX](#uiux)
+17. [Critical Rendering Path](#critical-rendering-path)
+	1. [Critical Rendering Path 기본 구조](#critical-rendering-path-기본-구조)
+	2. [Critical Rendering Path async 최적화](#critical-rendering-path-async-최적화)
+18. [Version Control](#version-control)
+	1. [Git Overall](#git-overall)
+	2. [Git Branch](#git-branch)
+	3. [Git Workflow](#git-workflow)
+19. [Compiler](#compiler)
+	1. [Compiler](#근본-compiler)
+	2. [JIT Compiler](#jit-compiler)
+	3. [Interpreter](#interpreter)
+20. [Build](#build)
+21. [CI](#github-action-ci)
+22. [Performance Tuning](#performance-tuning)
+	1. [Latency](#latency)
+	2. [Throughput](#throughput)
 
-a. [Computer Architecture](#computer-architecture)\
-&nbsp;&nbsp;&nbsp;&nbsp;1. [컴퓨터 구조](#computer-architecture-all) \
-&nbsp;&nbsp;&nbsp;&nbsp;2. [폰 노이만 구조](#von-neumann-architecture) \
-&nbsp;&nbsp;&nbsp;&nbsp;3. [CPU](#cpu) \
-&nbsp;&nbsp;&nbsp;&nbsp;4. [Cache](#cache) \
-&nbsp;&nbsp;&nbsp;&nbsp;5. [Bus](#bus) \
-&nbsp;&nbsp;&nbsp;&nbsp;6. [IO](#io) \
-&nbsp;&nbsp;&nbsp;&nbsp;x. [Application](#application) \
-&nbsp;&nbsp;&nbsp;&nbsp;x. [Charsets and Encodings](#charsets-and-encodings) \
-&nbsp;&nbsp;&nbsp;&nbsp;x. [Color and Image](#color-and-image) \
-&nbsp;&nbsp;&nbsp;&nbsp;x. [File Format](#file-format) \
-&nbsp;&nbsp;&nbsp;&nbsp;x. [Archive](#archive) \
-&nbsp;&nbsp;&nbsp;&nbsp;x. [Audio](#audio) \
-b. [Operating System](#operating-system) \
-&nbsp;&nbsp;&nbsp;&nbsp;1. [System Call](#kernel\)-1-system-call) \
-&nbsp;&nbsp;&nbsp;&nbsp;2. [Process 관리](#kernel\)-2-process-관리) \
-&nbsp;&nbsp;&nbsp;&nbsp;3. [메모리 관리](#kernel\)-3-메모리-관리) \
-&nbsp;&nbsp;&nbsp;&nbsp;4. [가상화](#가상화) \
-c. [Network](#network) \
-&nbsp;&nbsp;&nbsp;&nbsp;1. [브라우저에 google.com 치면 일어나는 일](#브라우저에-google.com-치면-일어나는-일) \
-&nbsp;&nbsp;&nbsp;&nbsp;2. [Http](#http) \
-&nbsp;&nbsp;&nbsp;&nbsp;3. [Url](#url) \
-&nbsp;&nbsp;&nbsp;&nbsp;4. [DNS](#dns) \
-&nbsp;&nbsp;&nbsp;&nbsp;5. [Packet](#packet) \
-&nbsp;&nbsp;&nbsp;&nbsp;6. [OSI Layers on Operating System](#osi-layers-on-os) \
-&nbsp;&nbsp;&nbsp;&nbsp;7. [1. Physical Layer](#1-physical-layer) \
-&nbsp;&nbsp;&nbsp;&nbsp;8. [2. Datalink Layer](#2-datalink-layer-on-l2-switch(frame)) \
-&nbsp;&nbsp;&nbsp;&nbsp;9. [ARP Protocol](#arp-protocol) \
-&nbsp;&nbsp;&nbsp;&nbsp;10. [NAT](#nat) \
-&nbsp;&nbsp;&nbsp;&nbsp;11. [DMZ](#dmz) \
-&nbsp;&nbsp;&nbsp;&nbsp;12. [Firewall](#firewall) \
-&nbsp;&nbsp;&nbsp;&nbsp;13. [3. Network Layer](#network-layer-on-l3-switch(packet)) \
-&nbsp;&nbsp;&nbsp;&nbsp;14. [3 Way Handshake](#3-way-handshake) \
-&nbsp;&nbsp;&nbsp;&nbsp;15. [SSL](#ssl) \
-&nbsp;&nbsp;&nbsp;&nbsp;16. [4 Way Handshake](#4-way-handshake) \
-d. [규모 확장 시스템 설계 기본](#규모-확장-시스템-설계-기본) \
-e. [aws architecture by size](#aws-architecture-by-size) \
-&nbsp;&nbsp;&nbsp;&nbsp;1. [사용자가 본인 1명일 때](#1-사용자가-본인-1명일-때) \
-&nbsp;&nbsp;&nbsp;&nbsp;2. [사용자가 n명일 때](#2-사용자가-n명일-때) \
-&nbsp;&nbsp;&nbsp;&nbsp;3. [사용자가 100명 단위일 때](#3-사용자가-100명-단위일-때) \
-&nbsp;&nbsp;&nbsp;&nbsp;4. [사용자가 1000명 단위일 때](#4-사용자가-1000명-단위일-때) \
-&nbsp;&nbsp;&nbsp;&nbsp;5. [사용자가 10000명 단위일 때](#5-사용자가-10000명-단위일-때) \
-&nbsp;&nbsp;&nbsp;&nbsp;6. [사용자가 50만명 단위일 때](#6-사용자가-50만명-단위일-때) \
-&nbsp;&nbsp;&nbsp;&nbsp;7. [사용자가 100만명 단위일 때](#7-사용자가-100만명-단위일-때) \
-&nbsp;&nbsp;&nbsp;&nbsp;8. [사용자가 500만명 단위일 때](#8-사용자가-500만명-단위일-때) \
-f. [aws architecture for startup](#aws-architecture-for-startup) \
-g. [3계층형 시스템](#3계층형-시스템) \
-h. [Web Server](#web-server) \
-i. [CGI](#cgi) \
-j. [Web Application Server](#web-application-server) \
-k. [Servlet](#servlet) \
-l. [JVM](#jvm) \
-m. [Garbage Collector](#garbage-collector) \
-n. [Spring Security](#spring-security) \
-&nbsp;&nbsp;&nbsp;&nbsp;1. [암호화](#암호화) \
-&nbsp;&nbsp;&nbsp;&nbsp;2. [대칭 키](#대칭-키) \
-&nbsp;&nbsp;&nbsp;&nbsp;3. [비대칭 키](#비대칭-키) \
-&nbsp;&nbsp;&nbsp;&nbsp;4. [대칭키 + 비대칭 키](#대칭-키-+-비대칭-키) \
-&nbsp;&nbsp;&nbsp;&nbsp;5. [session](#session) \
-&nbsp;&nbsp;&nbsp;&nbsp;6. [JWT](#jwt) \
-&nbsp;&nbsp;&nbsp;&nbsp;7. [Refresh token](#refresh-token) \
-&nbsp;&nbsp;&nbsp;&nbsp;8. [Web Context](#web-context) \
-&nbsp;&nbsp;&nbsp;&nbsp;9. [Spring Security basic architecture](#spring-security-basic) \
-&nbsp;&nbsp;&nbsp;&nbsp;10. [Spring Security JWT](#spring-security-jwt) \
-&nbsp;&nbsp;&nbsp;&nbsp;11. [CORS](#cors) \
-&nbsp;&nbsp;&nbsp;&nbsp;12. [XSS](#xss) \
-&nbsp;&nbsp;&nbsp;&nbsp;13. [XSRF](#xsrf) \
-o. [AOP](#aop) \
-p. [Spring MVC](#spring-mvc) \
-q. [JDBC](#jdbc) \
-r. [Database](#database) \
-&nbsp;&nbsp;&nbsp;&nbsp;1. [Mysql Architecture](#mysql-architecture) \
-&nbsp;&nbsp;&nbsp;&nbsp;2. [B Tree](#b-tree) \
-s. [UIUX](#uiux) \
-t. [Critical Rendering Path](#critical-rendering-path) \
-&nbsp;&nbsp;&nbsp;&nbsp;1. [Critical Rendering Path 기본 구조](#critical-rendering-path-기본-구조) \
-&nbsp;&nbsp;&nbsp;&nbsp;2. [Critical Rendering Path async 최적화](#critical-rendering-path-async-최적화) \
-u. [Version Control](#version-control) \
-&nbsp;&nbsp;&nbsp;&nbsp;1. [Git Overall](#git-overall) \
-&nbsp;&nbsp;&nbsp;&nbsp;2. [Git Branch](#git-branch) \
-&nbsp;&nbsp;&nbsp;&nbsp;3. [Git Workflow](#git-workflow) \
-v. [Compiler](#compiler) \
-&nbsp;&nbsp;&nbsp;&nbsp;1. [Compiler](#근본-compiler) \
-&nbsp;&nbsp;&nbsp;&nbsp;2. [JIT Compiler](#jit-compiler) \
-&nbsp;&nbsp;&nbsp;&nbsp;3. [Interpreter](#interpreter) \
-w. [Build](#build) \
-x. [CI](#github-action-ci) \
-y. [Performance Tuning](#performance-tuning) \
-&nbsp;&nbsp;&nbsp;&nbsp;1. [Latency](#latency) \
-&nbsp;&nbsp;&nbsp;&nbsp;2. [Throughput](#throughput) \
 end. [reference](#reference)
+
 ---
-more
-database: transaction, lock, isolation level, index, JPA N+1
 
 # Computer Architecture
 
@@ -604,8 +606,83 @@ tls handshake
 
 TCP 연결했던 세션 종료
 
-# 규모 확장 시스템 설계 기본
+
+
+# System Design
+
+
+### Basic Production App Architecture
+![prod app](./images/basic-production-app-architecture.png)
+
+1. build & deploy -> cicd
+2. sentry to save logs on other server
+3. spring actuator | 시계열 log -> metric -> threshold(ex. 99% coverage below) -> auto alert to programmer
+
+
+### 규모 확장 시스템 설계 기본
 ![규모확장 시스템설계 기본](./images/규모확장-시스템설계-기본.png)
+
+
+1. load balancer + scale out
+2. caching
+3. message queue for async
+4. sharding(master-write, slave-read)
+
+
+### Design Twitter
+![twitter](./images/twitter.png)
+
+1. static files(ex. image, video) stored in object storage -> poll from cdn specialized by region
+2. rdb sharding based on region, which celeb to follow to avoid multi-db-query
+3. popular tweets served from cache to reduce db io
+4. my tweet loads on feed-cache x # of my followers (pub/sub, async MQ -> parellel processing from cluster/workers -> feed cache) to reduce db io
+
+
+
+### 3계층형 시스템
+![3계층형 시스템](./images/3계층-시스템.png)
+
+
+
+### aws architecture for startup
+![aws architecture for startup](./images/aws-architecture-for-startup.png)
+
+### 1. 요약
+1. 데이터 흐름
+2. VPC 생성
+3. Subnet 생성
+4. Internet Gateway, NAT Gateway 생성
+5. Routing Table, Network ACL 설정
+6. AWS Lambda를 Private Subnet에서 구성
+
+
+### 2. 데이터 흐름
+a. User
+1. CloudFront를 통해 S3에서 호스팅 되는 React App 접속
+2. Route53을 통해 Internet Gateway로 이동
+3. ALB를 통해 Public Subnet 라우팅 테이블로 이동
+4. 라우팅 테이블에서 ALB 를 통해 접근한 트래픽은 어플리케이션으로 트래픽을 보냄
+5. 정상적이지 않은 접근일 경우 다시 Internet Gateway로 포워딩
+6. EB 어플리케이션은 내부 IP를 사용하여 MySQL에 접근
+
+
+b. DevOps
+1. EC2 접근 최소화
+2. 굳이 접근 해야 한다면, Bastion 서버를 중간에 두고 접근
+3. 로그 등은 반드시 언제든 확인할 수 있는 시스템을 갖추어야 한다.
+3. 데이터 베이스 접근 역시 Bastion 서버를 중간에 두고 접근
+4. 굳이 Bastion 서버가 아니더라도 VPN 등을 두고 접근을 실시한다.
+
+
+c. Lambda
+1. Lambda가 Private Subnet 에서 생성됨
+2. 인터넷을 사용해야 할 경우 Public Subnet 에 있는 NAT Gateway를 통해 인터넷에 접근함
+3. 데이터베이스 사용시 내부IP를 이용하여 데이터베이스에 접근
+
+
+
+
+
 
 # AWS architecture by size
 
@@ -702,51 +779,6 @@ ex)
 임시 데이터(장바구니)
 핫 테이블
 메타 데이터 / 검색 테이블
-
-
-
-
-# aws architecture for startup
-![aws architecture for startup](./images/aws-architecture-for-startup.png)
-
-### 1. 요약
-1. 데이터 흐름
-2. VPC 생성
-3. Subnet 생성
-4. Internet Gateway, NAT Gateway 생성
-5. Routing Table, Network ACL 설정
-6. AWS Lambda를 Private Subnet에서 구성
-
-
-### 2. 데이터 흐름
-a. User
-1. CloudFront를 통해 S3에서 호스팅 되는 React App 접속
-2. Route53을 통해 Internet Gateway로 이동
-3. ALB를 통해 Public Subnet 라우팅 테이블로 이동
-4. 라우팅 테이블에서 ALB 를 통해 접근한 트래픽은 어플리케이션으로 트래픽을 보냄
-5. 정상적이지 않은 접근일 경우 다시 Internet Gateway로 포워딩
-6. EB 어플리케이션은 내부 IP를 사용하여 MySQL에 접근
-
-
-b. DevOps
-1. EC2 접근 최소화
-2. 굳이 접근 해야 한다면, Bastion 서버를 중간에 두고 접근
-3. 로그 등은 반드시 언제든 확인할 수 있는 시스템을 갖추어야 한다.
-3. 데이터 베이스 접근 역시 Bastion 서버를 중간에 두고 접근
-4. 굳이 Bastion 서버가 아니더라도 VPN 등을 두고 접근을 실시한다.
-
-
-c. Lambda
-1. Lambda가 Private Subnet 에서 생성됨
-2. 인터넷을 사용해야 할 경우 Public Subnet 에 있는 NAT Gateway를 통해 인터넷에 접근함
-3. 데이터베이스 사용시 내부IP를 이용하여 데이터베이스에 접근
-
-
-
-# 3계층형 시스템
-![3계층형 시스템](./images/3계층-시스템.png)
-
-MVC
 
 
 # Web Server
@@ -1364,3 +1396,4 @@ A. 이미지, js파일 같은 정적 파일이 캐시가 아닌 디스크에서 
 7. [Application 구조](https://black7375.tistory.com/35)
 8. [pics](https://github.com/corkami/pics)
 9. [ByteByteGo](https://www.youtube.com/@ByteByteGo)
+10. [NeetCode](https://www.youtube.com/@NeetCode)

@@ -2,16 +2,17 @@
 Objective
 
 
-1. easy & reliable deployment 
+1. easy & reliable deployment
 2. scalability
-3. quick error recovery 
+3. quick error recovery
 
 
 ---\
 Approach
 
 
-modularize devOps concepts
+1. modularize devOps concepts
+2. 기획/설계/기술선택/구현/시연/평가
 
 
 
