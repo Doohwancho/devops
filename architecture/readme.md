@@ -14,9 +14,9 @@
 	11. [Archive](#archive)
 	12. [Audio](#audio)
 2. [Operating System](#operating-system)
-	1. [System Call](#kernel-1-system-call)
-	2. [Process 관리](#kernel-2-process-관리)
-	3. [메모리 관리](#kernel-3-메모리-관리)
+	1. [System Call](#system-call)
+	2. [Process 관리](#process-관리)
+	3. [메모리 관리](#메모리-관리)
 	4. [가상화](#가상화)
 3. [Network](#network)
 	1. [브라우저에 google.com 치면 일어나는 일](#브라우저에-google.com-치면-일어나는-일)
@@ -34,7 +34,8 @@
 	13. [3. Network Layer](#network-layer-on-l3-switch(packet))
 	14. [3 Way Handshake](#3-way-handshake)
 	15. [SSL](#ssl)
-	16. [4 Way Handshake](#4-way-handshake)
+	16. [Socket](#socket)
+	17. [4 Way Handshake](#4-way-handshake)
 4. [System Design](#system-design)
 	1. [Basic Production App Architecture](#basic-production-app-architecture)
 	2. [규모 확장 시스템 설계 기본](#규모-확장-시스템-설계-기본)
@@ -72,25 +73,42 @@
 	13. [XSRF](#xsrf)
 13. [AOP](#aop)
 14. [Spring MVC](#spring-mvc)
-14. [JDBC](#jdbc)
-15. [Database](#database)
+15. [Multi Thread](#multi-thread)
+	1. [Concurrency vs Parallel](#concurrency-vs-parallel)
+	2. [Async](#async)
+	3. [Blocking vs Non Blocking](#blocking-vs-non-blocking)
+	4. [Multi Thread Warning](#multi-thread-warning)
+	5. [Critical Section](#critical-section)
+	6. [Spin Lock](#spin-lock)
+	7. [Mutex](#mutex)
+	8. [Semaphore](#semaphore)
+	9. [Transaction](#transaction)
+16. [Event Loop](#event-loop)
+	1. [Node.js Reactor Pattern](#nodejs-reactor-pattern)
+	2. [Coroutine](#coroutine)
+	3. [Async Await](#async-await)
+	4. [Future and Promise](#future-and-promise)
+17. [Message Queue](#message-queue)
+	1. [Kafka](#kafka)
+18. [JDBC](#jdbc)
+19. [Database](#database)
 	1. [Mysql Architecture](#mysql-architecture)
 	2. [B Tree](#b-tree)
-16. [UIUX](#uiux)
-17. [Critical Rendering Path](#critical-rendering-path)
+20. [UIUX](#uiux)
+21. [Critical Rendering Path](#critical-rendering-path)
 	1. [Critical Rendering Path 기본 구조](#critical-rendering-path-기본-구조)
 	2. [Critical Rendering Path async 최적화](#critical-rendering-path-async-최적화)
-18. [Version Control](#version-control)
+22. [Version Control](#version-control)
 	1. [Git Overall](#git-overall)
 	2. [Git Branch](#git-branch)
 	3. [Git Workflow](#git-workflow)
-19. [Compiler](#compiler)
+23. [Compiler](#compiler)
 	1. [Compiler](#근본-compiler)
 	2. [JIT Compiler](#jit-compiler)
 	3. [Interpreter](#interpreter)
-20. [Build](#build)
-21. [CI](#github-action-ci)
-22. [Performance Tuning](#performance-tuning)
+24. [Build](#build)
+25. [CI](#github-action-ci)
+26. [Performance Tuning](#performance-tuning)
 	1. [Latency](#latency)
 	2. [Throughput](#throughput)
 
@@ -298,15 +316,55 @@ Q
 ![kernel](./images/os-kernel.png)
 
 
-### 1. kernel 1) System Call
+### System Call
 ![system call](./images/os-system-call.png)
 
 
-### 2. kernel 2) Process 관리
+### Process 관리
+
+![image](./images/concurrency-parallel.png)
+
+1. 순차처리 = 1개 코어가 3개 task를 순차 처리(+no context switching cost -9T(1~9))
+2. concurrency = 1개 코어가 3개 task를 각각 3개씩 쪼개어 돌아가면서 처리(+5T(1,[2,1],[3,2,1],[done,3,2],[done,done,3]) -context switching cost)
+![image](./images/context-switching.png)
+register, thread, process에 있던 정보를 모조리 복사해야하니까 write 비용 듬.
+
+3. parallelism == 3개 코어가 3개 task 각각 한개씩 동시에 처리
 
 
 
-### 3. kernel 3) 메모리 관리
+---
+
+![os-process-manage](./images/os-process-manage.png)
+
+when Interrupted with new process, how to handle?
+1. Preemptive Scheduling (먼저온 놈 너 나와!)
+	1. 우선순위 빠른 프로세스 먼저 처리
+	2. 많은 오버헤드 발생
+	3. 빠른 응답시간 요구하는 대화식 시분할 시스템에 사용됨
+2. Non-Preemptive Scheduling (늦게온 놈이 기다려)
+	1. 프로세스 처리시간 공정
+	2. 프로그램 응답시간 예측 용이
+	3. 일괄처리 방식에 적합
+	4. -중요한 작업이 중요하지 않은 task때문에 오래 기다리는 경우 발생
+
+![kernel level thread](./images/os-kernel-thread.png)
+os는 kernel thread를 스케쥴링 함.
+
+
+![user level thread](./images/os-user-level-thread.png)
+user level thread는 kernel level thread에서 파생되는데, 1:1, 1:N, M:N 관계일 수 있음.
+
+
+![java thread](./images/os-java-thread.png)
+
+java8기준, java는 user level thread 사용하지 않고, jvm을 통해 os로부터 system call을 호출하여 kernel thread를 할당받음.
+
+
+
+
+
+### 메모리 관리
 
 
 ![컴퓨터 자원 관리](./images/자원-관리.png)
@@ -327,7 +385,7 @@ Q
 가변길이는 공간 유용하게 쓸 수 있지만,(공간 good)\
 칸막이 위치가 안정해져있어서 원하는 책 찾으려면 고정 길이에 비해 시간걸림.(성능 bad)
 
-### 4. 가상화
+### 가상화
 한개에 물리 서버 안에 여러 논리서버 만들어 scale out 가능.
 
 ![가상화](./images/os-가상화1.png)
@@ -391,6 +449,12 @@ evolution of HTTP
 ![http](./images/http-2.png)
 
 1. IO multiplexing: 비동기로 여러개 보내고 서순 고려 안하고 받아 마지막에 재조립
+![multi plexing](./images/multiplex.gif)
+![multi plexing](./images/multiplex-2.png)
+![multi plexing](./images/multiplex-3.png)
+(multi-process -> multi-thread -> multi-plex 순)
+
+
 2. 얘도 line blocking issue 존재
 3. server push -> client poll 기능
 4. http request header 을 Huffman Coding 방식으로 압축함. 두번째 request부터는 diff 한 부분만 보냄.
@@ -598,6 +662,20 @@ http's' is on ssl
 tls handshake
 
 ![tls handshakes](./images/network-tls-handshake.svg)
+
+
+### Socket
+
+![image](./images/socket-1.png)
+![image](./images/socket-2.png)
+
+1. 프로세스간 통신도 결국 소켓이네.
+2. 네트워크 통신시 osi layer 4,3,2,1 내려가는 구간 스킵하고 통신하는 거고.
+3. Socket과 File은 본질적으로 같다.(UNIX에서는 둘이 같이 처리, window는 Socket API 따로 존재)
+
+![image](./images/socket-3.png)
+
+
 
 
 ### 4 Way Handshake
@@ -903,8 +981,6 @@ Dispatcher Servlet이 생긴 후, Servlet을 url마다 따로 만들지 않고, 
 Front Controller인 DispatcherServlet가 도입되면서 Front Controller + Controller + View로 나눠짐.\
 Model1 -> Model2 -> MVC 탄생
 
-# JVM
-
 ![.class](./images/java-class.png)
 ![class](./images/class101-1.png)
 
@@ -916,10 +992,11 @@ Model1 -> Model2 -> MVC 탄생
 4. Garbage Collector는 Heap Memory에 생성된 객체 중, 참조되지 않은 객체를 탐색 후 제거
 
 ![JVM](./images/jvm-architecture.png)
+![JVM](./images/stack-heap-method.png)
 ![JVM](./images/jvm-2.png)
 
 ---
-- 모든 쓰레드가 공유
+- Method + Heap area는 모든 쓰레드가 공유
 1. Method area (메소드 영역)
    1. meta space (interface, static, class, constant pool, etc)
    2. 예전 JVM버전엔 Permanent Generation(PermGen) Space 이었고 GC관리 영역이었음.
@@ -936,7 +1013,7 @@ A. 객체니까 Heap에 생성되는데, 클래스 정보는 메서드 영역에
 
 
 ---
-- 각각 쓰레드마다 생성 & 공유하지 않음
+- stack / pc register/ native area는 각각 쓰레드마다 생성 & 공유하지 않음
 3. Stack area (스택 영역)
    1. 지역 변수, 파라미터, 리턴 값, 연산에 사용되는 임시 값등이 생성되는 영역
 4. PC Register
@@ -969,6 +1046,7 @@ A. 객체니까 Heap에 생성되는데, 클래스 정보는 메서드 영역에
 
 ---
 reference counting
+
 ![reference counting](./images/gc-2.png)
 
 객체 노드가 누굴 참조하는지 다 세는 방법.
@@ -1141,6 +1219,165 @@ js script insertion
 
 # Spring MVC
 ![Spring-MVC](./images/spring-mvc.png)
+
+
+# Multi Thread
+
+### Concurrency vs Parallel
+
+![image](./images/concurrency-parallel-2.png)
+
+1. concurrency(동시성) -> 논리적. 동시에 여러 작업 실행하는 것 처럼 보임
+2. parallel(병렬) -> 물리적. 실제로 여러 작업이 여러 코어에서 동시에 실행 중
+
+
+### Async
+
+![image](./images/async.png)
+
+1. 동기
+	1. 작업 순서 보장
+2. 비동기
+	1. task 실행 순서, 끝나는 서순 보장 못함
+	2. 다 끝나고 서순 재정렬 해야할 수 있음
+	3. 독립적이거나 지연이 클 때 효과적
+
+### Blocking vs Non Blocking
+
+![image](./images/sync-blocking.png)
+
+동기 vs 비동기: 제어권한을 누가 가지고 있는가?\
+blocking vs non-blocking: 작업완료를 기다리는가?
+
+
+### Multi Thread Warning
+
+멀티쓰레드는 은탄환이 아니다.
+
+쓰레드 하나 담당인데 엄청 오래걸리는 task처리를 멀티쓰레드 해봤자,
+비싼 kernel thread 생성비용, Thread instance in jvm 생성 비용, 연산시 context switching cost만 든다.
+
+어짜피 한순간에 1 core = 1 task 처리하니까, connection pool size도 core 갯수 맞춰서 해라.
+
+---
+CPU bound(CPU burst > IO burst) -> multi thread 강세\
+IO bound(IO burst > CPU burst) -> single thread 강세
+
+IO 담당 CPU가 까로 존재하는데, old school thread pool 방식은 얘한테 보내고 올때까지 기다리는데,\
+event loop 방식은 main CPU가 IO 담당 CPU에게 요청 보내고 지 할일하다 받음.
+
+대신 event loop 방식은 각 요청이 실행이 짧아야 병목 안남.
+
+### Critical Section
+
+![image](./images/critical-section.png)
+
+race condition 막자고 lock 잘못걸면, process1->process2->process3->process1 순환참조하는 deadlock 걸릴 수 있다.
+
+### Spin Lock
+
+![image](./images/spin-lock.png)
+
+가장 간단한 동기화 방법.
+
+Lock상태에 접근하면, Lock이 풀릴 떄 까지 뺑뻉이 돌며 확인하다, 풀리면 접근하는 방식.\
+user space에서만 동작하기 때문에, context switching 비용이 없다.\
+그렇기에 다른 프로세스와 공유, 오래 대기하는 경우 문제가 생긴다.
+
+
+### Mutex
+
+![image](./images/mutex.png)
+
+운영체제를 통해 lock 거는 방법.\
+spin lock처럼 다른 lock 풀릴 떄 까지 계속 확인하는게 아니라 대기상태가 된다.\
+kernel을 거치기에, context switching 비용이 있다.
+
+### Semaphore
+
+![image](./images/semaphore.png)
+![image](./images/semaphore-2.png)
+
+배열처럼 여러 값에 접근할 때 쓰임.
+
+
+### Transaction
+
+trasaction: lock, unlock이 골아파서 변수에서 알아서 처리해줬으면 좋겠어! (DBMS)
+
+![image](./images/transaction-1.png)
+
+git처럼 commit하고 push하네\
+실패하면 rollback하고.
+
+![image](./images/transaction-2.png)
+
+trasaction1,2,3 동시에 v0을 참조하려고 함.
+race condition에서 trasaction1이 제일 먼저 도착해서 write 후 commit 완료.
+transaction2도 v0참조 했는데 버전이 v1임을 확인 -> v0이 아니네? 안맞네? 아닌가? 일단 재시도함.\
+v1을 카피해서 write시도해서 v2'을 만들고 끝남.
+
+
+# Event Loop
+
+### Nodejs Reactor Pattern
+
+![image](./images/reactor.png)
+
+Reactor Pattern = a central dispatcher handling events, then distribute events to appropriate handlers.
+
+js는 single thread 언어.\
+multiplexing + event loop으로 처리.
+
+![image](./images/node-1.png)
+![image](./images/node-6.png)
+
+libuv는 single thread\
+운영체제의 epoll, kqueue를 활용 -> TCP/UDP/TTY/Pipe 프로토콜로 통신
+
+
+![image](./images/node-2.png)
+![image](./images/node-3.png)
+
+single thread 언어라지만 사실 내부적으로 4 쓰레드가 있음.
+
+![image](./images/node-4.png)
+
+js 비동기 실행순서가 event loop인데 다른 이유는, queue가 여러개라서.\
+task queue, microtask queue 나눠져있네.
+
+![image](./images/node-5.gif)
+
+
+### Coroutine
+
+![image](./images/coroutine.png)
+
+### Async Await
+
+![image](./images/async-await.png)
+
+### Future and Promise
+
+![image](./images/future-promise.png)
+
+1. Future
+	1. 읽기 전용
+	2. 아직 계산되지 않은 값
+2. Promise
+	1. write-once
+	2. Future가 참조. 일 끝나면 Future에 결과값 적어줌
+	3. CompletableFuture나 Completer라고도 부름
+
+
+
+
+# Message Queue
+
+### Kafka
+
+![image](./images/kafka-1.png)
+
 
 # JDBC
 ![jdbc](./images/jdbc-architecture.jpg)
@@ -1397,3 +1634,4 @@ A. 이미지, js파일 같은 정적 파일이 캐시가 아닌 디스크에서 
 8. [pics](https://github.com/corkami/pics)
 9. [ByteByteGo](https://www.youtube.com/@ByteByteGo)
 10. [NeetCode](https://www.youtube.com/@NeetCode)
+11. [BlaCk_Log](https://black7375.tistory.com/90)
