@@ -1257,16 +1257,18 @@ blocking vs non-blocking: 작업완료를 기다리는가?
 쓰레드 하나 담당인데 엄청 오래걸리는 task처리를 멀티쓰레드 해봤자,
 비싼 kernel thread 생성비용, Thread instance in jvm 생성 비용, 연산시 context switching cost만 든다.
 
+현실 비지니스에서 thread pool이 병목지점으로 문제 발생할 만큼 문제가 생기는 앱이 드뭄.
+
 어짜피 한순간에 1 core = 1 task 처리하니까, connection pool size도 core 갯수 맞춰서 해라.
 
 ---
 CPU bound(CPU burst > IO burst) -> multi thread 강세\
 IO bound(IO burst > CPU burst) -> single thread 강세
 
-IO 담당 CPU가 까로 존재하는데, old school thread pool 방식은 얘한테 보내고 올때까지 기다리는데,\
+IO 담당 CPU가 까로 존재하는데, old school thread pool 방식은 DiskIO시 Main CPU가 얘한테 보내고 올때까지 기다리는데,(busy-waiting)\
 event loop 방식은 main CPU가 IO 담당 CPU에게 요청 보내고 지 할일하다 받음.
 
-대신 event loop 방식은 각 요청이 실행이 짧아야 병목 안남.
+대신 event loop 방식은 각 요청이 실행이 짧아야 병목 안남. CPU bound작업 들어오면 그놈 때문에 후속 event작업들이 다 밀려버리기 때문.
 
 ### Critical Section
 
@@ -1546,6 +1548,32 @@ ex. java, .net, nodejs(v8)
 
 ![jit](./images/jit-compiler.png)
 ![JVM](./images/jvm-architecture.png)
+
+
+
+
+---
+cache & optimization
+
+![](images/2022-12-12-18-36-33.png)
+
+1. app 시작시 cache된 내역 없기 때문에, 함수들 몇개 실행해줘서 warm up해 cache에 담는게 좋다.
+2. 대부분 기능에 대해 충분한 warm up 이후 트레픽 유입 유도
+
+![](images/2022-12-12-18-41-27.png)
+
+
+최적화 단계
+- level 0: interpreted code
+- level 1: simple C1 compiled code
+- level 2: limited C1 compiled code
+- level 3: full C1 compiled code
+- level 4: C2 compiled code
+
+code cache가 꽉차면 c2에서 막히고, c2도 꽉차면 c1에서 막히는 식.
+
+
+
 
 
 
