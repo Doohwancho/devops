@@ -4,15 +4,18 @@
 	1. [컴퓨터 구조](#computer-architecture-all)
 	2. [폰 노이만 구조](#von-neumann-architecture)
 	3. [CPU](#cpu)
-	4. [Cache](#cache)
-	5. [Bus](#bus)
-	6. [IO](#io)
-	7. [Application](#application)
-	8. [Charsets and Encodings](#charsets-and-encodings)
-	9. [Color and Image](#color-and-image)
-	10. [File Format](#file-format)
-	11. [Archive](#archive)
-	12. [Audio](#audio)
+	4. [GPU](#gpu)
+		1. [Pipeline and Shader](#pipeline-and-shader)
+	5. [Cache](#cache)
+	6. [Bus](#bus)
+	7. [IO](#io)
+	8. [etc](#etc)
+		1. [Application](#application)
+		2. [Charsets and Encodings](#charsets-and-encodings)
+		3. [Color and Image](#color-and-image)
+		4. [File Format](#file-format)
+		5. [Archive](#archive)
+		6. [Audio](#audio)
 2. [Operating System](#operating-system)
 	1. [System Call](#system-call)
 	2. [Process 관리](#process-관리)
@@ -77,17 +80,21 @@
 	1. [Concurrency vs Parallel](#concurrency-vs-parallel)
 	2. [Async](#async)
 	3. [Blocking vs Non Blocking](#blocking-vs-non-blocking)
-	4. [Multi Thread Warning](#multi-thread-warning)
-	5. [Critical Section](#critical-section)
-	6. [Spin Lock](#spin-lock)
-	7. [Mutex](#mutex)
-	8. [Semaphore](#semaphore)
-	9. [Transaction](#transaction)
+	4. [Multi Threading](#multi-threading)
+	5. [Multi Thread Warning](#multi-thread-warning)
+	6. [Synchronization](#synchronization)
+		1. [Critical Section](#critical-section)
+		2. [Spin Lock](#spin-lock)
+		3. [Mutex](#mutex)
+		4. [Semaphore](#semaphore)
+		5. [Transaction or STM](#transaction-or-stm)
 16. [Event Loop](#event-loop)
 	1. [Node.js Reactor Pattern](#nodejs-reactor-pattern)
 	2. [Coroutine](#coroutine)
 	3. [Async Await](#async-await)
 	4. [Future and Promise](#future-and-promise)
+	5. [Stream and Buffer](#stream-and-buffer)
+	6. [Push and Pull](#push-and-pull)
 17. [Message Queue](#message-queue)
 	1. [Kafka](#kafka)
 18. [JDBC](#jdbc)
@@ -157,6 +164,48 @@ arr[]는 공간지역성이 높고,\
 이걸 바탕으로 다음 필요한 데이터를 예측해서 가져오는데,
 예측이 맞으면 cache hit, 틀리면 cache miss -> 그 다음 메모리에서 가져옴
 
+## GPU
+
+![](images/2023-01-05-21-19-16.png)
+
+don't understand yet
+
+CPU
+
+- 직렬 프로그램(순차코드)에 명령 수준 병렬처리(파이프라인과 슈퍼 스칼라)
+- 병렬의 경우 SIMD를 사용
+- 정확한 분기예측
+- 많은 명령어 (CISC의 경우)
+- 오프로드할 필요가 없어 낮은 대기시간
+
+GPU
+
+- 백터 데이터와 처리량에 최적화
+- DRAM 대역폭이 높음
+- 계산에 중점을 두어 캐시와 제어 요소가 적음
+- 개별 스레드의 대기시간과 성능에 중점두지 않음
+
+### Pipeline and Shader
+
+![](images/2023-01-05-21-08-39.png)
+![](images/2023-01-05-21-08-56.png)
+
+1. 입력 어셈블러(Input Assembler): 인덱스 버퍼를 통해 중복되는 꼭지점(Vertex)를 제거
+2. 꼭지점 쉐이더(Vertex Shader): 모든 정점(Vertex)에 대해 실행되며, 변환(Transformation)이나 모핑(Morphing) 같은 작업을 한다
+3. 테셀레이션(Tessellation): 특정 규칙에 따라 표면 세부 정보(subdivide geometry)를 그려 메시 품질을 높힘
+4. 기하 도형 쉐이더(Geometry Shader): 모든 프리미티브(삼각형, 선, 점)에서 실행되며, 이를 버리거나 더 많은 프리미티브를 출력할 수 있음.
+5. 래스터화(Rasterization): 프리미티브의 벡터 정보를 래스터 이미지(픽셀)로 만듦
+조각(Fragment)으로 구성되고 화면 밖 조각들은 모두 버려지며, 꼭지점 쉐이더가 출력한 속성들은 보간됨
+다른 조각의 뒤(z-index, depth)에 있는 조각들 또한 버려질 수 있음
+6. 프레그먼트 쉐이더(Fragment Shader): 살아남은 모든 조각들에 대해 호출되며, 기록될 프레임 버퍼와 색상 및 깊이 값을 결정함
+텍스쳐(Texture) 좌표나 조명의 법선(normals for lighting)등도 포함될 수 있음
+7. 컬러 블렌딩(Color Blending): 프레임 버퍼의 동일한 픽셀에 매핑되는 다른 조각을 혼합함
+투명도에 따라 덮어쓰거나 추가, 혼합될 수 있음
+8. 프레임 버퍼(Frame Buffer): 다음 화면에 그려질 정보를 담는 메모리로 출력의 목적지
+
+
+입력 어셈블러/레스터화/컬러 블랜딩은 작업방식이 정해져 있으나 쉐이더를 활용할 수 있는 Vertex, Tessellation, Geometry, Fragment 단계는 코드를 GPU에 업로드해 프로그래머가 원하는 작업 방식을 정의할 수 있다.
+
 
 ### BUS
 ![BUS](./images/architecture-bus-3.png)
@@ -204,6 +253,7 @@ HDD or RAM에 연결되는 IO가 다 다르고,\
 버스가 CPU로 실어나르고,\
 CPU와 직접 데이터 교환하는게 아니라 캐시를 통해 교환함.
 
+## etc
 
 ### Application
 
@@ -452,7 +502,7 @@ evolution of HTTP
 ![multi plexing](./images/multiplex.gif)
 ![multi plexing](./images/multiplex-2.png)
 ![multi plexing](./images/multiplex-3.png)
-(multi-process -> multi-thread -> multi-plex 순)
+(connection 생성 비용은 multi-process -> multi-thread -> multi-plex 순)
 
 
 2. 얘도 line blocking issue 존재
@@ -1249,6 +1299,14 @@ js script insertion
 동기 vs 비동기: 제어권한을 누가 가지고 있는가?\
 blocking vs non-blocking: 작업완료를 기다리는가?
 
+### Multi Threading
+
+![](images/2023-01-05-20-30-44.png)
+![](images/2023-01-05-20-33-56.png)
+
+process와 달리 Heap, Data영역 공유하기 때문에 IPC가 필요 없다 -> Context Switching cost 적다.
+
+
 
 ### Multi Thread Warning
 
@@ -1269,6 +1327,16 @@ IO 담당 CPU가 까로 존재하는데, old school thread pool 방식은 DiskIO
 event loop 방식은 main CPU가 IO 담당 CPU에게 요청 보내고 지 할일하다 받음.
 
 대신 event loop 방식은 각 요청이 실행이 짧아야 병목 안남. CPU bound작업 들어오면 그놈 때문에 후속 event작업들이 다 밀려버리기 때문.
+
+
+## Synchronization
+
+### Race Condition
+![](images/2023-01-05-20-55-11.png)
+
+- 두 쓰레드가 동시에 같은곳 참조해서 값 수정 -> 문제 발생!
+- 해결법: 동시에 같은곳 접근 못하게 임계구역(critical section) 정하여 막는다.(lock)
+
 
 ### Critical Section
 
@@ -1303,21 +1371,24 @@ kernel을 거치기에, context switching 비용이 있다.
 배열처럼 여러 값에 접근할 때 쓰임.
 
 
-### Transaction
+### Transaction or STM
 
 trasaction: lock, unlock이 골아파서 변수에서 알아서 처리해줬으면 좋겠어! (DBMS)
+STM: software transaction memory.
 
 ![image](./images/transaction-1.png)
 
-git처럼 commit하고 push하네\
+수동으로 lock, unlock하지 말고, dbms가 자동으로 git처럼 commit하고 push하네\
 실패하면 rollback하고.
 
 ![image](./images/transaction-2.png)
 
-trasaction1,2,3 동시에 v0을 참조하려고 함.
-race condition에서 trasaction1이 제일 먼저 도착해서 write 후 commit 완료.
-transaction2도 v0참조 했는데 버전이 v1임을 확인 -> v0이 아니네? 안맞네? 아닌가? 일단 재시도함.\
-v1을 카피해서 write시도해서 v2'을 만들고 끝남.
+1. trasaction1,2,3 동시에 v0을 참조하려고 함
+2. race condition에서 trasaction1이 제일 먼저 도착해서 write 후 commit 완료
+3. transaction2도 v0참조 했는데 버전이 v1임을 확인 -> v0이 아니네? 안맞네? 아닌가? 일단 재시도함
+4. v1을 카피해서 write시도해서 v2'을 만들고 끝남
+
+![](images/2023-01-05-21-02-22.png)
 
 
 # Event Loop
@@ -1371,6 +1442,28 @@ task queue, microtask queue 나눠져있네.
 	2. Future가 참조. 일 끝나면 Future에 결과값 적어줌
 	3. CompletableFuture나 Completer라고도 부름
 
+### Stream and Buffer
+![](images/2023-01-05-20-39-08.png)
+
+buffer is queue
+
+Q. why need buffer?
+- 데이터 바로 처리 할 수 없기 때문에 순서대로 일시저장
+- 효율적으로 쌓고 보내기 위해 처리할 크기가 될 때 까지 저장
+
+
+### Push and Pull
+
+![](images/2023-01-05-20-43-27.png)
+
+1. pull: consumer->producer 에게 달라고 요청하는 것
+2. push: producer->consumer 일방적 보내기
+
+![](images/2023-01-05-20-43-37.png)
+![](images/2023-01-05-20-44-18.png)
+
+1. pull은 producer(server)가 빠르면 유리한 구조
+2. push는 consumer(client)가 빠르면 유리한 구조
 
 
 
