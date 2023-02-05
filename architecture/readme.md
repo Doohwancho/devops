@@ -1479,6 +1479,25 @@ Q. why need buffer?
 
 # ORM
 
+java object -> database-independent jpql
+
+
+Q. why ORM?
+
+1. database independent -> 잡다한 connection 관리 코드 없어도 됨
+2. no work for simple query (already abstracted)
+3. cache 기능 -> backend app과 db사이에 버퍼 역할 -> cache hit rate increased
+
+
+Q. why not ORM?
+
+1. worse performance than plain SQL
+2. more abstraction -> more things to learn, burden for developers
+3. sql tuning만 제대로 하려고 해도 각 db engine파서 실행계획 뜯고 빡쎈데 그 위에 abstract layer까지 신경써야 함
+4. 아주 복잡한 한방쿼리는 hibernate로 구현하기 어려움
+
+
+
 ### Spring Data JPA
 
 ![](images/2023-02-05-20-26-37.png)
@@ -1518,6 +1537,8 @@ Spring Data Jpa는 JPA 인터페이스를 한번 더 추상화 한 것일 뿐.
 
 
 ### JPA
+
+![](images/2023-02-05-20-38-38.png)
 
 JPA는 인터페이스, Hibernate는 JPA 인터페이스를 implement한 것.
 
