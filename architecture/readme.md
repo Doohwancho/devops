@@ -1481,9 +1481,50 @@ Q. why need buffer?
 
 ### Spring Data JPA
 
+![](images/2023-02-05-20-26-37.png)
+
+Spring Data Jpa는 service -> repository -> orm -> db에서, repository를 추상화 한 것.
+
+왜?
+
+기존 DAOImpl에서 반복되는 지저분한 코드 줄이려고
+
+![](images/2023-02-05-20-27-54.png)
+
+Spring Data Jpa는 JPA 인터페이스를 한번 더 추상화 한 것일 뿐.
+
+결국
+1. java object
+2. spring data jpa
+3. jpa(인터페이스)
+4. hibernate(implements JPA)
+	- transfer POJO -> jpql -> sql
+5. jdbc
+6. database
+
+
+![](images/2023-02-05-20-29-17.png)
+
+![](images/2023-02-05-20-29-51.png)
+
+![](images/2023-02-05-20-31-51.png)
+
+![](images/2023-02-05-20-32-10.png)
+
+안에 까보면,
+내부적으로 java object -> JPA인터페이스에 맞게 JPQL로 변환해 주는 코드가 있다.
+
+
+
+
 ### JPA
 
+JPA는 인터페이스, Hibernate는 JPA 인터페이스를 implement한 것.
+
+
 ### Hibernate
+
+JPA는 인터페이스, Hibernate는 JPA 인터페이스를 implement한 것.
 
 ![](images/2023-02-05-20-06-22.png)
 
