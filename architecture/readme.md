@@ -102,9 +102,10 @@
 	2. [JPA](#jpa)
 	3. [Hibernate](#hibernate)
 19. [JDBC](#jdbc)
-20. [Database](#database)
-	1. [Mysql Architecture](#mysql-architecture)
-	2. [B+Tree](#b+-tree)
+20. [Relational Database](#relational-database)
+	1. [B-Tree](#b-tree)
+	2. [B+Tree](#b+tree)
+	3. [Mysql Architecture](#mysql-architecture)
 21. [UIUX](#uiux)
 22. [Critical Rendering Path](#critical-rendering-path)
 	1. [Critical Rendering Path 기본 구조](#critical-rendering-path-기본-구조)
@@ -1597,16 +1598,53 @@ CPU CORE 가 빨라서 여러 쓰레드 동시에 처리하는 것 처럼 보이
 근데 AP server를 최적화 해도, database server에 IO blocking, 병목 발생 가능하기 때문에, 이쪽도 신경 써야 함.
 
 
-# Database
+# Relational Database
+
+
+### B-Tree
+
+어떤 datastructure에 데이터 저장해야 CRUD 효율적일까?
+
+![](images/2023-02-05-20-53-04.png)
+
+Balanced Binary Search Tree는 child가 2개밖에 안되서 한층 내려갈 때마다 log_2 이네?
+
+child 여러개 둬서 찾기 속도 log_3,4,5,N 하고 싶어서, B-Tree가 나옴.
+
+각 노드에 값은 값 자체로도 사용되지만, 어느 child로 보낼지 기준(최솟값, 최댓값) 역할도 함.
+
+장점
+1. db에 없는 element 검색시 full-range scan안해도 되서 효율적
+2. where절에 조건검색 시, 이미 ASC sort 되어있기 때문에 빠름.
+	- ex. 6보다 작은애 반환해달라고 하면, 6노드 left child 다 반환해주면 됨.
+
+단점
+- full range scan이 느림. 왜? node에서 node 넘어가는게 array가 아닌 linkedlist처럼 되있으니까.
+
+### B+Tree
+
+![](images/2023-02-05-21-00-55.png)
+
+B+Tree와 B-Tree와 차이점은, B+Tree는 모든 값을 leaf node에 보관하고, 부모 노드들은 가이드만 제공함.
+
+![](images/2023-02-05-21-01-32.png)
+
+또한 모든 leaf nodes들이 ASC sort된 채로 linkedlist처럼 이어져있기 때문에, full range scan이 B-Tree보다 더 빠름.
+
+
+장점
+- read가 빠르다.
+	- 왜?
+		- 모든 데이터가 tree depth 2~4안에 해결된다고 함.
+
+단점
+- insert, update, delete 할 때, 미리 규칙에 맞게 넣어야 되서 오래걸린다.
+- write가 느리고 resource-heavy하니까, 중간에 crash나서 corrupt가능성 있음 -> write 전 write-ahead log(WAL file) 써놓고 insert,update,delete 해야 함.
+
+
 
 ### Mysql architecture
 ![Mysql](./images/mysql-architecture.png)
-
-### B-Tree
-![B-Tree](./images/database-btree-1.png)
-
-b-tree에서 인덱스를 찾아가는 과정
-
 
 # UIUX
 
