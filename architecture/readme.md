@@ -106,21 +106,24 @@
 	1. [B-Tree](#b-tree)
 	2. [B+Tree](#b+tree)
 	3. [Mysql Architecture](#mysql-architecture)
-21. [UIUX](#uiux)
-22. [Critical Rendering Path](#critical-rendering-path)
+21. [NOSQL](#nosql)
+	1. [Log Structured Storage Engine](#log-structured-storage-engine)
+	2. [LSM Tree](#lsm-tree)
+22. [UIUX](#uiux)
+23. [Critical Rendering Path](#critical-rendering-path)
 	1. [Critical Rendering Path 기본 구조](#critical-rendering-path-기본-구조)
 	2. [Critical Rendering Path async 최적화](#critical-rendering-path-async-최적화)
-23. [Version Control](#version-control)
+24. [Version Control](#version-control)
 	1. [Git Overall](#git-overall)
 	2. [Git Branch](#git-branch)
 	3. [Git Workflow](#git-workflow)
-24. [Compiler](#compiler)
+25. [Compiler](#compiler)
 	1. [Compiler](#근본-compiler)
 	2. [JIT Compiler](#jit-compiler)
 	3. [Interpreter](#interpreter)
-25. [Build](#build)
-26. [CI](#github-action-ci)
-27. [Performance Tuning](#performance-tuning)
+26. [Build](#build)
+27. [CI](#github-action-ci)
+28. [Performance Tuning](#performance-tuning)
 	1. [Latency](#latency)
 	2. [Throughput](#throughput)
 
@@ -1645,6 +1648,72 @@ B+Tree와 B-Tree와 차이점은, B+Tree는 모든 값을 leaf node에 보관하
 
 ### Mysql architecture
 ![Mysql](./images/mysql-architecture.png)
+
+
+# NOSQL
+
+### Log Structured Storage Engine
+
+![](images/2023-02-05-21-19-02.png)
+
+- log를 맨 뒤 인덱스에 쌓는 구조
+- key 1234에 덮어쓰기 시도했지만, 기존 row 그대로 남아있고, 그 뒤에 적재한다.
+	- get/set 1234 하면 가장 마지막 key:1234를 꺼내온다.
+	- insert는 맨 뒤에 툭 얹으면 그만이라 빠른데,
+	- read는 느림
+		- 왜?
+			- db 전체 조회한 이후,
+			- 중복되는 애들 중에 제일 마지막 key인 애를 반환해야 하니까.
+
+문제 해결
+1. read가 느린 문제는 hash index + segment file로 해결.
+2. 덮어쓰기 해도 기존 데이터 계속 쌓이는 문제는 'compaction'으로 해결
+
+
+---
+A. hash index + segment file
+
+![](images/2023-02-05-21-24-52.png)
+
+이제 filed log on disk를 full range scan io 안해도 됨. index보고 찾아!
+
+![](images/2023-02-05-21-24-23.png)
+
+그리고 index를 {최솟값, 최댓값} 정하고, 해당 인덱스의 최솟값~최댓값 안에 속하는 단위대로 Disk log file의 segment단위로 자름.
+
+이제 index search 시, 해당 인덱스에 해당하는 segment만 보면 됨. 개꿀!
+
+장점
+1. active한 마지막 segment file빼고, 이전 segment file들은 바뀌지 않음. immutable
+2. 이전 segment file들이 바뀌지 않는 immutable 하니까, optimize하기 쉬워짐
+
+---
+B. 덮어쓰기 문제 compaction으로 해결
+
+![](images/2023-02-05-21-32-38.png)
+
+segmentation으로 바뀌지 않은 이전 segment들 중에서 중복 row 지워줌.
+이로써 덮어쓰기해도 기존 row 안지워지는 문제 해결!
+
+
+---
+그럼에도 불구하고 문제점
+
+1. 중복 row 제외하더라도, hash index가 거의 모든 row의 key를 가지고 있어야 함 -> large index size
+2. 모든 key가 RAM에 로드되어있어야 함
+	- 메모리 많이 잡아먹음 -> too much RAM usage -> 가상메모리 -> disk IO해야해서 느려짐
+	- index가 메모리에 로드 안되서 못찾았다? -> index full scan 후 disk full range scan 해야 함 -> 비효율
+3. range query가 어려움
+	- why?
+		- segment 별로 파일들이 다 잘라져 있으니까.
+
+이 문제를 LSM tree로 해결함.
+
+
+### LSM Tree
+
+Log Structured Merge Tree
+
 
 # UIUX
 
