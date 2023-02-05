@@ -97,25 +97,29 @@
 	6. [Push and Pull](#push-and-pull)
 17. [Message Queue](#message-queue)
 	1. [Kafka](#kafka)
-18. [JDBC](#jdbc)
-19. [Database](#database)
+18. [ORM](#orm)
+	1. [Spring Data Jpa](#spring-data-jpa)
+	2. [JPA](#jpa)
+	3. [Hibernate](#hibernate)
+19. [JDBC](#jdbc)
+20. [Database](#database)
 	1. [Mysql Architecture](#mysql-architecture)
-	2. [B Tree](#b-tree)
-20. [UIUX](#uiux)
-21. [Critical Rendering Path](#critical-rendering-path)
+	2. [B+Tree](#b+-tree)
+21. [UIUX](#uiux)
+22. [Critical Rendering Path](#critical-rendering-path)
 	1. [Critical Rendering Path 기본 구조](#critical-rendering-path-기본-구조)
 	2. [Critical Rendering Path async 최적화](#critical-rendering-path-async-최적화)
-22. [Version Control](#version-control)
+23. [Version Control](#version-control)
 	1. [Git Overall](#git-overall)
 	2. [Git Branch](#git-branch)
 	3. [Git Workflow](#git-workflow)
-23. [Compiler](#compiler)
+24. [Compiler](#compiler)
 	1. [Compiler](#근본-compiler)
 	2. [JIT Compiler](#jit-compiler)
 	3. [Interpreter](#interpreter)
-24. [Build](#build)
-25. [CI](#github-action-ci)
-26. [Performance Tuning](#performance-tuning)
+25. [Build](#build)
+26. [CI](#github-action-ci)
+27. [Performance Tuning](#performance-tuning)
 	1. [Latency](#latency)
 	2. [Throughput](#throughput)
 
@@ -1472,6 +1476,32 @@ Q. why need buffer?
 ### Kafka
 
 ![image](./images/kafka-1.png)
+
+# ORM
+
+### Spring Data JPA
+
+### JPA
+
+### Hibernate
+
+![](images/2023-02-05-20-06-22.png)
+
+1. org.hibernate.connection.ConnectionProvider
+	- factory for, and pool of, JDBC connections.
+	- it abstracts the app from Datasource or DriverManager.
+2. org.hibernate.Session
+	- java object가 session과 만나기 전까지는 'Transient and detached objects and collections'이었다가, session과 만나면 Persistent objects and collections이 된다.
+	- 이는, short-lived, single threaded object containing 'persistent state' and business function
+	- Session은 SessionFactory에서 만들어지는데, SessionFactory는 threadsafe, immutable cache of compiled mappings for a single database.
+	- SessionFactory can hold (second level) cache of data that is reusable between transactions at a process or cluster level
+	- Session은 single threaded, short-lived object representing a conversation between app and persistent store(db)
+	- Session holds first-level cache of persistent object that are used when navigating the object graph or looking up objects by identifier
+	- Session wraps jdbc connection
+	- Session is factory for 'transaction'
+3. org.hibernate.Transaction
+	- single-threaded, short-lived object used by app to specify atomic units of work.
+
 
 
 # JDBC

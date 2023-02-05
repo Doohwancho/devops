@@ -29,7 +29,6 @@ F. Monitoring\
 G. Stress Test\
 x. CI/CD\
 x. Audit\
-x. gRPC\
 x. K8s\
 x. Terraform
 
