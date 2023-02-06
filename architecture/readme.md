@@ -83,8 +83,8 @@
 	4. [Multi Threading](#multi-threading)
 	5. [Multi Thread Warning](#multi-thread-warning)
 	6. [Synchronization](#synchronization)
-		1. [Critical Section](#critical-section)
-		2. [Spin Lock](#spin-lock)
+		1. [Spin Lock](#spin-lock)
+		2. [Critical Section](#critical-section)
 		3. [Mutex](#mutex)
 		4. [Semaphore](#semaphore)
 		5. [Transaction or STM](#transaction-or-stm)
@@ -1343,24 +1343,33 @@ event loop 방식은 main CPU가 IO 담당 CPU에게 요청 보내고 지 할일
 ![](images/2023-01-05-20-55-11.png)
 
 - 두 쓰레드가 동시에 같은곳 참조해서 값 수정 -> 문제 발생!
-- 해결법: 동시에 같은곳 접근 못하게 임계구역(critical section) 정하여 막는다.(lock)
+- 해결법(동기화 방법) 3가지
+	1. 진입 제어
+		- 동시에 같은곳 접근 못하게 임계구역(critical section) 정하여 막는다.(lock)
+	2. 신호 제어
+		- 이벤트 기반. 화장실에서 나오면 신호 줌.
+	3. 운에 맡기고 문제 터지면 복구하기(?)
+		- ?
+
+### Spin Lock
+
+![image](./images/spin-lock.png)
+
+가장 간단한 동기화 방법. (1. 진입 제어 방식)
+
+Lock상태에 접근하면, Lock이 풀릴 떄 까지 뺑뻉이 돌며 확인하다, 풀리면 접근하는 방식.\
+user space에서만 동작하기 때문에, context switching 비용이 없다.\
+그렇기에 다른 프로세스와 공유, 오래 대기하는 경우 문제가 생긴다.
 
 
 ### Critical Section
 
 ![image](./images/critical-section.png)
 
-race condition 막자고 lock 잘못걸면, process1->process2->process3->process1 순환참조하는 deadlock 걸릴 수 있다.
+동기화 방법 3가지 중, 1. 진입제어 방법.
+race condition 발생하는 곳을 한놈 들어가면 접근 제한 검.
 
-### Spin Lock
-
-![image](./images/spin-lock.png)
-
-가장 간단한 동기화 방법.
-
-Lock상태에 접근하면, Lock이 풀릴 떄 까지 뺑뻉이 돌며 확인하다, 풀리면 접근하는 방식.\
-user space에서만 동작하기 때문에, context switching 비용이 없다.\
-그렇기에 다른 프로세스와 공유, 오래 대기하는 경우 문제가 생긴다.
+단, race condition 막자고 lock 잘못걸면, process1->process2->process3->process1 순환참조하는 deadlock 걸릴 수 있다.
 
 
 ### Mutex
@@ -1369,15 +1378,54 @@ user space에서만 동작하기 때문에, context switching 비용이 없다.\
 
 운영체제를 통해 lock 거는 방법.\
 spin lock처럼 다른 lock 풀릴 떄 까지 계속 확인하는게 아니라 대기상태가 된다.\
+화장실 나오면 키 반환하고 unlock하면, suspended된 애들이 resume되어 여럿이 또 들어가려고 경쟁.\
+이 짓을 반복.\
 kernel을 거치기에, context switching 비용이 있다.
+
+
+---
+vs critial section
+
+critical section이랑 mutex랑 본질적으론 비슷한 개념인데, 적용 범위에서 차이가 있다고 한다.
+- critical section = 하나의 프로세스 안 멀티 쓰레드 의 동기화를 보장하는 반면,
+- mutex는 멀티 프로세스의 쓰레드 사이의 동기화를 보장해 준다고 함.
 
 ### Semaphore
 
 ![image](./images/semaphore.png)
 ![image](./images/semaphore-2.png)
 
-배열처럼 여러 값에 접근할 때 쓰임.
+Semaphore역시 mutex처럼 critical section(1. 진입제어 방법)의 방법론 중 하나.
 
+---
+vs mutex
+
+- mutex는 화장실이 하나라 10명오면 한명밖에 못들어가고 나머지는 SUSPENDED, 대기상태.
+- semaphore은 화장실이 3칸이라, 10명오면 선착순 3명 들어가고, 나머지 7명은 UNLOCK신호 받을 때 까지 SUSPENDED, 대기함.
+
+
+---
+thread pool과 비슷해 보이는데, 차이점은,
+
+-  둘 다 한번에 몇개 쓰레드 동시에 실행시킬지 정해주는데,
+-  semaphore은 한층 더 진화해서, 쓰레드가 동시에 수행할 수 있는 영역을 지정해 준다.
+```java
+semaphore.acquire();
+//... 이 영역 안에 명령어 추가로 집어넣을 수 있음.
+semaphore.release();
+```
+- semaphore = thread pool + AOP
+
+
+
+---
+semaphore 단점
+
+- hold and wait 전략(.wait(), .notify()) 로 공유자원에 대한 접근을 제한함.
+- 근데 .wait()이랑 .notify() 서순이 어긋나거나 둘 중 하나라도 생략되면, 바로 데드락걸림.
+- 이걸 정교하게 컨트롤하기 어렵기 때문에 모니터가 나옴.
+	- monitor은 wait(), notify() 관리해주는 솔루션.
+	- 자바의 synchronized도 모니터를 통해 생성되었다.
 
 ### Transaction or STM
 
