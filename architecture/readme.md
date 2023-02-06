@@ -1715,6 +1715,71 @@ segmentation으로 바뀌지 않은 이전 segment들 중에서 중복 row 지�
 Log Structured Merge Tree
 
 
+![](images/2023-02-05-21-40-13.png)
+
+차이점 with Log Structured Storage
+- Log Structured Storage는 insert시 맨 끝에 쌓았다면, LSM Tree는 key가 ASC sort된 상태로 저장됨.
+
+Q. 그럼 insert 속도 엄청 빠르다는 장점이 날아가잖아?
+
+![](images/2023-02-06-15-57-39.png)
+
+그래서 바로 SSTable(sorted string table)에 넣지 않고, 인덱스로 쓰이는 self balancing BST에('memTree'라고 명칭) 넣은 후, SSTable에 ASC sort해서 넣는다.
+
+memTree에 넣을 땐, override 가능
+
+![](images/2023-02-06-15-57-53.png)
+
+- 이 memTree로 데이터 관리하다가, 일정 사이즈가 넘으면 SSTable(Disk)로 만드는 것.
+- memTable -> SSTable 만들 때, append-only로 한번에 쫙 만듬(어짜피 memTable도 pre-order traveral로 조회하면 ASC sort 되있으니까, 순차 조회 하면서 append하면 빠름)
+- memTree -> SSTable 로 append시, crash날걸 대비해서 애초에 memTable에 insert시 log file도 따로 씀. 얘는 sort해서 넣지 않고 그냥 append로 쌓아둠.
+- log file의 유일한 목적은 memTable -> SSTable append가 crash났을 시, 복구 용도
+- SSTable이 ASC sort된 채로 append되기 때문에, range scan에 유리
+- SSTable도 Log Structured Storage Engine처럼, 일정 양 차면 immutable segment로 나눠서 관리
+- segment가 immutable하기 때문에 read시 lock이 필요 없음 -> 그래서 LSM tree가 read가 빠른 것.
+
+
+Q. LSM Tree는 어떻게 read함?
+1. read request가 오면, 일단 mem-table에 있나 확인
+2. 없으면 SSTable을 최근 순서대로 확인해서 반환
+
+
+Q. 근데 SSTable을 좀 더 optimize 가능하지 않을까? Disk IO니까.
+A. SSTable용 Index 생성.
+
+![](images/2023-02-06-16-07-01.png)
+
+memTable -> SSTable 인데, SSTable을 read하기 위한 index도 있음.
+
+이 인덱스의 특징은, 모든 SSTable의 row를 들고있지 않고, 각 segment의 최솟값, 최댓값만 인덱스 키로 들고있어서, 해당 range안에 드는지 확인 후, 해당 범위 안에 들면 거기에 붙은 segment를 붙여주는 식.
+
+![](images/2023-02-06-16-08-46.png)
+
+그리고 segment된 immutable SSTable들은 Log Structured Storage Engine처럼, compaction 해서,
+중복 삭제 후, 하나의 SSTable로 합치는 작업을 함.
+
+왜?
+
+full range scan할 때, 여러 segment로 쪼개져있으면, segment 끝날 때마다 context switching해야 하는 cost가 크니까.
+
+
+
+---
+LSM Tree vs B+Tree
+
+
+
+B+Tree는 depth 3~4정도면 금방 찾아서 read가 더 빠름. 대신 insert, update, delete시 B+Tree를 재정렬 해야해서 느림.
+
+LSM Tree는 self-balancing BST인 memTable에 insert해서 write가 더 빠름. 내부적으로 memTable -> SSTable insert도 맨 끝에 append만 하면 되서 빠름.
+대신, read시 memTable에 없어서 SSTable에서 찾아야 할 때, index에 찾고 맞는 segment 찾아서 range scan해야해서, B+Tree보다 느림.
+
+
+Q.
+non-blocking io 구조가 필요한 아키텍쳐라면, relational database는 blocking이라 못써먹는데, mongo db라던지 non-blocking을 지원하는 db 보면 아마 내부적으로 segment가 immutable하기 때문에 non-blocking이 가능한거 아닐까?
+
+
+
 # UIUX
 
 ![ux](./images/ux.webp)
