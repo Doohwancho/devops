@@ -37,7 +37,7 @@
 	13. [3. Network Layer](#network-layer-on-l3-switch(packet))
 	14. [3 Way Handshake](#3-way-handshake)
 	15. [SSL](#ssl)
-	16. [Socket](#socket)
+	16. [TCP Socket Programming](#tcp-socket-programming)
 	17. [4 Way Handshake](#4-way-handshake)
 4. [System Design](#system-design)
 	1. [Basic Production App Architecture](#basic-production-app-architecture)
@@ -722,16 +722,40 @@ tls handshake
 ![tls handshakes](./images/network-tls-handshake.svg)
 
 
-### Socket
+### TCP Socket Programming
+
+UDP는 연결 안하고 그냥 보내고, 못받아도 무시함.
+TCP는 연결 후 패킷 보냄.
+
+근데 연결하려면 상태라는 개념이 필요.
+- state
+	1. 연결 전
+	2. 연결 중
+	3. 연결 후
+
+연결 붙고 떨어질 때마다, 상태가 계속 전이 함.
+
+![](images/2023-02-06-19-13-13.png)
+
+파란선이 서버의 상태 전이도.\
+빨간선이 클라이언트의 상태 전이도.
+
+서버에서 CLOSED -> LISTEN 상태 되려면,
+
+![](images/2023-02-06-19-14-11.png)
+![image](./images/socket-3.png)
+
+- File의 fopen()처럼, Socket도 socket() -> bind() 해서, TCP protocol 정보(ip addr + port number 1~65534중 안겹치는 놈) 붙여줌.
+- 접속 대기용 서버 소켓이 server.listen() 한 이후, client.socket(), client.connect() 해서 요청 받으면, server.accept()해서 상태를 ESTABLISHED로 전환 후, 클라이언트 통신용 새로운 소켓 반환.
+- 얘 가지고 recv(), send()로 클라이언트와 통신하다가, *클라이언트*가 먼저 shutdown() 요청을 보내 접속 끊으면, client.socket()은 close()되어 자원 반환되고, server.클라이언트_통신용_소켓.close()되어 자원 반환하지만, 접속 대기용 서버 소켓은 아직 살아있음.
+
 
 ![image](./images/socket-1.png)
-![image](./images/socket-2.png)
 
 1. 프로세스간 통신도 결국 소켓이네.
 2. 네트워크 통신시 osi layer 4,3,2,1 내려가는 구간 스킵하고 통신하는 거고.
 3. Socket과 File은 본질적으로 같다.(UNIX에서는 둘이 같이 처리, window는 Socket API 따로 존재)
 
-![image](./images/socket-3.png)
 
 
 
