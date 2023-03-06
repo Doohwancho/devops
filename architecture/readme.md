@@ -81,8 +81,9 @@
 	2. [Async](#async)
 	3. [Blocking vs Non Blocking](#blocking-vs-non-blocking)
 	4. [Multi Threading](#multi-threading)
-	5. [Multi Thread Warning](#multi-thread-warning)
-	6. [Synchronization](#synchronization)
+	5. [Multi Thread Types](#multi-thread-types)
+	6. [Multi Thread Warning](#multi-thread-warning)
+	7. [Synchronization](#synchronization)
 		1. [Spin Lock](#spin-lock)
 		2. [Critical Section](#critical-section)
 		3. [Mutex](#mutex)
@@ -1307,10 +1308,27 @@ js script insertion
 
 ### Concurrency vs Parallel
 
+
+(1) Concurrency
+
+![](images/2023-03-06-19-17-18.png)
+- 병행성, 동시성
+- 여러 job 들이 interleaving 하면서 진행.
+- 실제로 동시에 진행되고 있지는 않지만, user 입장에서는 동시에 진행되는 듯한 illusion을 제공
+
+(2) Parallelism
+
+![](images/2023-03-06-19-18-11.png)
+
+- 병렬성
+- 여러 코어에서 실제로 동시에 실행되고 있는 것을 말함.
+- concurrent 하지 않아도 parallel 할 수 있다.
+
 ![image](./images/concurrency-parallel-2.png)
 
-1. concurrency(동시성) -> 논리적. 동시에 여러 작업 실행하는 것 처럼 보임
-2. parallel(병렬) -> 물리적. 실제로 여러 작업이 여러 코어에서 동시에 실행 중
+parallel하면서 concurrent할 수 있다.
+
+
 
 
 ### Async
@@ -1333,16 +1351,69 @@ blocking vs non-blocking: 작업완료를 기다리는가?
 
 ### Multi Threading
 
+![](images/2023-03-06-19-21-52.png)
+
+1. 1 process, 1 thread
+	- 초기 MS/DOS
+2. 1 process, n threads
+	- 인터넷 발전 -> 동시 접속자 빠르게 처리하는 웹서버 요구가 생김
+	- ex. JVM
+3. n processes, 1 thread ea.
+4. n processes, n thread ea.
+
+
+---
+Q. 왜 멀티쓰레드가 멀티 프로세스보다 더 빠르지?
+
+![](images/2023-03-06-19-44-45.png)
+
+create process vs create thread
+
 ![](images/2023-01-05-20-30-44.png)
+
+그리고 process의 heap, static, code 부분을 쓰레드들이 공유함
+
 ![](images/2023-01-05-20-33-56.png)
 
 process와 달리 Heap, Data영역 공유하기 때문에 IPC가 필요 없다 -> Context Switching cost 적다.
 
 
+### Multi Thead Types
+
+(1) Kernel-Level Threads (KLTs)
+
+![](images/2023-03-06-19-50-59.png)
+
+- 스레드 관련 모든 작업을 커널이 담당한다. (안정적이다.)
+- Windows와 Solaris 는 커널 스레드를 사용한다.
+- Pthreads(POSIX 스레드) 에서는 PTHREAD_SCOPE_SYSTEM 옵션으로 커널 스레드를 사용할 수 있다.
+- system call 에 의존하기 때문에 mode switch가 필연적이다. (오버헤드가 존재한다.)
+- OS의 종류마다 제공하는 thread api 가 존재한다. (UNIX-POSIX pthreads, Windows-Win32 threads, JVM-Java threads, Android-Android threads)
+
+(2) User-Level Threads (ULTs)
+
+![](images/2023-03-06-19-51-08.png)
+
+- library 형태로 논리적인 멀티스레드를 지원한다.
+- 모드 전환 없이, 프로시저 콜만큼의 속도로 매우 빠르게 멀티스레드를 사용할 수 있다.
+- 커널이 스레드의 존재를 모르기 때문에 안정성이 떨어진다. (ex. 한 스레드가 유저 레벨에서 block 되면 모든 스레드가 정지한다.) => 되도록 non-blocking 함수를 쓰는 등의 작업이 필요
+
+
+(3) Hybrid Threads
+
+![](images/2023-03-06-19-51-16.png)
+
+- KLTs의 안정성과 ULTs 의 속도를 모두 취하기 위한 절충안
+
 
 ### Multi Thread Warning
 
+![](images/2023-03-06-19-27-20.png)
+
 멀티쓰레드는 은탄환이 아니다.
+
+쓰레드 수를 무한히 늘린다고 성능도 무한히 늘어나지 않는다.
+
 
 쓰레드 하나 담당인데 엄청 오래걸리는 task처리를 멀티쓰레드 해봤자,
 비싼 kernel thread 생성비용, Thread instance in jvm 생성 비용, 연산시 context switching cost만 든다.
@@ -1359,6 +1430,14 @@ IO 담당 CPU가 까로 존재하는데, old school thread pool 방식은 DiskIO
 event loop 방식은 main CPU가 IO 담당 CPU에게 요청 보내고 지 할일하다 받음.
 
 대신 event loop 방식은 각 요청이 실행이 짧아야 병목 안남. CPU bound작업 들어오면 그놈 때문에 후속 event작업들이 다 밀려버리기 때문.
+
+---
+Q. 언제 멀티 쓰레드 쓰는게 좋을까?
+
+1. tasks 가 서로 독립적이어서 병렬로 처리될 수 있는 경우 (task parallelism)
+2. 각 스레드에 동등한 workload를 분배할 수 있는 경우 (load balancing)
+3. 처리되는 data에 의존성이 없어야한다. 있는 경우 동기화를 해야함. (data parallelism)
+
 
 
 ## Synchronization
@@ -1384,6 +1463,11 @@ event loop 방식은 main CPU가 IO 담당 CPU에게 요청 보내고 지 할일
 Lock상태에 접근하면, Lock이 풀릴 떄 까지 뺑뻉이 돌며 확인하다, 풀리면 접근하는 방식.\
 user space에서만 동작하기 때문에, context switching 비용이 없다.\
 그렇기에 다른 프로세스와 공유, 오래 대기하는 경우 문제가 생긴다.
+
+그리고 화장실에 들어가있는데 수십 쓰레드가 미친듯이 문 두드리니까,
+CPU usage 겁나 튀는 단점이 있다.
+
+
 
 
 ### Critical Section
@@ -1977,6 +2061,18 @@ ex. java, .net, nodejs(v8)
 
 ![jit](./images/jit-compiler.png)
 ![JVM](./images/jvm-architecture.png)
+
+![](images/2023-03-06-19-10-33.png)
+
+JIT compiler로 컴파일한걸 jvm interpretor에게 주면 line by line으로 해석 후 실행한다.
+
+아무래도 c언어 처럼 한번에 모든 코드를 기계어로 번역 후, 한번에 실행하는 것에 비해 느리다.
+
+java에서 동일한 함수가 여러번 호출되는 경우, 해당 함수를 번역하고 실행하는 작업이 반복되기 때문.
+
+이러한 반복되는 코드를 hot code라고 하고, 잘 호출되지 않는 코드를 cold code라고 한다.
+
+JIT compiler는 자주 반복되는 hot code를 machine-specific한 기계어로 번역하고 캐싱하여 성능개선한다.
 
 
 
