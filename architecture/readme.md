@@ -78,7 +78,7 @@
 14. [Spring MVC](#spring-mvc)
 15. [Multi Thread](#multi-thread)
 	1. [Concurrency vs Parallel](#concurrency-vs-parallel)
-	2. [Async](#async)
+	2. [Synchronous vs Asynchronous](#synch-vs-async)
 	3. [Blocking vs Non Blocking](#blocking-vs-non-blocking)
 	4. [Multi Threading](#multi-threading)
 	5. [Multi Thread Types](#multi-thread-types)
@@ -1331,7 +1331,14 @@ parallel하면서 concurrent할 수 있다.
 
 
 
-### Async
+### Synch vs Async
+
+호출되는 함수의 "작업완료 여부"를 신경쓰냐의 문제.
+
+1. 호출되는 함수에게 callback 전달하고, 그 함수가 작업 끝날 때 까지 신경쓰면 synchronous(ex. 리턴을 기다린다거나..)
+2. 신경 안쓰면 asynchronous (ex. 리턴 안기다린다거나..)
+
+
 
 ![image](./images/async.png)
 
@@ -1344,10 +1351,64 @@ parallel하면서 concurrent할 수 있다.
 
 ### Blocking vs Non Blocking
 
+호출되는 함수가 "바로 리턴하냐 마느냐"의 문제.
+
+1. 바로 리턴하면, 호출한 쪽에게 제어권을 넘겨주니까, 호출한 쪽에서는 다른일 할 수 있음 -> Non Blocking
+2. 호출되는 함수가 바로 리턴 하지 않고, 끝날때 까지 끌면, 호출한 쪽에서는 그 일이 끝날 때 까지 다른걸 못함 -> blocking
+
+
 ![image](./images/sync-blocking.png)
 
-동기 vs 비동기: 제어권한을 누가 가지고 있는가?\
-blocking vs non-blocking: 작업완료를 기다리는가?
+
+case1) 익숙한 것들
+
+![](images/2023-03-07-21-51-17.png)
+
+- example
+	1. synch + blocking
+		- file.read(), file.write(), psmt.executeUpdate()
+	2. async + non blocking
+		- node.js
+
+case2) 안익숙한것1. sync + non blocking
+
+Blocking-Async는 호출되는 함수가 바로 리턴하지 않고, 호출하는 함수는 작업 완료 여부를 신경쓰지 않는 것이다.
+
+![](images/2023-03-07-21-53-53.png)
+
+1. 호출되는 함수는 바로 리턴
+2. 호출하는 함수는 작업 완료 여부 신경씀
+
+example)
+Future.isDone();
+
+```java
+Future ft = asyncFileChannel.read(~~~);
+
+while(!ft.isDone()) {
+    // isDone()은 asyncChannle.read() 작업이 완료되지 않았다면 false를 바로 리턴해준다.
+    // isDone()은 물어보면 대답을 해줄 뿐 작업 완료를 스스로 신경쓰지 않고,
+    //     isDone()을 호출하는 쪽에서 계속 isDone()을 호출하면서 작업 완료를 신경쓴다.
+    // asyncChannle.read()이 완료되지 않아도 여기에서 다른 작업 수행 가능
+}
+
+// 작업이 완료되면 작업 결과에 따른 다른 작업 처리
+```
+
+
+case3) 안익숙한것2. blocking async
+
+![](images/2023-03-07-21-57-30.png)
+
+별 득이 없어서 잘 안쓴다.
+blocking되어 다른 일도 못하는 마당에,
+blocking sync와 다르지도 않은데 callback 호출이 한번 더 있음.
+
+example) anti-pattern) node.js + mysql
+
+node.js는 non blocking인데, mysql이 sync라, 비효율
+
+
 
 ### Multi Threading
 
