@@ -1274,6 +1274,37 @@ Spring Container에서 보관하는 @Bean 정보 필요 없는 처리 할 때 �
 
 
 ### Spring Security Basic
+
+스프링 시큐리티는 필터 체인 파악하면 간단하다.
+
+![](images/2023-03-13-00-38-49.png)
+
+![](images/2023-03-13-00-39-47.png)
+
+![](images/2023-03-13-00-40-07.png)
+
+- 2
+	- 사용자가 로그인 되어 있는지 SecurityContext에 검색하는 부분
+- 4
+	- Csrf 설정이 되어 있는지 그리고 그에 따른 보안정적이 적용되는 부분
+- 5
+	- 로그아웃 request를 판별하여 로그아웃이면 그 기능을 실행한다.
+	- 등록된 logout페이지를 보여주게 된다.
+- 6
+	- 실제 로그인을 실행하는 부분이다.
+	- 이 안에 AuthenticationManager가 들어가고
+	- UserDetailsService가 들어가게 된다.
+- 13
+	- 실제 페이지에 접근 권한이 있는지를 확인하는 부분이다.
+	- 실제 Authentication을 뒤져서 Role을 확인하고 권한이 없으면 예외를 발생시킨다.
+	- 권한이 있으면 보여준다.
+- 12
+	- 13번에서 발생한 예외를 처리하는데
+	- 예를 들면 로그인 요청이면 로그인 화면을,
+	- Basic Auth의 경우는 X-Authentication 헤더를 사용하여 유저에게 로그인정보를 요청하게 된다.
+
+
+
 ![spring security](./images/spring-security-architecture.jpg)
 
 ### Spring Security JWT
