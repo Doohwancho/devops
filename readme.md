@@ -19,7 +19,7 @@ E. Web Server\
 F. Monitoring\
 G. Stress Test\
 H. System Design\
+I. Terraform\
 x. CI/CD\
 x. Audit\
-x. K8s\
-x. Terraform
+x. K8s
