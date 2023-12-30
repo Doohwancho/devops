@@ -14,4 +14,6 @@ Todos
 a-1. [install and do getting-started](https://developer.hashicorp.com/terraform/tutorials/aws-get-started/install-cli) - getting started :white_check_mark:\
 a-2. create & destroy ec2 instance using terraform :white_check_mark:\
 a-3. basic vpc :white_check_mark\
-a-4. [basic 3-tier-architecture](https://www.youtube.com/watch?v=7xngnjfIlK4) :white_check_mark:
+a-4. [basic 3-tier-architecture](https://www.youtube.com/watch?v=7xngnjfIlK4) :white_check_mark:\
+a-5. [terraform state를 aws - s3 bucket(remote cloud)에 보관하기](https://www.youtube.com/watch?v=7xngnjfIlK4) :white_check_mark:
+
