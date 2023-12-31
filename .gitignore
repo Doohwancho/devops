@@ -350,5 +350,6 @@ prometheus/
 prometheus_data/
 pgdata/
 
+*.pem
 
 
