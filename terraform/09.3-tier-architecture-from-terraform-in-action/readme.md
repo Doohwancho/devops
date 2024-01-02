@@ -8,16 +8,18 @@
 ![](images/2024-01-02-18-39-02.png)
 다른 AZ에 있는 private subnet for ec2 & rds
 
-0. internet gateway
-1. vpc
-2. classic load balancer
+0. iam
+	- AmazonSSMManagedInstanceCore policy for access to private ec2 using aws session manager
+1. internet gateway
+2. vpc
+3. classic load balancer
 	- public subnets
 	- security group
-3. ec2
+4. ec2
 	- private subnets connected to nat gateway
 	- security group
 	- ebs
-4. rds
+5. rds
 	- private subnets connected to nat gateway
 	- security group
 

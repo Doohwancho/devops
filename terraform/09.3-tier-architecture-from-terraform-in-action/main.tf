@@ -1,3 +1,10 @@
+module "iam_instance_profile" {
+  source = "./modules/iam"
+  name = "${var.namespace}-iam"
+  actions = ["logs:*", "rds:*"]
+  resources = ["*"]
+}
+
 module "autoscaling" {
   source      = "./modules/autoscaling" #A
   namespace   = var.namespace #B
@@ -6,7 +13,7 @@ module "autoscaling" {
   vpc       = module.networking.vpc #A
   sg        = module.networking.sg #A
   db_config = module.database.db_config #A
-
+  iam_instance_profile_name = module.iam_instance_profile.name
 }
 
 module "database" {

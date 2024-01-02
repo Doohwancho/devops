@@ -14,6 +14,11 @@ variable "sg" {
   type = any
 }
 
+variable "iam_instance_profile_name" {
+  description = "The name of the IAM instance profile to be used by the EC2 instances"
+  type        = string
+}
+
 variable "db_config" {
   type = object( #A
     { #A

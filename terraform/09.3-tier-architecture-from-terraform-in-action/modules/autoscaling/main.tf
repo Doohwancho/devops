@@ -1,8 +1,3 @@
-module "iam_instance_profile" { # create IAM profile.
-  source  = "terraform-in-action/iip/aws" # it's using a module named iip from the terraform-in-action repository on Terraform's module registry for AWS.
-  actions = ["logs:*", "rds:*"] # allows all actions (*) on AWS logs and RDS services. not good for production, but good enough for dev
-}
-
 data "cloudinit_config" "config" {
   gzip          = true # cloud_init content should be gzip compressed
   base64_encode = true # cloud_init content should be based64_encoded
@@ -28,7 +23,7 @@ resource "aws_launch_template" "webserver" {
   user_data     = data.cloudinit_config.config.rendered #B <----------- 여기서 git clone해서 프로젝트 실행함.
   key_name      = var.ssh_keypair
   iam_instance_profile {
-    name = module.iam_instance_profile.name
+    name = var.iam_instance_profile_name
   }
   vpc_security_group_ids = [var.sg.websvr]
 }
