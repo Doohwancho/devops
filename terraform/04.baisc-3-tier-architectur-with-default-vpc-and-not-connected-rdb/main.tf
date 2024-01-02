@@ -156,24 +156,24 @@ resource "aws_security_group" "alb" {
 }
 
 resource "aws_security_group_rule" "allow_alb_http_inbound" {
-  type              = "ingress"
+  type              = "ingress" # incoming traffic
   security_group_id = aws_security_group.alb.id
 
   from_port   = 80
   to_port     = 80
   protocol    = "tcp"
-  cidr_blocks = ["0.0.0.0/0"]
+  cidr_blocks = ["0.0.0.0/0"] # allow all traffics from all ips
 
 }
 
 resource "aws_security_group_rule" "allow_alb_all_outbound" {
-  type              = "egress"
+  type              = "egress" # outbound traffic
   security_group_id = aws_security_group.alb.id
 
-  from_port   = 0
+  from_port   = 0 # 0,0, "-1" 조합은 모든 포트를 허용하겠다는 뜻
   to_port     = 0
   protocol    = "-1"
-  cidr_blocks = ["0.0.0.0/0"]
+  cidr_blocks = ["0.0.0.0/0"] # allow all destination ip
 
 }
 
