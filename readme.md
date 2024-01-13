@@ -20,6 +20,7 @@ F. Monitoring\
 G. Stress Test\
 H. System Design\
 I. Terraform\
+J. Ansible\
 x. CI/CD\
 x. Audit\
 x. K8s
