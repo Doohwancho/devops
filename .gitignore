@@ -344,10 +344,6 @@ db/
 mysql/
 mysql_db/
 alertmanager/
-grafana/
-grafana_data/
-prometheus/
-prometheus_data/
 pgdata/
 
 *.pem
