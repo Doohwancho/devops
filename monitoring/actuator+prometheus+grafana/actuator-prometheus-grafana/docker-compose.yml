@@ -11,6 +11,7 @@ services:
       - '8080:8080'
     networks:
       - backend
+    restart: always # ensures that Docker will automatically try to restart your Spring Boot application container whenever it stops or fails
 
   prometheus:
     image: prom/prometheus
@@ -37,7 +38,7 @@ services:
     ports:
       - '3000:3000'
     volumes:
-      - ./grafana/provisioning/:/etc/grafana/provisioning/
+      - ./grafana/provisioning/:/usr/share/grafana/conf/provisioning/
     env_file:
       - grafana/config.monitoring
     depends_on:
