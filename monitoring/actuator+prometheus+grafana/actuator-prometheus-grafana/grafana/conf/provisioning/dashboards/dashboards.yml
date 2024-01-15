@@ -1,0 +1,11 @@
+apiVersion: 1
+
+providers:
+- name: 'Prometheus' # 이 이름이 step1에 datasource.yml에 명시한 데이터 소스의 이름이고, 이걸 기준으로 매핑한다.
+  orgId: 1
+  folder: ''
+  type: file
+  disableDeletion: false
+  editable: true
+  options:
+    path: /var/lib/grafana/dashboards

@@ -11,7 +11,7 @@ services:
       - '8080:8080'
     networks:
       - backend
-    restart: always # ensures that Docker will automatically try to restart your Spring Boot application container whenever it stops or fails
+    restart: always 
 
   prometheus:
     image: prom/prometheus
@@ -30,17 +30,22 @@ services:
       - app
 
   grafana:
-    image: grafana/grafana
+    image: grafana/grafana-enterprise
     container_name: 'grafana'
     hostname: grafana
+    restart: unless-stopped
+    user: '0' # if you are running as root then set it to 0. else find the right id with the id -u command
     networks:
       - backend
     ports:
       - '3000:3000'
     volumes:
-      - ./grafana/provisioning/:/usr/share/grafana/conf/provisioning/
-    env_file:
-      - grafana/config.monitoring
+      - ./grafana/conf/provisioning/dashboards/:/usr/share/grafana/conf/provisioning/dashboards/ #주의! - os마다, grafana 버전마다 docker container에서 volume mapping해줘야하는 장소가 달라질 수 있다. 현재 config는 mac m1 기준이다. 
+      - ./grafana/conf/provisioning/datasources/:/usr/share/grafana/conf/provisioning/datasources/
+      - ./grafana/grafana_data/:/var/lib/grafana
+    environment:
+      - GF_SECURITY_ADMIN_PASSWORD=admin
+      - GF_USERS_ALLOW_SIGN_UP=false
     depends_on:
       - prometheus
 

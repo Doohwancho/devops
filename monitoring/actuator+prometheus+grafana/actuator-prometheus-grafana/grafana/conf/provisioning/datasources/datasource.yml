@@ -6,7 +6,7 @@ deleteDatasources:
     orgId: 1
 
 datasources:
-  - name: 'my Prometheus metrics from springboot app'
+  - name: 'Prometheus' # 이 이름을 기준으로 ./grafana/conf/provisioning/dashboards/dashboards.yml에 name 필드와 매핑된다.
     orgId: 1 # <int> Org id. Default to 1
     type: prometheus
     access: proxy
