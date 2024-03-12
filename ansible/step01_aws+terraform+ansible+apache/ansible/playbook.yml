@@ -1,0 +1,23 @@
+---
+- hosts: all
+  become: true
+  connection: ssh
+  vars:
+    ansible_ssh_common_args: "-o ConnectTimeout=300 -o ControlMaster=auto -o ControlPersist=600s"
+
+
+  tasks:
+    - name: Install Apache web server
+      apt:
+        name: apache2
+        state: present
+
+    # - name: Copy web application files
+    #   copy:
+    #     src: ./webapp/
+    #     dest: /var/www/html/
+
+    - name: Restart Apache
+      service:
+        name: apache2
+        state: restarted

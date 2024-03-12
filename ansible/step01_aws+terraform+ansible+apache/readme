@@ -1,0 +1,33 @@
+---
+What
+
+
+terraform으로 provisioning 하고,
+자동으로 ansible로 프로젝트 빌드 & 실행
+
+
+---
+실패
+
+
+terraform으로 provisioning도 되고,
+실행된 ec2에 ansible-playbook 을 로컬 pc에서 실행시키는 것도 가능한데,
+
+둘이 동시에 terraform -> ansible 실행은 실패했다.
+실패원인은 ansible 실행하려면 ssh 접속해야 하는데, ssh 접속하려면 elastic ip(public ip)가 ec2에 붙어야 하는데,
+eip는 반드시 ec2가 실행 완료된 시점에 붙는다.
+그런데 local-exec 에서 ansible 코드 가 실행되는 시점은 eip가 붙기 전이라, ssh 접속이 실패하면서, eip조차 ec2에 붙지 않는다.
+
+따라서 terraform과 ansible을 따로 실행시켜야 한다.
+
+
+---
+Prerequisites
+
+
+1. Ec2 -> 왼쪽 탭 중 네트워크 및 보안 -> 키 페어 -> .pem 키 다운받기
+2. chmod 400 example1.pem
+3. mv example1.pem ~/.ssh
+
+
+
