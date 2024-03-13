@@ -1,0 +1,13 @@
+---\
+Concept
+
+
+a. create aws ec2 ami
+
+
+
+---\
+Todo
+
+
+a-1. create custom ec2 with openjdk8-zulu on 8core 32GiB RAM arm64 aws graviton3 processor :white_check_mark:

@@ -21,6 +21,7 @@ G. Stress Test\
 H. System Design\
 I. Terraform\
 J. Ansible\
+K. Packer\
 x. CI/CD\
 x. Audit\
 x. K8s
