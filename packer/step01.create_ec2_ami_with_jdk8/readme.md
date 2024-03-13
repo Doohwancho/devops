@@ -6,6 +6,7 @@ How
 terraform init
 terraform apply --auto-approve
 packer build openjdk8_ubuntu18_packer.pkr.hcl
+terraform destroy --auto-approve
 ```
 
 
