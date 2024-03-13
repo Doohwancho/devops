@@ -4,9 +4,9 @@ How
 
 ```
 terraform init
-terraform apply --auto-approve
+terraform apply
 packer build openjdk8_ubuntu18_packer.pkr.hcl
-terraform destroy --auto-approve
+terraform destroy
 ```
 
 
@@ -23,3 +23,10 @@ What
 	- ami-059e7332a087320a3
 		- arm64
 		- aws graviton3 processor
+
+
+---\
+주의점
+
+
+1. aws custom ami를 만들면, ec2 cloudwatch가 깔려있지 않다. -> ec2 monitoring을 별도로 구축해야 한다.
