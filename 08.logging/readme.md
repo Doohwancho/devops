@@ -1,0 +1,5 @@
+---\
+Goal
+
+
+setup logging system
