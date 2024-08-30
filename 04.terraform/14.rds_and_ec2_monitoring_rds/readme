@@ -16,3 +16,94 @@ terraform configuration for ...
 1. ec2 - spring backend server와 rds를 연동하고,
 2. ec2를 통해 rds에 stress test 해본다.
 3. stress test 중 rds가 어떻게 반응하는지 pmm/server로 모니터링 하고 이것저것 실험해본다.
+
+
+# Q. how to setup from scratch?
+# F. prometheus server에서 rds-mysql을 pmm으로 모니터링하기 
+## F-0. start terraform 
+```
+terraform init 
+terraform apply
+```
+
+## F.1. session_manager로 기본 bash 접속 
+```
+bash
+lsb_release -a # ubuntu 버전 확인 
+docker --version # 도커가 user_data.sh 스크립트로 설치되었는지 확인 
+```
+
+
+## F.2. rds로 접속하기 from prometheus server 
+```
+sudo apt update
+sudo apt install mysql-client -y (yes 눌러주는 명령어 필요)
+
+
+user로 접속)
+sudo mysql -h ${rdb.endpoint} -u admin -p -P 3306 ecommerce
+
+password: ${adminPassword}
+```
+
+## F.3. rds에 pmm user 만들기 
+id: pmm 
+pw: pass
+
+```sql
+SELECT user, host FROM mysql.user;
+
+CREATE USER 'pmm'@'%' IDENTIFIED BY 'pass';
+GRANT SELECT, PROCESS, REPLICATION CLIENT ON *.* TO 'pmm'@'%';
+ALTER USER 'pmm'@'%' WITH MAX_USER_CONNECTIONS 10;
+GRANT SELECT, UPDATE, DELETE, DROP ON performance_schema.* TO 'pmm'@'%';
+
+SELECT user, host FROM mysql.user;
+```
+
+
+## F.4. pmm/server2 세팅 on prometheus_monitoring_server
+```
+sudo docker pull percona/pmm-server:2
+
+sudo docker volume create pmm-data
+
+sudo docker run --detach --restart always --publish 443:443 -p 8080:80 -v pmm-data:/srv --name pmm-server percona/pmm-server:2
+
+sudo docker ps 
+```
+
+원래는 db server에 pmm/client도 설치해야 하는데, aws-rds는 enhanced monitoring setting 설정해놨으면 이거 설치 안해도 모니터링 데이터 보내서 스킵한다
+
+
+## F.5. pmm/server 접속 후 모니터링할 RDS 서버 추가 
+### F.5.1. pmm/server 페이지 로그인 
+```
+http://server_public_ip:8080/graph/login
+```
+
+id:admin 
+pw:admin 
+
+### F.5.2. rds instance 추가 
+는 클라이언트에서 수동으로 직접 설정하기 
+오른쪽 위에 pmm -> add instance 클릭
+
+#### F.5.2.1. iam user의 access key, private access key 입력 
+Enter the access key ID and the secret access key of your IAM user or leave these fields empty if an IAM role was created.
+
+aws - IAM에서 iam 유저 만들 때 발급 받았던 access key id, secret access key 입력하기 
+
+```
+access key: ${access_key_id}
+private access key: ${secret_access_key}
+```
+
+#### F.5.2.2. 아까 rds에서 만든 유저 pmm password: pass 입력 
+username: pmm 
+password: pass
+
+## F-6. destroy terraform 
+```
+terraform destroy
+```
