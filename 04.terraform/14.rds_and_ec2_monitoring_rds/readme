@@ -1,0 +1,18 @@
+# what is this?
+terraform configuration for ...
+
+1. ec2 for monitoring rds server 
+2. rds 
+3. iam for accessing to ec2 using session manager and ec2 to rds permission + 
+4. network setting(ex. security group, ports, etc) for ec2 and rds 
+
+
+# prerequisites
+1. IAM 유저 생성
+2. 생성한 IAM 유저의 access key와 private access key 를 발급받아야 한다. (pmm/server에서 rds 찾고 연동할 때 사용한다.)
+
+
+# TODO 
+1. ec2 - spring backend server와 rds를 연동하고,
+2. ec2를 통해 rds에 stress test 해본다.
+3. stress test 중 rds가 어떻게 반응하는지 pmm/server로 모니터링 하고 이것저것 실험해본다.

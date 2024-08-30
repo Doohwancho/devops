@@ -23,4 +23,5 @@ a-9. 3-tier-architecture from terraform-in-action + iam :white_check_mark:\
 a-10. 3-tier-architecture + iam + elasticache :white_check_mark:\
 a-11. 3-tier-architecture + iam + elasticache + prometheus + grafana :white_check_mark:\
 a-12. t2.micro ec2 for prometheus + grafana :white_check_mark:\
-a-13. 3-tier-architecture + get rds endpoint and print inside ec2 on build.sh :white_check_mark:
+a-13. 3-tier-architecture + get rds endpoint and print inside ec2 on build.sh :white_check_mark:\
+a-14. ec2 monitoring server with pmm/server connected to rds :white_check_mark:
