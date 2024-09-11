@@ -24,4 +24,6 @@ a-10. 3-tier-architecture + iam + elasticache :white_check_mark:\
 a-11. 3-tier-architecture + iam + elasticache + prometheus + grafana :white_check_mark:\
 a-12. t2.micro ec2 for prometheus + grafana :white_check_mark:\
 a-13. 3-tier-architecture + get rds endpoint and print inside ec2 on build.sh :white_check_mark:\
-a-14. ec2 monitoring server with pmm/server connected to rds :white_check_mark:
+a-14. ec2 monitoring server with pmm/server connected to rds :white_check_mark:\
+a-15. spring backend ec2 server + ec2 monitoring server with pmm/server connected to rds :white_check_mark:\
+a-16. spring backend ec2 server + ec2 monitoring server with pmm/server connected to rds + another ec2 in separate vpc for initiating stress-test :white_check_mark:

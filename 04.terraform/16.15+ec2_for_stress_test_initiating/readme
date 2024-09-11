@@ -1,0 +1,4 @@
+# what
+
+16-1. ec2(spring backend server) + aws-RDS + ec2(monitoring both spring server & RDS)
+16-2. stress test를 시작하기 위한 2core 2RAM 까지 ec2

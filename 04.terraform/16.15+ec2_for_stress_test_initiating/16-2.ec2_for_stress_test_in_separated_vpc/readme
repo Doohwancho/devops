@@ -1,0 +1,7 @@
+# what
+stress test를 거는 2core 2GiB RAM AMD64 짜리 ec2
+
+
+# 기능
+1. docker, k6, git이 깔려있다.
+2. aws-session_manager로 접속 가능하다.
