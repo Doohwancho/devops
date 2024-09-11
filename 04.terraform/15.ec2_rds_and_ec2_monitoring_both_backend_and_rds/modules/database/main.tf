@@ -23,8 +23,22 @@ resource "aws_db_instance" "database" {
   allocated_storage      = 10
   engine                 = "mysql"
   engine_version         = "8.0"
+  /*
   # https://instances.vantage.sh/rds/?region=ap-northeast-2&selected=m7g.medium,m7a.medium,c7a.medium,c7gn.medium,t3.small
-  instance_class         = "db.m5.large" # 2 vCPU core, 8 GiB RAM, 1000RPS까지 견딤 
+    // 100 RPS:
+    // EC2: t3.micro (1 vCPU, 1 GB RAM) 또는 t3.small (1 vCPU, 2 GB RAM)
+    // RDS: db.t3.micro (1 vCPU, 1 GB RAM) 또는 db.t3.small (1 vCPU, 2 GB RAM)
+
+    // 1,000 RPS:
+    // EC2: t3.medium (2 vCPU, 4 GB RAM) 또는 c5.xlarge (4 vCPU, 8 GB RAM)
+    // RDS: db.m5.large (2 vCPU, 8 GB RAM) 또는 db.m5.xlarge (4 vCPU, 16 GB RAM)
+
+    // 3,000 RPS:
+    // EC2: c5.2xlarge (8 vCPU, 16 GB RAM) 또는 c5.4xlarge (16 vCPU, 32 GB RAM)
+    // RDS: db.m5.2xlarge (8 vCPU, 32 GB RAM) 또는 db.m5.4xlarge (16 vCPU, 64 GB RAM)
+  */
+  instance_class         = "db.m5.large" # intel 64x, 2 vCPU core, 8 GiB RAM, 원래는 최대 1000RPS까지 견뎌야 하나, 현 프로젝트에 stress_test 1000 RPS 테스트 결과, cpu 100% 찍고 사망
+                                         # "db.m6g.2xlarge" # AWS Graviton2 processor, 8 vCPU core, 32 GiB RAM, 1000RPS까지 견딤 
   identifier             = "${var.namespace}-db-instance"
   db_name                = "ecommerce"
   username               = "admin"
