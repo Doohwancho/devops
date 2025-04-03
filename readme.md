@@ -12,13 +12,15 @@ Fields
 
 
 A. Linux\
-B. Software Architecture\
+B. Web Server\
 C. AWS\
-D. Docker\
-E. Web Server\
-F. Monitoring\
-G. Stress Test\
-H. System Design\
-I. Terraform\
-J. Ansible\
-K. Packer
+D. Terraform\
+E. Packer\
+F. Ansible\
+G. APM(Monitoring)\
+H. Logging\
+I. System Design\
+J. Stress Test\
+K. CICD\
+L. Docker\
+M. K8S

@@ -1,6 +1,7 @@
 ---\
-Goal
+Project
 
 
-1. familiarized with k8s
+a. familiarized with k8s\
+b. fastapi + mongodb + ELk on k8s
 
