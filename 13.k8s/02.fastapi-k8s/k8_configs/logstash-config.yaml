@@ -1,0 +1,22 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: logstash-config
+data:
+  logstash.conf: |
+    input {
+      tcp {
+        port => 5044
+        # codec => json
+        codec => json_lines
+      }
+    }
+    
+    output {
+      elasticsearch {
+        hosts => ["elasticsearch-service:9200"] 
+        index => "fastapi-logs-%{+YYYY.MM.dd}"
+      }
+      # 디버깅을 위한 stdout 출력 추가
+      stdout { codec => rubydebug }
+    }

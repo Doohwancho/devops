@@ -2,3 +2,5 @@ fastapi
 pydantic
 uvicorn
 pymongo
+python-json-logger==2.0.7
+python-logstash==0.4.8

@@ -74,6 +74,7 @@ kubectl apply -f ./k8_configs/fastapi_deployment_file.yaml # FastAPI Deployment 
 kubectl apply -f ./k8_configs/fastapi_service_file.yaml # FastAPI service
 
 # ELK
+kubectl apply -f k8_configs/logstash-config.yaml
 kubectl apply -f ./k8_configs/elastic_depl_serv.yaml # Elastic Search
 kubectl apply -f ./k8_configs/logstash_depl_serv.yaml  # Logstash
 kubectl apply -f ./k8_configs/kibana_depl_serv.yaml  # kibana dashboard

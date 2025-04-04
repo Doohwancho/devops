@@ -15,24 +15,31 @@ spec:
         app: logstash
     spec:
       containers:
-      - name: logstash
-        image: docker.elastic.co/logstash/logstash:7.15.2
-        ports:
-        - containerPort: 5044
-          name: http
-        env:
-        - name: ELASTICSEARCH_URL
-          value: http://elasticsearch:9200
-        resources:
-          limits:
-            cpu: 500m
-            memory: 1.5Gi
-          requests:
-            cpu: 100m
-            memory: 1Gi
+        - name: logstash
+          image: docker.elastic.co/logstash/logstash:7.15.2
+          ports:
+            - containerPort: 5044
+              name: http
+          env:
+            - name: ELASTICSEARCH_URL
+              value: http://elasticsearch-service:9200
+          volumeMounts:
+            - name: logstash-config
+              mountPath: /usr/share/logstash/pipeline/logstash.conf
+              subPath: logstash.conf
+          resources:
+            limits:
+              cpu: 500m
+              memory: 1.5Gi
+            requests:
+              cpu: 100m
+              memory: 1Gi
+      volumes:
+        - name: logstash-config
+          configMap:
+            name: logstash-config
 
 ---
-
 apiVersion: v1
 kind: Service
 metadata:
@@ -45,4 +52,3 @@ spec:
     - protocol: TCP
       port: 5044
       targetPort: 5044
-
