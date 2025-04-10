@@ -125,6 +125,12 @@ curl http://localhost:8000/health
 minikube service fastapi-app-service
 ```
 
+RESTful API 정보는 redoc에 있다.
+```
+http://localhost/redoc
+```
+
+
 ## step8. mongo-express test 
 Q. what is mongo-express?\
 A. 몽고DB 관리용 웹 인터페이스. 데이터베이스 구조를 빠르게 확인하거나 테스트할 때 유용함.
